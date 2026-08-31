@@ -4,4 +4,4 @@
 LANGUAGE_NAME = "Entity Scripting Language"
 AUTHOR = "Devin Frost"
 VERSION = "0.1"
-DESCRIPTION = "C-Like ECS scripting language."
+DESCRIPTION = "Entity Scripting Language (ESL) is a C-Like ECS scripting language."
