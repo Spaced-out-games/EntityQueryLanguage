@@ -1,2 +1,79 @@
-// Future milestone file.
-// TODO M2: Formal grammar will be developed in Milestone 2.
+
+start: statement*
+
+?statement: declaration
+          | assignment
+          | if_block
+          | while_block
+          | struct_block
+          | function_block
+          | block
+          | expression_statement
+
+expression_statement: expression ";"
+declaration: type NAME ("=" expression)? ";"
+type: "static"? "inline"? ("const" | "mut")? NAME [("[" INT "]") | "&"]
+
+assignment: NAME "=" expression ";"
+
+block: "{" statement* "}"
+
+while_block: "while" "(" expression ")" block
+
+if_block: "if" "(" expression ")" block ["else" block]
+
+struct_block: "virtual"? "struct" NAME "{" struct_member* "}" ";"
+
+function_block: decorator* type NAME "(" [parameter_list] ")" block
+
+parameter_list: parameter ("," parameter)* 
+parameter: type NAME
+
+decorator: "@" NAME ["(" [argument_list] ")"]
+
+template_list: "<" template_argument ("," template_argument)* ">"
+?template_argument: type | number # | string
+
+struct_member: declaration
+
+?expression: comparison
+
+?comparison: sum
+           | comparison "==" sum
+           | comparison "!=" sum
+           | comparison "<" sum
+           | comparison ">" sum
+           | comparison "<=" sum
+           | comparison ">=" sum
+
+?sum: product
+    | sum "+" product
+    | sum "-" product
+
+?product: unary
+        | product "*" unary
+        | product "/" unary
+        | product "%" unary
+
+?unary: "-" unary
+      | "!" unary
+      | atom
+
+?atom: function_call
+     | number
+     | NAME
+     | "(" expression ")"
+     | STRING
+
+function_call: NAME "(" [argument_list] ")"
+argument_list: expression ("," expression)*
+
+NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+?number: INT | FLOAT
+
+INT: /[0-9]+/
+FLOAT: /[0-9]+\.[0-9]+/
+STRING: /"(?:\\.|[^"\\])*"/
+%import common.WS
+%ignore WS
+%ignore /\/\/[^\n]*/
