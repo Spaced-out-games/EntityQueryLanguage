@@ -1,0 +1,14 @@
+
+
+// this fails - only declarations and definitions allowed
+//struct test {
+//    print(43);
+//};
+
+// no Expressions in structures
+struct Test {
+    32;
+};
+
+
+

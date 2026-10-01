@@ -1,79 +1,132 @@
+entry: start*
 
-start: statement*
+// Top-level entry points: static declarations, structs, and  functions ONLY
+start: declaration
+     | struct_definition
+     | function_definition
+
 
 ?statement: declaration
           | assignment
-          | if_block
-          | while_block
-          | struct_block
-          | function_block
-          | block
           | expression_statement
+          | if_statement
+          | while_statement
+          | for_statement
+          | block
+          | return_statement
 
+// Types and qualifiers
+typename: NAME
+static: "static"
+inline: "inline"
+const: "const"
+mut: "mut"
+type_qualifier: const | mut
+reference: "&"
+type_suffix: ("[" DECIMAL_INT "]") | reference
+
+
+// Declarations
+declaration: static? inline? type_qualifier? typename type_suffix? NAME initializer? ";"
+
+
+initializer: "=" expression
+
+parameter: type_qualifier? typename [type_suffix] NAME
+parameter_list: parameter ("," parameter)*
+
+// Statements
+assignment: lvalue "=" expression ";"
 expression_statement: expression ";"
-declaration: type NAME ("=" expression)? ";"
-type: "static"? "inline"? ("const" | "mut")? NAME [("[" INT "]") | "&"]
-
-assignment: NAME "=" expression ";"
 
 block: "{" statement* "}"
 
-while_block: "while" "(" expression ")" block
+if_statement: "if" "(" expression ")" block else_clause?
+else_clause: "else" block
+for_statement: "for" "(" expression ";" expression ";" expression ")" "{" block "}"
 
-if_block: "if" "(" expression ")" block ["else" block]
 
-struct_block: "virtual"? "struct" NAME "{" struct_member* "}" ";"
 
-function_block: decorator* type NAME "(" [parameter_list] ")" block
+while_statement: "while" "(" expression ")" block
 
-parameter_list: parameter ("," parameter)* 
-parameter: type NAME
+return_statement: "return" expression? ";"
 
-decorator: "@" NAME ["(" [argument_list] ")"]
+// Structs and functions
+struct_definition: virtual_modifier? "struct" NAME "{" struct_member* "}" ";"
+virtual_modifier: "virtual"
 
-template_list: "<" template_argument ("," template_argument)* ">"
-?template_argument: type | number # | string
+struct_member: const? typename type_suffix? NAME initializer? ";"
 
-struct_member: declaration
+function_definition: decorator* typename NAME "(" parameter_list? ")" block
 
-?expression: comparison
+decorator: "@" decorator_type decorator_arguments?
+decorator_type: NAME
+decorator_arguments: "(" argument_list? ")"
 
-?comparison: sum
-           | comparison "==" sum
-           | comparison "!=" sum
-           | comparison "<" sum
-           | comparison ">" sum
-           | comparison "<=" sum
-           | comparison ">=" sum
+cast: "(" typename ")" expression
+
+// Expressions
+?expression: comparison | cast
+
+?comparison: bitwise_shift
+           | comparison COMPARE_OP bitwise_shift
+
+?bitwise_shift: sum
+              | bitwise_shift SHIFT_OP sum
 
 ?sum: product
-    | sum "+" product
-    | sum "-" product
+    | sum ADD_OP product
 
 ?product: unary
-        | product "*" unary
-        | product "/" unary
-        | product "%" unary
+        | product MUL_OP unary
 
-?unary: "-" unary
-      | "!" unary
-      | atom
+?unary: UNARY_OP unary
+      | rvalue
+
+// Assignable expressions
+?lvalue: NAME
+       | lvalue "." NAME
+       | lvalue "[" expression "]"
+
+// Readable expressions
+?rvalue: postfix
+
+?postfix: atom
+        | postfix "." NAME
+        | postfix "[" expression "]"
 
 ?atom: function_call
-     | number
+     | literal
      | NAME
      | "(" expression ")"
-     | STRING
 
-function_call: NAME "(" [argument_list] ")"
+function_call: NAME "(" argument_list? ")"
 argument_list: expression ("," expression)*
 
-NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
-?number: INT | FLOAT
+// Literal hierarchy
+literal: number_literal
+       | STRING
 
-INT: /[0-9]+/
-FLOAT: /[0-9]+\.[0-9]+/
+number_literal: DECIMAL_INT
+              | HEXADECIMAL_INT
+              | DECIMAL_FLOAT
+
+// Tokens
+
+NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+DECIMAL_INT: /[0-9]+/
+HEXADECIMAL_INT: /0x[0-9a-fA-F]*/
+DECIMAL_FLOAT: /[0-9]+\.[0-9]+/
 STRING: /"(?:\\.|[^"\\])*"/
+
+COMPARE_OP: "==" | "!=" | "<=" | ">=" | "<" | ">"
+SHIFT_OP: "<<" | ">>"
+ADD_OP: "+" | "-"
+MUL_OP: "*" | "/" | "%"
+UNARY_OP: "-" | "!"
+
 %import common.WS
 %ignore WS
 %ignore /\/\/[^\n]*/
+
+# TODO: support initializer lists

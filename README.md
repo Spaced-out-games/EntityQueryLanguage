@@ -1,7 +1,7 @@
 # Entity Scripting Language
 
 ## Purpose
-This language aims to support modding features for games using Entity-Component-Systems by providing a C-like programming language
+This language aims to support modding features for games using Entity-Component-Systems by providing a C-like entity shading language
 
 ## Target Users
 Game developers, game modders. Expected to be proficient in the procedural inner workings of a C-like language.
@@ -13,7 +13,7 @@ Game developers, game modders. Expected to be proficient in the procedural inner
 
 ## Initial Features
 1. C Structures supported out of the box
-2. Decorator "@system" tells the compiler that:
+2. Decorator "@entry" tells the compiler that:
   a. a function should be a registered system
   b. it serves as one (of many) entry points into execution 
 4. "const" and "mut" keywords tell the compiler to enforce certain access patterns and hint the interpretter as to what order systems are to be executed

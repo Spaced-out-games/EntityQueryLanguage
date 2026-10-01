@@ -1,0 +1,188 @@
+Welcome to Entity Shader Language Version 0.1
+Entity Shader Language (ESL) is a C-Like shader language built for modding
+Designed by: Devin Frost
+======================== BLOCK ========================
+// global
+static inline const f32& deltaTime;
+
+======================== TREE ========================
+entry
+  start	Declaration(type=Type(name='f32', array_size=None, reference=False), name='deltaTime', initializer=ReferenceType(), static=False, inline=False, const=False, mut=False)
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+// vector type
+struct Vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+};
+
+======================== TREE ========================
+entry
+  start	StructDefinition(name='Vec3', members=[StructMember(type=Type(name='f32', array_size=None, reference=False), name='x', initializer=None, const=False), StructMember(type=Type(name='f32', array_size=None, reference=False), name='y', initializer=None, const=False), StructMember(type=Type(name='f32', array_size=None, reference=False), name='z', initializer=None, const=False)], virtual=False)
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+// quaternion type
+struct Quat {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+};
+
+======================== TREE ========================
+entry
+  start	StructDefinition(name='Quat', members=[StructMember(type=Type(name='f32', array_size=None, reference=False), name='x', initializer=None, const=False), StructMember(type=Type(name='f32', array_size=None, reference=False), name='y', initializer=None, const=False), StructMember(type=Type(name='f32', array_size=None, reference=False), name='z', initializer=None, const=False), StructMember(type=Type(name='f32', array_size=None, reference=False), name='w', initializer=None, const=False)], virtual=False)
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+// transform type
+struct Transform {
+    Vec3 position;
+    Quat rotation;
+    Vec3 scale;
+};
+
+======================== TREE ========================
+entry
+  start	StructDefinition(name='Transform', members=[StructMember(type=Type(name='Vec3', array_size=None, reference=False), name='position', initializer=None, const=False), StructMember(type=Type(name='Quat', array_size=None, reference=False), name='rotation', initializer=None, const=False), StructMember(type=Type(name='Vec3', array_size=None, reference=False), name='scale', initializer=None, const=False)], virtual=False)
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+// virtual structure test
+virtual struct Person {
+    // captures arrays
+    char[256] contents;
+    i32[2] debts_and_credits;  
+};
+
+======================== TREE ========================
+entry
+  start	StructDefinition(name='Person', members=[StructMember(type=Type(name='char', array_size=None, reference=False), name='contents', initializer=ArrayType(size=256), const=False), StructMember(type=Type(name='i32', array_size=None, reference=False), name='debts_and_credits', initializer=ArrayType(size=2), const=False)], virtual=True)
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+// tests entry point decorator
+@entry
+void integrate(mut Transform& transform, const Velocity& velocity) {
+    transform = transform + velocity;
+}
+
+
+======================== TREE ========================
+entry
+  start	FunctionDefinition(return_type=Type(name='void', array_size=None, reference=False), name='integrate', parameters=[Parameter(type=Type(name='Transform', array_size=None, reference=False), name='transform', const=False, mut=False), Parameter(type=Type(name='Velocity', array_size=None, reference=False), name='velocity', const=False, mut=False)], body=Block(statements=[Assignment(target='transform', value=BinaryExpression(operator='+', left='transform', right='velocity'))]), decorators=[Decorator(type='entry', arguments=[])])
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+@SomeMadeUpDecorator("test", 124)
+void foo() {
+    transform.pos.x = 0;
+}
+
+======================== TREE ========================
+entry
+  start	FunctionDefinition(return_type=Type(name='void', array_size=None, reference=False), name='foo', parameters=[], body=Block(statements=[Assignment(target=MemberAccess(object=MemberAccess(object='transform', member='pos'), member='x'), value=IntegerLiteral(value=0))]), decorators=[Decorator(type='SomeMadeUpDecorator', arguments=[StringLiteral(value='test'), IntegerLiteral(value=124)])])
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+
+@export(qsh)
+void main() {
+    // if-else
+    if(i > 20) {
+        print("i is too big");
+    } else {
+        print("i is too small");
+    }
+}
+
+======================== TREE ========================
+entry
+  start	FunctionDefinition(return_type=Type(name='void', array_size=None, reference=False), name='main', parameters=[], body=Block(statements=[IfStatement(condition=BinaryExpression(operator='>', left='i', right=IntegerLiteral(value=20)), then_block=Block(statements=[ExpressionStatement(expression=FunctionCall(name='print', arguments=[StringLiteral(value='i is too big')]))]), else_block=Block(statements=[ExpressionStatement(expression=FunctionCall(name='print', arguments=[StringLiteral(value='i is too small')]))]))]), decorators=[Decorator(type='export', arguments=['qsh'])])
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+// tinylang positive test translation
+void tinylang_example() {
+    int score = 80;
+    int bonus = 5;
+    print(score + bonus * 2);
+    if(score >= 60) {
+        print(1);
+    } else {
+        print(0);
+    }
+
+
+    while(score < 85) {
+        score = score + 1;
+    }
+    print(score);
+}
+======================== TREE ========================
+entry
+  start	FunctionDefinition(return_type=Type(name='void', array_size=None, reference=False), name='tinylang_example', parameters=[], body=Block(statements=[Declaration(type=Type(name='int', array_size=None, reference=False), name='score', initializer=IntegerLiteral(value=80), static=False, inline=False, const=False, mut=False), Declaration(type=Type(name='int', array_size=None, reference=False), name='bonus', initializer=IntegerLiteral(value=5), static=False, inline=False, const=False, mut=False), ExpressionStatement(expression=FunctionCall(name='print', arguments=[BinaryExpression(operator='+', left='score', right=BinaryExpression(operator='*', left='bonus', right=IntegerLiteral(value=2)))])), IfStatement(condition=BinaryExpression(operator='>=', left='score', right=IntegerLiteral(value=60)), then_block=Block(statements=[ExpressionStatement(expression=FunctionCall(name='print', arguments=[IntegerLiteral(value=1)]))]), else_block=Block(statements=[ExpressionStatement(expression=FunctionCall(name='print', arguments=[IntegerLiteral(value=0)]))])), WhileStatement(condition=BinaryExpression(operator='<', left='score', right=IntegerLiteral(value=85)), body=Block(statements=[Assignment(target='score', value=BinaryExpression(operator='+', left='score', right=IntegerLiteral(value=1)))])), ExpressionStatement(expression=FunctionCall(name='print', arguments=['score']))]), decorators=[])
+
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+======================== BLOCK ========================
+
+
+// this fails - only declarations and definitions allowed
+//struct test {
+//    print(43);
+//};
+
+// no Expressions in structures
+struct Test {
+    32;
+};
+
+
+
+
+======================== TREE ========================
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '3' in the current parser context, at line 10 col 5
+
+    32;
+    ^
+Expected one of: 
+	* CONST
+	* RBRACE
+	* NAME
+

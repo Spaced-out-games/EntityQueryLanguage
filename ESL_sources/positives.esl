@@ -1,0 +1,72 @@
+// global
+static inline const f32& deltaTime;
+/**/
+// vector type
+struct Vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+};
+/**/
+// quaternion type
+struct Quat {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+};
+/**/
+// transform type
+struct Transform {
+    Vec3 position;
+    Quat rotation;
+    Vec3 scale;
+};
+/**/
+// virtual structure test
+virtual struct Person {
+    // captures arrays
+    char[256] contents;
+    i32[2] debts_and_credits;  
+};
+/**/
+// tests entry point decorator
+@entry
+void integrate(mut Transform& transform, const Velocity& velocity) {
+    transform = transform + velocity;
+}
+
+/**/
+@SomeMadeUpDecorator("test", 124)
+void foo() {
+    transform.pos.x = 0;
+}
+/**/
+
+@export(qsh)
+void main() {
+    // if-else
+    if(i > 20) {
+        print("i is too big");
+    } else {
+        print("i is too small");
+    }
+}
+/**/
+// tinylang positive test translation
+void tinylang_example() {
+    int score = 80;
+    int bonus = 5;
+    print(score + bonus * 2);
+    if(score >= 60) {
+        print(1);
+    } else {
+        print(0);
+    }
+
+
+    while(score < 85) {
+        score = score + 1;
+    }
+    print(score);
+}
