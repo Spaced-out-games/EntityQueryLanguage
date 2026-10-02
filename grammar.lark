@@ -1,14 +1,15 @@
 entry: start*
 
 // Top-level entry points: static declarations, structs, and  functions ONLY
-start: declaration
-     | struct_definition
-     | function_definition
+start: declaration # static inline const f32& deltaTime;
+     | struct_definition #struct Vec3 {...}
+     | function_definition # void foo() {...}
+     # TODO: support struct and function declarations, header semantics
 
 
-?statement: declaration
+?statement: declaration 
           | assignment
-          | expression_statement
+          | expression_statement 
           | if_statement
           | while_statement
           | for_statement
