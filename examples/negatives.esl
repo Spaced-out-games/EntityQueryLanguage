@@ -1,0 +1,44 @@
+
+
+// this fails - only declarations and definitions allowed
+struct NoStatementsInStruct {
+    print(43);
+};
+
+/**/
+// no Expressions in structures
+struct NoExpressionsInStructs {
+    32;
+};
+
+/**/
+
+//int incomplete_string_literal() {
+    //return ";
+//}
+
+
+
+
+// const & mut mutually exclusive
+static inline const mut i32 const_mut_together[32];
+
+/**/
+
+static inline f32[16]& illegalArrayRef;
+
+/**/
+
+struct foo {
+    inline f32& illegalInlineInStruct;
+}
+
+
+
+/**/
+
+i32 foo() {
+    struct illegalNestedStruct {
+        i32 some_member;
+    };
+}

@@ -45,7 +45,7 @@ Do NOT simply copy the instructor's example grammar or AST design.
 from pathlib import Path
 
 from lark import Lark, Transformer
-from lark.exceptions import UnexpectedInput
+from lark.exceptions import UnexpectedInput, VisitError
 
 # ------------------------------------------------------------
 # AST IMPORTS
@@ -56,35 +56,22 @@ from lark.exceptions import UnexpectedInput
 #
 # Example AST node names are provided below.
 
-from ast_nodes import (
-    Program,
-    Number,
-    Boolean,
-    Var,
-    UnaryOp,
-    BinOp,
-    Declaration,
-    Assignment,
-    Show,
-    Block,
-    If,
-    While,
-)
+from ast_nodes import *
+from config import POSITIVES, NEGATIVES, SPLITTER
 
 
 # ============================================================
 # 1. LOCATE grammar.lark
 # ============================================================
 
-BASE_DIR = Path(__file__).resolve().parent
-GRAMMAR_FILE = BASE_DIR / "grammar.lark"
+from config import GRAMMAR_PATH
 
 
 # ============================================================
 # 2. CREATE THE LARK PARSER
 # ============================================================
 
-def create_parser():
+def create_parser(grammar_path: str):
     """
     Create and return the Lark parser used by TinyLang.
 
@@ -98,518 +85,24 @@ def create_parser():
     """
 
     return Lark.open(
-        str(GRAMMAR_FILE),
-        parser="lalr",
-        start="start",
+        grammar_path,
+        #parser="lalr",
+        parser="earley",
+        start="start"
     )
 
 
 # Create one parser that can be reused.
 
-parser = create_parser()
+parser = create_parser(GRAMMAR_PATH)
 
-
-# ============================================================
-# 3. AST TRANSFORMER
-# ============================================================
-
-class ToAST(Transformer):
-    """
-    Convert the Lark parse structure into TinyLang AST nodes.
-
-    IMPORTANT:
-    The method names in this class must correspond to rule
-    names or aliases in YOUR grammar.lark.
-
-    Example:
-
-        NUMBER -> number
-
-    can cause Lark to call:
-
-        def number(...)
-
-    Similarly:
-
-        NAME -> var
-
-    can cause Lark to call:
-
-        def var(...)
-
-    Therefore, grammar.lark and frontend.py must be designed
-    together.
-    """
-
-    # --------------------------------------------------------
-    # PROGRAM
-    # --------------------------------------------------------
-
-    def start(self, items):
-        """
-        Convert the start rule into a Program AST node.
-
-        Example grammar:
-
-            start: statement+
-
-        The items list contains the transformed statements.
-        """
-
-        return Program(list(items))
-
-
-    # ========================================================
-    # LITERAL VALUES
-    # ========================================================
-
-    def number(self, items):
-        """
-        Convert a numeric token into a Number AST node.
-
-        Example source:
-
-            42
-            3.14
-        """
-
-        value = float(items[0])
-
-        return Number(value)
-
-
-    def boolean(self, items):
-        """
-        Convert a Boolean token into a Boolean AST node.
-
-        Example source:
-
-            true
-            false
-        """
-
-        text = str(items[0]).lower()
-
-        value = (text == "true")
-
-        return Boolean(value)
-
-
-    # ========================================================
-    # VARIABLES
-    # ========================================================
-
-    def var(self, items):
-        """
-        Convert an identifier into a Var AST node.
-
-        Example:
-
-            score
-
-        becomes conceptually:
-
-            Var("score")
-        """
-
-        name = str(items[0])
-
-        return Var(name)
-
-
-    # ========================================================
-    # UNARY EXPRESSIONS
-    # ========================================================
-
-    def neg(self, items):
-        """
-        Unary numeric negation.
-
-        Example:
-
-            -5
-
-        Conceptual AST:
-
-            UnaryOp("-", Number(5))
-        """
-
-        operand = items[0]
-
-        return UnaryOp("-", operand)
-
-
-    def not_expr(self, items):
-        """
-        Boolean negation.
-
-        Example:
-
-            not ready
-
-        Conceptual AST:
-
-            UnaryOp("not", Var("ready"))
-        """
-
-        operand = items[0]
-
-        return UnaryOp("not", operand)
-
-
-    # ========================================================
-    # BINARY-EXPRESSION HELPER
-    # ========================================================
-
-    def _fold_binary(self, items):
-        """
-        Convert a sequence such as:
-
-            left operator right operator right ...
-
-        into nested BinOp AST nodes.
-
-        Example source:
-
-            2 + 3 + 4
-
-        Conceptually becomes:
-
-            BinOp(
-                "+",
-                BinOp(
-                    "+",
-                    Number(2),
-                    Number(3)
-                ),
-                Number(4)
-            )
-
-        This produces left-associative structure.
-        """
-
-        if len(items) == 1:
-            return items[0]
-
-        left = items[0]
-
-        index = 1
-
-        while index < len(items):
-
-            operator = str(items[index])
-            right = items[index + 1]
-
-            left = BinOp(
-                operator,
-                left,
-                right
-            )
-
-            index += 2
-
-        return left
-
-
-    # ========================================================
-    # ARITHMETIC EXPRESSIONS
-    # ========================================================
-
-    def sum(self, items):
-        """
-        Handle addition and subtraction.
-
-        Example grammar:
-
-            ?sum: product (ADDOP product)*
-
-        Example:
-
-            x + 5 - 2
-        """
-
-        return self._fold_binary(items)
-
-
-    def product(self, items):
-        """
-        Handle multiplication, division, and remainder.
-
-        Example grammar:
-
-            ?product: unary (MULOP unary)*
-
-        Example:
-
-            x * 5 / 2
-        """
-
-        return self._fold_binary(items)
-
-
-    # ========================================================
-    # COMPARISON EXPRESSIONS
-    # ========================================================
-
-    def comparison(self, items):
-        """
-        Handle comparison operators.
-
-        Example grammar:
-
-            ?comparison: sum (COMPOP sum)?
-
-        Examples:
-
-            score > 60
-
-            x == y
-
-            count <= 10
-        """
-
-        if len(items) == 1:
-            return items[0]
-
-        left = items[0]
-        operator = str(items[1])
-        right = items[2]
-
-        return BinOp(
-            operator,
-            left,
-            right
-        )
-
-
-    # ========================================================
-    # BOOLEAN EXPRESSIONS
-    # ========================================================
-
-    def and_expr(self, items):
-        """
-        Handle Boolean AND expressions.
-
-        Example:
-
-            ready and active
-        """
-
-        if len(items) == 1:
-            return items[0]
-
-        left = items[0]
-
-        for right in items[1:]:
-
-            left = BinOp(
-                "and",
-                left,
-                right
-            )
-
-        return left
-
-
-    def or_expr(self, items):
-        """
-        Handle Boolean OR expressions.
-
-        Example:
-
-            ready or active
-        """
-
-        if len(items) == 1:
-            return items[0]
-
-        left = items[0]
-
-        for right in items[1:]:
-
-            left = BinOp(
-                "or",
-                left,
-                right
-            )
-
-        return left
-
-
-    # ========================================================
-    # VARIABLE DECLARATION
-    # ========================================================
-
-    def declaration(self, items):
-        """
-        Convert a declaration into a Declaration AST node.
-
-        Example source:
-
-            let score = 80;
-
-        Conceptual AST:
-
-            Declaration(
-                "score",
-                Number(80)
-            )
-        """
-
-        name = str(items[0])
-        expression = items[1]
-
-        return Declaration(
-            name,
-            expression
-        )
-
-
-    # ========================================================
-    # ASSIGNMENT
-    # ========================================================
-
-    def assignment(self, items):
-        """
-        Convert an assignment into an Assignment AST node.
-
-        Example:
-
-            score = score + 5;
-        """
-
-        name = str(items[0])
-        expression = items[1]
-
-        return Assignment(
-            name,
-            expression
-        )
-
-
-    # ========================================================
-    # OUTPUT / SHOW STATEMENT
-    # ========================================================
-
-    def show_stmt(self, items):
-        """
-        Convert the TinyLang output statement.
-
-        Instructor example:
-
-            show score;
-
-        Conceptual AST:
-
-            Show(
-                Var("score")
-            )
-
-        STUDENTS:
-        Your language does not have to use the keyword "show".
-        Use the output syntax defined for YOUR TinyLang.
-        """
-
-        expression = items[0]
-
-        return Show(expression)
-
-
-    # ========================================================
-    # BLOCK
-    # ========================================================
-
-    def block(self, items):
-        """
-        Convert a sequence of statements surrounded by
-        block delimiters into a Block AST node.
-
-        Instructor example:
-
-            {
-                show x;
-                x = x + 1;
-            }
-
-        Conceptual AST:
-
-            Block([
-                Show(...),
-                Assignment(...)
-            ])
-        """
-
-        return Block(list(items))
-
-
-    # ========================================================
-    # IF STATEMENT
-    # ========================================================
-
-    def if_stmt(self, items):
-        """
-        Convert an if/else statement into an If AST node.
-
-        Instructor example:
-
-            if (score >= 60) {
-                show score;
-            }
-            else {
-                show 0;
-            }
-
-        Expected transformed items:
-
-            condition
-            then_block
-            optional else_block
-        """
-
-        condition = items[0]
-        then_block = items[1]
-
-        else_block = None
-
-        if len(items) > 2:
-            else_block = items[2]
-
-        return If(
-            condition,
-            then_block,
-            else_block
-        )
-
-
-    # ========================================================
-    # WHILE STATEMENT
-    # ========================================================
-
-    def while_stmt(self, items):
-        """
-        Convert a while statement into a While AST node.
-
-        Instructor example:
-
-            while (score < 100) {
-                score = score + 1;
-            }
-        """
-
-        condition = items[0]
-        body = items[1]
-
-        return While(
-            condition,
-            body
-        )
-
+from ESLTranslator import ESLTransformer
 
 # ============================================================
 # 4. CREATE TRANSFORMER
 # ============================================================
 
-transformer = ToAST()
+transformer = ESLTransformer()
 
 
 # ============================================================
@@ -720,72 +213,70 @@ def check_syntax(source):
 
         return False
 
+from utilities import pretty_ast
 
 # ============================================================
 # 9. DEMONSTRATION / DEVELOPMENT DRIVER
 # ============================================================
 
+def demo_driver(parser: None, AST_transformer: Transformer, positives: list[str], negatives: list[str], splitter: str):
+
+    # generate the test blocks
+    positive_blocks: list[tuple[str, bool]]
+    negative_blocks: list[tuple[str, bool]]
+
+
+
+    for path in positives:
+        with open(path, "r") as source_file:
+            source = source_file.read()
+            blocks = source.split(splitter)
+            positive_blocks = [[block, True] for block in blocks]
+
+    for path in negatives:
+        with open(path, "r") as source_file:
+            source = source_file.read()
+            blocks = source.split(splitter)
+            negative_blocks = [[block, False] for block in blocks]
+
+    # merge them
+    all_blocks = positive_blocks + negative_blocks
+
+    for block, expects_pass in all_blocks:
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        print("======================== CODE BLOCK ========================")
+        print(block)
+
+        print("======================== TOKENS ========================")
+
+        for token in parser.lex(block):
+            print(f"{token.type:<18} {token.value!r} line={token.line} col={token.column}")
+
+        try:
+            parse_tree = parser.parse(block)
+            print("======================== PARSE TREE ========================")
+
+
+            print(parse_tree.pretty())
+
+            print("======================== AST ========================")
+
+            tree = AST_transformer.transform(parse_tree)
+            print(pretty_ast(tree))
+            
+            # it needs to pass, so it better pass
+            print("======================== STATUS ========================")
+            print("PASSED!!!" if expects_pass else "FAILED!!!")
+            print(f"expected: {expects_pass}; actual: True")
+
+        except UnexpectedInput as e:
+            print(None)
+            print("======================== STATUS ========================")
+            print("PASSED!!!" if not expects_pass else "FAILED!!!")
+            print(f"expected: {expects_pass}; actual: False\n\nError:\n")
+            print(e)
+        except VisitError as e:
+            print(e)
+
 if __name__ == "__main__":
-
-    print("=" * 60)
-    print("TinyLang Frontend Test")
-    print("=" * 60)
-
-    # --------------------------------------------------------
-    # STUDENTS:
-    #
-    # Replace these instructor examples with programs written
-    # using YOUR TinyLang syntax.
-    # --------------------------------------------------------
-
-    sample_program = """
-    let score = 80;
-    let bonus = 5;
-
-    show score + bonus * 2;
-
-    if (score >= 60) {
-        show 1;
-    }
-    else {
-        show 0;
-    }
-    """
-
-    print("\nSOURCE PROGRAM")
-    print("-" * 60)
-    print(sample_program)
-
-
-    # --------------------------------------------------------
-    # PARSE TREE
-    # --------------------------------------------------------
-
-    try:
-
-        tree = parse_tree(sample_program)
-
-        print("\nPARSE TREE")
-        print("-" * 60)
-
-        print(tree.pretty())
-
-
-        # ----------------------------------------------------
-        # AST
-        # ----------------------------------------------------
-
-        ast = transformer.transform(tree)
-
-        print("\nAST")
-        print("-" * 60)
-
-        print(ast)
-
-
-    except UnexpectedInput as error:
-
-        print("\nSYNTAX ERROR")
-        print("-" * 60)
-
-        print(error)
+    demo_driver(parser, transformer, POSITIVES, NEGATIVES, SPLITTER)

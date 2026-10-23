@@ -1,0 +1,3491 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+// global
+static inline const f32& someGlobalRef;
+static inline const f32[16] someGlobalArray;
+
+======================== TOKENS ========================
+STATIC             'static' line=2 col=1
+INLINE             'inline' line=2 col=8
+CONST              'const' line=2 col=15
+NAME               'f32' line=2 col=21
+AMPERSAND          '&' line=2 col=24
+NAME               'someGlobalRef' line=2 col=26
+SEMICOLON          ';' line=2 col=39
+STATIC             'static' line=3 col=1
+INLINE             'inline' line=3 col=8
+CONST              'const' line=3 col=15
+NAME               'f32' line=3 col=21
+LSQB               '[' line=3 col=24
+DECIMAL_INT        '16' line=3 col=25
+RSQB               ']' line=3 col=27
+NAME               'someGlobalArray' line=3 col=29
+SEMICOLON          ';' line=3 col=44
+======================== PARSE TREE ========================
+start
+  entry
+    declaration
+      qualified_type
+        type_qualifier
+          static
+        type_qualifier
+          inline
+        type_qualifier
+          const
+        typename	f32
+        type_suffix
+          reference
+      identifier	someGlobalRef
+      None
+  entry
+    declaration
+      qualified_type
+        type_qualifier
+          static
+        type_qualifier
+          inline
+        type_qualifier
+          const
+        typename	f32
+        type_suffix
+          array_size	16
+      identifier	someGlobalArray
+      None
+
+======================== AST ========================
+Program
+└─ entries: list
+   ├─ [0]: Declaration
+   │  ├─ type: Type
+   │  │  ├─ type_id: 'f32'
+   │  │  ├─ inline: True
+   │  │  ├─ static: True
+   │  │  ├─ mut: False
+   │  │  ├─ const: True
+   │  │  └─ suffix: ReferenceFlag (empty)
+   │  ├─ id: Identifier
+   │  │  └─ name: 'someGlobalRef'
+   │  └─ initializer: None
+   └─ [1]: Declaration
+      ├─ type: Type
+      │  ├─ type_id: 'f32'
+      │  ├─ inline: True
+      │  ├─ static: True
+      │  ├─ mut: False
+      │  ├─ const: True
+      │  └─ suffix: ArraySpan
+      │     └─ size: 16
+      ├─ id: Identifier
+      │  └─ name: 'someGlobalArray'
+      └─ initializer: None
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// initialized structure
+struct Vec3 {
+    f32 x = 0.0;
+    f32 y = 0.0;
+    f32 z = 0.0;
+};
+
+======================== TOKENS ========================
+STRUCT             'struct' line=4 col=1
+NAME               'Vec3' line=4 col=8
+LBRACE             '{' line=4 col=13
+NAME               'f32' line=5 col=5
+NAME               'x' line=5 col=9
+EQUAL              '=' line=5 col=11
+DECIMAL_FLOAT      '0.0' line=5 col=13
+SEMICOLON          ';' line=5 col=16
+NAME               'f32' line=6 col=5
+NAME               'y' line=6 col=9
+EQUAL              '=' line=6 col=11
+DECIMAL_FLOAT      '0.0' line=6 col=13
+SEMICOLON          ';' line=6 col=16
+NAME               'f32' line=7 col=5
+NAME               'z' line=7 col=9
+EQUAL              '=' line=7 col=11
+DECIMAL_FLOAT      '0.0' line=7 col=13
+SEMICOLON          ';' line=7 col=16
+RBRACE             '}' line=8 col=1
+SEMICOLON          ';' line=8 col=2
+======================== PARSE TREE ========================
+start
+  entry
+    struct_definition
+      None
+      None
+      struct_name	Vec3
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	x
+        initializer
+          literal
+            number_literal	0.0
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	y
+        initializer
+          literal
+            number_literal	0.0
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	z
+        initializer
+          literal
+            number_literal	0.0
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: StructDefinition
+      ├─ name: Identifier
+      │  └─ name: 'Vec3'
+      ├─ members: list
+      │  ├─ [0]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'f32'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'x'
+      │  │  └─ initializer: Initializer
+      │  │     └─ expression: Literal
+      │  │        └─ value: 0.0
+      │  ├─ [1]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'f32'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'y'
+      │  │  └─ initializer: Initializer
+      │  │     └─ expression: Literal
+      │  │        └─ value: 0.0
+      │  └─ [2]: StructMember
+      │     ├─ type: Type
+      │     │  ├─ type_id: 'f32'
+      │     │  ├─ inline: False
+      │     │  ├─ static: False
+      │     │  ├─ mut: False
+      │     │  ├─ const: False
+      │     │  └─ suffix: None
+      │     ├─ id: Identifier
+      │     │  └─ name: 'z'
+      │     └─ initializer: Initializer
+      │        └─ expression: Literal
+      │           └─ value: 0.0
+      ├─ virtual: False
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// quaternion type, no initializer
+struct Quat {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+};
+
+======================== TOKENS ========================
+STRUCT             'struct' line=3 col=1
+NAME               'Quat' line=3 col=8
+LBRACE             '{' line=3 col=13
+NAME               'f32' line=4 col=5
+NAME               'x' line=4 col=9
+SEMICOLON          ';' line=4 col=10
+NAME               'f32' line=5 col=5
+NAME               'y' line=5 col=9
+SEMICOLON          ';' line=5 col=10
+NAME               'f32' line=6 col=5
+NAME               'z' line=6 col=9
+SEMICOLON          ';' line=6 col=10
+NAME               'f32' line=7 col=5
+NAME               'w' line=7 col=9
+SEMICOLON          ';' line=7 col=10
+RBRACE             '}' line=8 col=1
+SEMICOLON          ';' line=8 col=2
+======================== PARSE TREE ========================
+start
+  entry
+    struct_definition
+      None
+      None
+      struct_name	Quat
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	x
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	y
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	z
+      struct_member
+        qualified_type
+          typename	f32
+          None
+        identifier	w
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: StructDefinition
+      ├─ name: Identifier
+      │  └─ name: 'Quat'
+      ├─ members: list
+      │  ├─ [0]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'f32'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'x'
+      │  │  └─ initializer: None
+      │  ├─ [1]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'f32'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'y'
+      │  │  └─ initializer: None
+      │  ├─ [2]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'f32'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'z'
+      │  │  └─ initializer: None
+      │  └─ [3]: StructMember
+      │     ├─ type: Type
+      │     │  ├─ type_id: 'f32'
+      │     │  ├─ inline: False
+      │     │  ├─ static: False
+      │     │  ├─ mut: False
+      │     │  ├─ const: False
+      │     │  └─ suffix: None
+      │     ├─ id: Identifier
+      │     │  └─ name: 'w'
+      │     └─ initializer: None
+      ├─ virtual: False
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// transform type
+struct Transform {
+    Vec3 position;
+    Quat rotation;
+    Vec3 scale;
+};
+
+======================== TOKENS ========================
+STRUCT             'struct' line=3 col=1
+NAME               'Transform' line=3 col=8
+LBRACE             '{' line=3 col=18
+NAME               'Vec3' line=4 col=5
+NAME               'position' line=4 col=10
+SEMICOLON          ';' line=4 col=18
+NAME               'Quat' line=5 col=5
+NAME               'rotation' line=5 col=10
+SEMICOLON          ';' line=5 col=18
+NAME               'Vec3' line=6 col=5
+NAME               'scale' line=6 col=10
+SEMICOLON          ';' line=6 col=15
+RBRACE             '}' line=7 col=1
+SEMICOLON          ';' line=7 col=2
+======================== PARSE TREE ========================
+start
+  entry
+    struct_definition
+      None
+      None
+      struct_name	Transform
+      struct_member
+        qualified_type
+          typename	Vec3
+          None
+        identifier	position
+      struct_member
+        qualified_type
+          typename	Quat
+          None
+        identifier	rotation
+      struct_member
+        qualified_type
+          typename	Vec3
+          None
+        identifier	scale
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: StructDefinition
+      ├─ name: Identifier
+      │  └─ name: 'Transform'
+      ├─ members: list
+      │  ├─ [0]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'Vec3'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'position'
+      │  │  └─ initializer: None
+      │  ├─ [1]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'Quat'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'rotation'
+      │  │  └─ initializer: None
+      │  └─ [2]: StructMember
+      │     ├─ type: Type
+      │     │  ├─ type_id: 'Vec3'
+      │     │  ├─ inline: False
+      │     │  ├─ static: False
+      │     │  ├─ mut: False
+      │     │  ├─ const: False
+      │     │  └─ suffix: None
+      │     ├─ id: Identifier
+      │     │  └─ name: 'scale'
+      │     └─ initializer: None
+      ├─ virtual: False
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// virtual structure
+virtual struct Person_vstruct {
+    // captures arrays
+    char[256] name;
+    i8 age;
+    f64 net_worth;
+};
+
+======================== TOKENS ========================
+VIRTUAL            'virtual' line=3 col=1
+STRUCT             'struct' line=3 col=9
+NAME               'Person_vstruct' line=3 col=16
+LBRACE             '{' line=3 col=31
+NAME               'char' line=5 col=5
+LSQB               '[' line=5 col=9
+DECIMAL_INT        '256' line=5 col=10
+RSQB               ']' line=5 col=13
+NAME               'name' line=5 col=15
+SEMICOLON          ';' line=5 col=19
+NAME               'i8' line=6 col=5
+NAME               'age' line=6 col=8
+SEMICOLON          ';' line=6 col=11
+NAME               'f64' line=7 col=5
+NAME               'net_worth' line=7 col=9
+SEMICOLON          ';' line=7 col=18
+RBRACE             '}' line=8 col=1
+SEMICOLON          ';' line=8 col=2
+======================== PARSE TREE ========================
+start
+  entry
+    struct_definition
+      None
+      virtual_tag
+      struct_name	Person_vstruct
+      struct_member
+        qualified_type
+          typename	char
+          type_suffix
+            array_size	256
+        identifier	name
+      struct_member
+        qualified_type
+          typename	i8
+          None
+        identifier	age
+      struct_member
+        qualified_type
+          typename	f64
+          None
+        identifier	net_worth
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: StructDefinition
+      ├─ name: Identifier
+      │  └─ name: 'Person_vstruct'
+      ├─ members: list
+      │  ├─ [0]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'char'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: ArraySpan
+      │  │  │     └─ size: 256
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'name'
+      │  │  └─ initializer: None
+      │  ├─ [1]: StructMember
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'i8'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: False
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: None
+      │  │  ├─ id: Identifier
+      │  │  │  └─ name: 'age'
+      │  │  └─ initializer: None
+      │  └─ [2]: StructMember
+      │     ├─ type: Type
+      │     │  ├─ type_id: 'f64'
+      │     │  ├─ inline: False
+      │     │  ├─ static: False
+      │     │  ├─ mut: False
+      │     │  ├─ const: False
+      │     │  └─ suffix: None
+      │     ├─ id: Identifier
+      │     │  └─ name: 'net_worth'
+      │     └─ initializer: None
+      ├─ virtual: True
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// tests entry point decorator
+@entry
+void integrate(mut Transform& transform, const Velocity& velocity) {
+    transform = transform + velocity;
+}
+
+
+======================== TOKENS ========================
+AT                 '@' line=3 col=1
+NAME               'entry' line=3 col=2
+NAME               'void' line=4 col=1
+NAME               'integrate' line=4 col=6
+LPAR               '(' line=4 col=15
+MUT                'mut' line=4 col=16
+NAME               'Transform' line=4 col=20
+AMPERSAND          '&' line=4 col=29
+NAME               'transform' line=4 col=31
+COMMA              ',' line=4 col=40
+CONST              'const' line=4 col=42
+NAME               'Velocity' line=4 col=48
+AMPERSAND          '&' line=4 col=56
+NAME               'velocity' line=4 col=58
+RPAR               ')' line=4 col=66
+LBRACE             '{' line=4 col=68
+NAME               'transform' line=5 col=5
+EQUAL              '=' line=5 col=15
+NAME               'transform' line=5 col=17
+PLUS               '+' line=5 col=27
+NAME               'velocity' line=5 col=29
+SEMICOLON          ';' line=5 col=37
+RBRACE             '}' line=6 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      decorators
+        decorator
+          decorator_type	entry
+          None
+      qualified_type
+        typename	void
+        None
+      integrate
+      parameter_list
+        argument_declaration
+          qualified_type
+            type_qualifier
+              mut
+            typename	Transform
+            type_suffix
+              reference
+          transform
+        argument_declaration
+          qualified_type
+            type_qualifier
+              const
+            typename	Velocity
+            type_suffix
+              reference
+          velocity
+      block
+        statement
+          expression_statement
+            assign
+              var_ref	transform
+              assign_op	=
+              add
+                var_ref	transform
+                var_ref	velocity
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'integrate'
+      ├─ parameters: list
+      │  ├─ [0]: Parameter
+      │  │  ├─ type: Type
+      │  │  │  ├─ type_id: 'Transform'
+      │  │  │  ├─ inline: False
+      │  │  │  ├─ static: False
+      │  │  │  ├─ mut: True
+      │  │  │  ├─ const: False
+      │  │  │  └─ suffix: ReferenceFlag (empty)
+      │  │  └─ name: Identifier
+      │  │     └─ name: 'transform'
+      │  └─ [1]: Parameter
+      │     ├─ type: Type
+      │     │  ├─ type_id: 'Velocity'
+      │     │  ├─ inline: False
+      │     │  ├─ static: False
+      │     │  ├─ mut: False
+      │     │  ├─ const: True
+      │     │  └─ suffix: ReferenceFlag (empty)
+      │     └─ name: Identifier
+      │        └─ name: 'velocity'
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: ExpressionStatement
+      │        └─ expression: AssignExpression
+      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │           ├─ target: VarRef
+      │           │  └─ name: 'transform'
+      │           └─ value: BinaryExpression
+      │              ├─ operator: '+'
+      │              ├─ left: VarRef
+      │              │  └─ name: 'transform'
+      │              └─ right: VarRef
+      │                 └─ name: 'velocity'
+      └─ decorators: list
+         └─ [0]: Decorator
+            ├─ type: DecoratorType
+            │  └─ name: 'entry'
+            └─ args: None
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+@ParameterizedDecorator("test", 124)
+void foo() {
+    transform.pos.x = 0;
+}
+
+======================== TOKENS ========================
+AT                 '@' line=2 col=1
+NAME               'ParameterizedDecorator' line=2 col=2
+LPAR               '(' line=2 col=24
+STRING             '"test"' line=2 col=25
+COMMA              ',' line=2 col=31
+DECIMAL_INT        '124' line=2 col=33
+RPAR               ')' line=2 col=36
+NAME               'void' line=3 col=1
+NAME               'foo' line=3 col=6
+LPAR               '(' line=3 col=9
+RPAR               ')' line=3 col=10
+LBRACE             '{' line=3 col=12
+NAME               'transform' line=4 col=5
+DOT                '.' line=4 col=14
+NAME               'pos' line=4 col=15
+DOT                '.' line=4 col=18
+NAME               'x' line=4 col=19
+EQUAL              '=' line=4 col=21
+DECIMAL_INT        '0' line=4 col=23
+SEMICOLON          ';' line=4 col=24
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      decorators
+        decorator
+          decorator_type	ParameterizedDecorator
+          decorator_arguments
+            argument_list
+              literal
+                string_literal	"test"
+              literal
+                number_literal	124
+      qualified_type
+        typename	void
+        None
+      foo
+      None
+      block
+        statement
+          expression_statement
+            assign
+              member
+                member
+                  var_ref	transform
+                  pos
+                x
+              assign_op	=
+              literal
+                number_literal	0
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'foo'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: ExpressionStatement
+      │        └─ expression: AssignExpression
+      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │           ├─ target: MemberAccess
+      │           │  ├─ target: MemberAccess
+      │           │  │  ├─ target: VarRef
+      │           │  │  │  └─ name: 'transform'
+      │           │  │  └─ member: 'pos'
+      │           │  └─ member: 'x'
+      │           └─ value: Literal
+      │              └─ value: 0
+      └─ decorators: list
+         └─ [0]: Decorator
+            ├─ type: DecoratorType
+            │  └─ name: 'ParameterizedDecorator'
+            └─ args: ArgumentList
+               └─ args: list
+                  ├─ [0]: Literal
+                  │  └─ value: 'test'
+                  └─ [1]: Literal
+                     └─ value: 124
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+@export qsh
+void main() {
+    // if-else
+    if(i > 20) {
+        print("i is too big");
+    } else {
+        print("i is too small");
+    }
+}
+
+
+======================== TOKENS ========================
+AT                 '@' line=3 col=1
+NAME               'export' line=3 col=2
+NAME               'qsh' line=3 col=9
+NAME               'void' line=4 col=1
+NAME               'main' line=4 col=6
+LPAR               '(' line=4 col=10
+RPAR               ')' line=4 col=11
+LBRACE             '{' line=4 col=13
+IF                 'if' line=6 col=5
+LPAR               '(' line=6 col=7
+NAME               'i' line=6 col=8
+MORETHAN           '>' line=6 col=10
+DECIMAL_INT        '20' line=6 col=12
+RPAR               ')' line=6 col=14
+LBRACE             '{' line=6 col=16
+NAME               'print' line=7 col=9
+LPAR               '(' line=7 col=14
+STRING             '"i is too big"' line=7 col=15
+RPAR               ')' line=7 col=29
+SEMICOLON          ';' line=7 col=30
+RBRACE             '}' line=8 col=5
+ELSE               'else' line=8 col=7
+LBRACE             '{' line=8 col=12
+NAME               'print' line=9 col=9
+LPAR               '(' line=9 col=14
+STRING             '"i is too small"' line=9 col=15
+RPAR               ')' line=9 col=31
+SEMICOLON          ';' line=9 col=32
+RBRACE             '}' line=10 col=5
+RBRACE             '}' line=11 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      decorators
+        decorator
+          decorator_type	export
+          decorator_value	qsh
+      qualified_type
+        typename	void
+        None
+      main
+      None
+      block
+        statement
+          if_statement
+            greater
+              var_ref	i
+              literal
+                number_literal	20
+            block
+              statement
+                expression_statement
+                  call
+                    var_ref	print
+                    argument_list
+                      literal
+                        string_literal	"i is too big"
+            else_clause
+              block
+                statement
+                  expression_statement
+                    call
+                      var_ref	print
+                      argument_list
+                        literal
+                          string_literal	"i is too small"
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'main'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: IfStatement
+      │        ├─ condition: BinaryExpression
+      │        │  ├─ operator: '>'
+      │        │  ├─ left: VarRef
+      │        │  │  └─ name: 'i'
+      │        │  └─ right: Literal
+      │        │     └─ value: 20
+      │        ├─ then_block: StatementBlock
+      │        │  └─ statements: list
+      │        │     └─ [0]: ExpressionStatement
+      │        │        └─ expression: FuncCall
+      │        │           ├─ callee: VarRef
+      │        │           │  └─ name: 'print'
+      │        │           └─ args: ArgumentList
+      │        │              └─ args: list
+      │        │                 └─ [0]: Literal
+      │        │                    └─ value: 'i is too big'
+      │        └─ else_clause: ElseClause
+      │           └─ body: StatementBlock
+      │              └─ statements: list
+      │                 └─ [0]: ExpressionStatement
+      │                    └─ expression: FuncCall
+      │                       ├─ callee: VarRef
+      │                       │  └─ name: 'print'
+      │                       └─ args: ArgumentList
+      │                          └─ args: list
+      │                             └─ [0]: Literal
+      │                                └─ value: 'i is too small'
+      └─ decorators: list
+         └─ [0]: Decorator
+            ├─ type: DecoratorType
+            │  └─ name: 'export'
+            └─ args: DecoratorValue
+               └─ value: 'qsh'
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+
+// if without else
+void if_only() {
+    int score = 80;
+    if (score >= 60) {
+        print(1);
+    }
+}
+
+======================== TOKENS ========================
+NAME               'void' line=5 col=1
+NAME               'if_only' line=5 col=6
+LPAR               '(' line=5 col=13
+RPAR               ')' line=5 col=14
+LBRACE             '{' line=5 col=16
+NAME               'int' line=6 col=5
+NAME               'score' line=6 col=9
+EQUAL              '=' line=6 col=15
+DECIMAL_INT        '80' line=6 col=17
+SEMICOLON          ';' line=6 col=19
+IF                 'if' line=7 col=5
+LPAR               '(' line=7 col=8
+NAME               'score' line=7 col=9
+__ANON_5           '>=' line=7 col=15
+DECIMAL_INT        '60' line=7 col=18
+RPAR               ')' line=7 col=20
+LBRACE             '{' line=7 col=22
+NAME               'print' line=8 col=9
+LPAR               '(' line=8 col=14
+DECIMAL_INT        '1' line=8 col=15
+RPAR               ')' line=8 col=16
+SEMICOLON          ';' line=8 col=17
+RBRACE             '}' line=9 col=5
+RBRACE             '}' line=10 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      if_only
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	int
+              None
+            identifier	score
+            initializer
+              literal
+                number_literal	80
+        statement
+          if_statement
+            greater_equal
+              var_ref	score
+              literal
+                number_literal	60
+            block
+              statement
+                expression_statement
+                  call
+                    var_ref	print
+                    argument_list
+                      literal
+                        number_literal	1
+            None
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'if_only'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: Declaration
+      │     │  ├─ type: Type
+      │     │  │  ├─ type_id: 'int'
+      │     │  │  ├─ inline: False
+      │     │  │  ├─ static: False
+      │     │  │  ├─ mut: False
+      │     │  │  ├─ const: False
+      │     │  │  └─ suffix: None
+      │     │  ├─ id: Identifier
+      │     │  │  └─ name: 'score'
+      │     │  └─ initializer: Initializer
+      │     │     └─ expression: Literal
+      │     │        └─ value: 80
+      │     └─ [1]: IfStatement
+      │        ├─ condition: BinaryExpression
+      │        │  ├─ operator: '>='
+      │        │  ├─ left: VarRef
+      │        │  │  └─ name: 'score'
+      │        │  └─ right: Literal
+      │        │     └─ value: 60
+      │        ├─ then_block: StatementBlock
+      │        │  └─ statements: list
+      │        │     └─ [0]: ExpressionStatement
+      │        │        └─ expression: FuncCall
+      │        │           ├─ callee: VarRef
+      │        │           │  └─ name: 'print'
+      │        │           └─ args: ArgumentList
+      │        │              └─ args: list
+      │        │                 └─ [0]: Literal
+      │        │                    └─ value: 1
+      │        └─ else_clause: None
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// if / else
+void if_else() {
+    int score = 80;
+    if (score >= 60) {
+        print(1);
+    } else {
+        print(0);
+    }
+}
+
+======================== TOKENS ========================
+NAME               'void' line=3 col=1
+NAME               'if_else' line=3 col=6
+LPAR               '(' line=3 col=13
+RPAR               ')' line=3 col=14
+LBRACE             '{' line=3 col=16
+NAME               'int' line=4 col=5
+NAME               'score' line=4 col=9
+EQUAL              '=' line=4 col=15
+DECIMAL_INT        '80' line=4 col=17
+SEMICOLON          ';' line=4 col=19
+IF                 'if' line=5 col=5
+LPAR               '(' line=5 col=8
+NAME               'score' line=5 col=9
+__ANON_5           '>=' line=5 col=15
+DECIMAL_INT        '60' line=5 col=18
+RPAR               ')' line=5 col=20
+LBRACE             '{' line=5 col=22
+NAME               'print' line=6 col=9
+LPAR               '(' line=6 col=14
+DECIMAL_INT        '1' line=6 col=15
+RPAR               ')' line=6 col=16
+SEMICOLON          ';' line=6 col=17
+RBRACE             '}' line=7 col=5
+ELSE               'else' line=7 col=7
+LBRACE             '{' line=7 col=12
+NAME               'print' line=8 col=9
+LPAR               '(' line=8 col=14
+DECIMAL_INT        '0' line=8 col=15
+RPAR               ')' line=8 col=16
+SEMICOLON          ';' line=8 col=17
+RBRACE             '}' line=9 col=5
+RBRACE             '}' line=10 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      if_else
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	int
+              None
+            identifier	score
+            initializer
+              literal
+                number_literal	80
+        statement
+          if_statement
+            greater_equal
+              var_ref	score
+              literal
+                number_literal	60
+            block
+              statement
+                expression_statement
+                  call
+                    var_ref	print
+                    argument_list
+                      literal
+                        number_literal	1
+            else_clause
+              block
+                statement
+                  expression_statement
+                    call
+                      var_ref	print
+                      argument_list
+                        literal
+                          number_literal	0
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'if_else'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: Declaration
+      │     │  ├─ type: Type
+      │     │  │  ├─ type_id: 'int'
+      │     │  │  ├─ inline: False
+      │     │  │  ├─ static: False
+      │     │  │  ├─ mut: False
+      │     │  │  ├─ const: False
+      │     │  │  └─ suffix: None
+      │     │  ├─ id: Identifier
+      │     │  │  └─ name: 'score'
+      │     │  └─ initializer: Initializer
+      │     │     └─ expression: Literal
+      │     │        └─ value: 80
+      │     └─ [1]: IfStatement
+      │        ├─ condition: BinaryExpression
+      │        │  ├─ operator: '>='
+      │        │  ├─ left: VarRef
+      │        │  │  └─ name: 'score'
+      │        │  └─ right: Literal
+      │        │     └─ value: 60
+      │        ├─ then_block: StatementBlock
+      │        │  └─ statements: list
+      │        │     └─ [0]: ExpressionStatement
+      │        │        └─ expression: FuncCall
+      │        │           ├─ callee: VarRef
+      │        │           │  └─ name: 'print'
+      │        │           └─ args: ArgumentList
+      │        │              └─ args: list
+      │        │                 └─ [0]: Literal
+      │        │                    └─ value: 1
+      │        └─ else_clause: ElseClause
+      │           └─ body: StatementBlock
+      │              └─ statements: list
+      │                 └─ [0]: ExpressionStatement
+      │                    └─ expression: FuncCall
+      │                       ├─ callee: VarRef
+      │                       │  └─ name: 'print'
+      │                       └─ args: ArgumentList
+      │                          └─ args: list
+      │                             └─ [0]: Literal
+      │                                └─ value: 0
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// else-if chain
+void else_if_chain() {
+    int score = 80;
+    if (score >= 90) {
+        print(3);
+    } else if (score >= 60) {
+        print(2);
+    } else {
+        print(1);
+    }
+}
+
+======================== TOKENS ========================
+NAME               'void' line=3 col=1
+NAME               'else_if_chain' line=3 col=6
+LPAR               '(' line=3 col=19
+RPAR               ')' line=3 col=20
+LBRACE             '{' line=3 col=22
+NAME               'int' line=4 col=5
+NAME               'score' line=4 col=9
+EQUAL              '=' line=4 col=15
+DECIMAL_INT        '80' line=4 col=17
+SEMICOLON          ';' line=4 col=19
+IF                 'if' line=5 col=5
+LPAR               '(' line=5 col=8
+NAME               'score' line=5 col=9
+__ANON_5           '>=' line=5 col=15
+DECIMAL_INT        '90' line=5 col=18
+RPAR               ')' line=5 col=20
+LBRACE             '{' line=5 col=22
+NAME               'print' line=6 col=9
+LPAR               '(' line=6 col=14
+DECIMAL_INT        '3' line=6 col=15
+RPAR               ')' line=6 col=16
+SEMICOLON          ';' line=6 col=17
+RBRACE             '}' line=7 col=5
+ELSE               'else' line=7 col=7
+IF                 'if' line=7 col=12
+LPAR               '(' line=7 col=15
+NAME               'score' line=7 col=16
+__ANON_5           '>=' line=7 col=22
+DECIMAL_INT        '60' line=7 col=25
+RPAR               ')' line=7 col=27
+LBRACE             '{' line=7 col=29
+NAME               'print' line=8 col=9
+LPAR               '(' line=8 col=14
+DECIMAL_INT        '2' line=8 col=15
+RPAR               ')' line=8 col=16
+SEMICOLON          ';' line=8 col=17
+RBRACE             '}' line=9 col=5
+ELSE               'else' line=9 col=7
+LBRACE             '{' line=9 col=12
+NAME               'print' line=10 col=9
+LPAR               '(' line=10 col=14
+DECIMAL_INT        '1' line=10 col=15
+RPAR               ')' line=10 col=16
+SEMICOLON          ';' line=10 col=17
+RBRACE             '}' line=11 col=5
+RBRACE             '}' line=12 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      else_if_chain
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	int
+              None
+            identifier	score
+            initializer
+              literal
+                number_literal	80
+        statement
+          if_statement
+            greater_equal
+              var_ref	score
+              literal
+                number_literal	90
+            block
+              statement
+                expression_statement
+                  call
+                    var_ref	print
+                    argument_list
+                      literal
+                        number_literal	3
+            else_clause
+              if_statement
+                greater_equal
+                  var_ref	score
+                  literal
+                    number_literal	60
+                block
+                  statement
+                    expression_statement
+                      call
+                        var_ref	print
+                        argument_list
+                          literal
+                            number_literal	2
+                else_clause
+                  block
+                    statement
+                      expression_statement
+                        call
+                          var_ref	print
+                          argument_list
+                            literal
+                              number_literal	1
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'else_if_chain'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: Declaration
+      │     │  ├─ type: Type
+      │     │  │  ├─ type_id: 'int'
+      │     │  │  ├─ inline: False
+      │     │  │  ├─ static: False
+      │     │  │  ├─ mut: False
+      │     │  │  ├─ const: False
+      │     │  │  └─ suffix: None
+      │     │  ├─ id: Identifier
+      │     │  │  └─ name: 'score'
+      │     │  └─ initializer: Initializer
+      │     │     └─ expression: Literal
+      │     │        └─ value: 80
+      │     └─ [1]: IfStatement
+      │        ├─ condition: BinaryExpression
+      │        │  ├─ operator: '>='
+      │        │  ├─ left: VarRef
+      │        │  │  └─ name: 'score'
+      │        │  └─ right: Literal
+      │        │     └─ value: 90
+      │        ├─ then_block: StatementBlock
+      │        │  └─ statements: list
+      │        │     └─ [0]: ExpressionStatement
+      │        │        └─ expression: FuncCall
+      │        │           ├─ callee: VarRef
+      │        │           │  └─ name: 'print'
+      │        │           └─ args: ArgumentList
+      │        │              └─ args: list
+      │        │                 └─ [0]: Literal
+      │        │                    └─ value: 3
+      │        └─ else_clause: ElseClause
+      │           └─ body: IfStatement
+      │              ├─ condition: BinaryExpression
+      │              │  ├─ operator: '>='
+      │              │  ├─ left: VarRef
+      │              │  │  └─ name: 'score'
+      │              │  └─ right: Literal
+      │              │     └─ value: 60
+      │              ├─ then_block: StatementBlock
+      │              │  └─ statements: list
+      │              │     └─ [0]: ExpressionStatement
+      │              │        └─ expression: FuncCall
+      │              │           ├─ callee: VarRef
+      │              │           │  └─ name: 'print'
+      │              │           └─ args: ArgumentList
+      │              │              └─ args: list
+      │              │                 └─ [0]: Literal
+      │              │                    └─ value: 2
+      │              └─ else_clause: ElseClause
+      │                 └─ body: StatementBlock
+      │                    └─ statements: list
+      │                       └─ [0]: ExpressionStatement
+      │                          └─ expression: FuncCall
+      │                             ├─ callee: VarRef
+      │                             │  └─ name: 'print'
+      │                             └─ args: ArgumentList
+      │                                └─ args: list
+      │                                   └─ [0]: Literal
+      │                                      └─ value: 1
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// while loop
+void while_loop() {
+    int score = 80;
+    while (score < 85) {
+        score = score + 1;
+    }
+    print(score);
+}
+
+======================== TOKENS ========================
+NAME               'void' line=3 col=1
+NAME               'while_loop' line=3 col=6
+LPAR               '(' line=3 col=16
+RPAR               ')' line=3 col=17
+LBRACE             '{' line=3 col=19
+NAME               'int' line=4 col=5
+NAME               'score' line=4 col=9
+EQUAL              '=' line=4 col=15
+DECIMAL_INT        '80' line=4 col=17
+SEMICOLON          ';' line=4 col=19
+WHILE              'while' line=5 col=5
+LPAR               '(' line=5 col=11
+NAME               'score' line=5 col=12
+LESSTHAN           '<' line=5 col=18
+DECIMAL_INT        '85' line=5 col=20
+RPAR               ')' line=5 col=22
+LBRACE             '{' line=5 col=24
+NAME               'score' line=6 col=9
+EQUAL              '=' line=6 col=15
+NAME               'score' line=6 col=17
+PLUS               '+' line=6 col=23
+DECIMAL_INT        '1' line=6 col=25
+SEMICOLON          ';' line=6 col=26
+RBRACE             '}' line=7 col=5
+NAME               'print' line=8 col=5
+LPAR               '(' line=8 col=10
+NAME               'score' line=8 col=11
+RPAR               ')' line=8 col=16
+SEMICOLON          ';' line=8 col=17
+RBRACE             '}' line=9 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      while_loop
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	int
+              None
+            identifier	score
+            initializer
+              literal
+                number_literal	80
+        statement
+          while_statement
+            less
+              var_ref	score
+              literal
+                number_literal	85
+            block
+              statement
+                expression_statement
+                  assign
+                    var_ref	score
+                    assign_op	=
+                    add
+                      var_ref	score
+                      literal
+                        number_literal	1
+        statement
+          expression_statement
+            call
+              var_ref	print
+              argument_list
+                var_ref	score
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'while_loop'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: Declaration
+      │     │  ├─ type: Type
+      │     │  │  ├─ type_id: 'int'
+      │     │  │  ├─ inline: False
+      │     │  │  ├─ static: False
+      │     │  │  ├─ mut: False
+      │     │  │  ├─ const: False
+      │     │  │  └─ suffix: None
+      │     │  ├─ id: Identifier
+      │     │  │  └─ name: 'score'
+      │     │  └─ initializer: Initializer
+      │     │     └─ expression: Literal
+      │     │        └─ value: 80
+      │     ├─ [1]: WhileStatement
+      │     │  ├─ condition: BinaryExpression
+      │     │  │  ├─ operator: '<'
+      │     │  │  ├─ left: VarRef
+      │     │  │  │  └─ name: 'score'
+      │     │  │  └─ right: Literal
+      │     │  │     └─ value: 85
+      │     │  └─ body: StatementBlock
+      │     │     └─ statements: list
+      │     │        └─ [0]: ExpressionStatement
+      │     │           └─ expression: AssignExpression
+      │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │     │              ├─ target: VarRef
+      │     │              │  └─ name: 'score'
+      │     │              └─ value: BinaryExpression
+      │     │                 ├─ operator: '+'
+      │     │                 ├─ left: VarRef
+      │     │                 │  └─ name: 'score'
+      │     │                 └─ right: Literal
+      │     │                    └─ value: 1
+      │     └─ [2]: ExpressionStatement
+      │        └─ expression: FuncCall
+      │           ├─ callee: VarRef
+      │           │  └─ name: 'print'
+      │           └─ args: ArgumentList
+      │              └─ args: list
+      │                 └─ [0]: VarRef
+      │                    └─ name: 'score'
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// for loop
+void for_loop() {
+    int total = 0;
+    for (i = 0; i < 10; i = i + 1) {
+        total = total + i;
+    }
+    print(total);
+}
+
+======================== TOKENS ========================
+NAME               'void' line=3 col=1
+NAME               'for_loop' line=3 col=6
+LPAR               '(' line=3 col=14
+RPAR               ')' line=3 col=15
+LBRACE             '{' line=3 col=17
+NAME               'int' line=4 col=5
+NAME               'total' line=4 col=9
+EQUAL              '=' line=4 col=15
+DECIMAL_INT        '0' line=4 col=17
+SEMICOLON          ';' line=4 col=18
+FOR                'for' line=5 col=5
+LPAR               '(' line=5 col=9
+NAME               'i' line=5 col=10
+EQUAL              '=' line=5 col=12
+DECIMAL_INT        '0' line=5 col=14
+SEMICOLON          ';' line=5 col=15
+NAME               'i' line=5 col=17
+LESSTHAN           '<' line=5 col=19
+DECIMAL_INT        '10' line=5 col=21
+SEMICOLON          ';' line=5 col=23
+NAME               'i' line=5 col=25
+EQUAL              '=' line=5 col=27
+NAME               'i' line=5 col=29
+PLUS               '+' line=5 col=31
+DECIMAL_INT        '1' line=5 col=33
+RPAR               ')' line=5 col=34
+LBRACE             '{' line=5 col=36
+NAME               'total' line=6 col=9
+EQUAL              '=' line=6 col=15
+NAME               'total' line=6 col=17
+PLUS               '+' line=6 col=23
+NAME               'i' line=6 col=25
+SEMICOLON          ';' line=6 col=26
+RBRACE             '}' line=7 col=5
+NAME               'print' line=8 col=5
+LPAR               '(' line=8 col=10
+NAME               'total' line=8 col=11
+RPAR               ')' line=8 col=16
+SEMICOLON          ';' line=8 col=17
+RBRACE             '}' line=9 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      for_loop
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	int
+              None
+            identifier	total
+            initializer
+              literal
+                number_literal	0
+        statement
+          for_statement
+            for_init
+              assign
+                var_ref	i
+                assign_op	=
+                literal
+                  number_literal	0
+            for_cond
+              less
+                var_ref	i
+                literal
+                  number_literal	10
+            for_step
+              assign
+                var_ref	i
+                assign_op	=
+                add
+                  var_ref	i
+                  literal
+                    number_literal	1
+            block
+              statement
+                expression_statement
+                  assign
+                    var_ref	total
+                    assign_op	=
+                    add
+                      var_ref	total
+                      var_ref	i
+        statement
+          expression_statement
+            call
+              var_ref	print
+              argument_list
+                var_ref	total
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'for_loop'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: Declaration
+      │     │  ├─ type: Type
+      │     │  │  ├─ type_id: 'int'
+      │     │  │  ├─ inline: False
+      │     │  │  ├─ static: False
+      │     │  │  ├─ mut: False
+      │     │  │  ├─ const: False
+      │     │  │  └─ suffix: None
+      │     │  ├─ id: Identifier
+      │     │  │  └─ name: 'total'
+      │     │  └─ initializer: Initializer
+      │     │     └─ expression: Literal
+      │     │        └─ value: 0
+      │     ├─ [1]: ForStatement
+      │     │  ├─ init: ForInitializer
+      │     │  │  └─ init: AssignExpression
+      │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │     │  │     ├─ target: VarRef
+      │     │  │     │  └─ name: 'i'
+      │     │  │     └─ value: Literal
+      │     │  │        └─ value: 0
+      │     │  ├─ condition: ForConditional
+      │     │  │  └─ cond: BinaryExpression
+      │     │  │     ├─ operator: '<'
+      │     │  │     ├─ left: VarRef
+      │     │  │     │  └─ name: 'i'
+      │     │  │     └─ right: Literal
+      │     │  │        └─ value: 10
+      │     │  ├─ step: ForStep
+      │     │  │  └─ step: AssignExpression
+      │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │     │  │     ├─ target: VarRef
+      │     │  │     │  └─ name: 'i'
+      │     │  │     └─ value: BinaryExpression
+      │     │  │        ├─ operator: '+'
+      │     │  │        ├─ left: VarRef
+      │     │  │        │  └─ name: 'i'
+      │     │  │        └─ right: Literal
+      │     │  │           └─ value: 1
+      │     │  └─ body: StatementBlock
+      │     │     └─ statements: list
+      │     │        └─ [0]: ExpressionStatement
+      │     │           └─ expression: AssignExpression
+      │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │     │              ├─ target: VarRef
+      │     │              │  └─ name: 'total'
+      │     │              └─ value: BinaryExpression
+      │     │                 ├─ operator: '+'
+      │     │                 ├─ left: VarRef
+      │     │                 │  └─ name: 'total'
+      │     │                 └─ right: VarRef
+      │     │                    └─ name: 'i'
+      │     └─ [2]: ExpressionStatement
+      │        └─ expression: FuncCall
+      │           ├─ callee: VarRef
+      │           │  └─ name: 'print'
+      │           └─ args: ArgumentList
+      │              └─ args: list
+      │                 └─ [0]: VarRef
+      │                    └─ name: 'total'
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// for with empty clauses
+void for_empty() {
+    for (;;) {
+        return;
+    }
+}
+
+======================== TOKENS ========================
+NAME               'void' line=3 col=1
+NAME               'for_empty' line=3 col=6
+LPAR               '(' line=3 col=15
+RPAR               ')' line=3 col=16
+LBRACE             '{' line=3 col=18
+FOR                'for' line=4 col=5
+LPAR               '(' line=4 col=9
+SEMICOLON          ';' line=4 col=10
+SEMICOLON          ';' line=4 col=11
+RPAR               ')' line=4 col=12
+LBRACE             '{' line=4 col=14
+RETURN             'return' line=5 col=9
+SEMICOLON          ';' line=5 col=15
+RBRACE             '}' line=6 col=5
+RBRACE             '}' line=7 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      for_empty
+      None
+      block
+        statement
+          for_statement
+            None
+            None
+            None
+            block
+              statement
+                return_statement
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'for_empty'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: ForStatement
+      │        ├─ init: None
+      │        ├─ condition: None
+      │        ├─ step: None
+      │        └─ body: StatementBlock
+      │           └─ statements: list
+      │              └─ [0]: ReturnStatement
+      │                 └─ value: None
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// nested: for containing while containing if
+void nested_loops() {
+    int j = 0;
+    for (i = 0; i < 3; i = i + 1) {
+        while (j < 3) {
+            if (j == 1) {
+                j = j + 2;
+            } else {
+                j = j + 1;
+            }
+        }
+    }
+}
+
+======================== TOKENS ========================
+NAME               'void' line=3 col=1
+NAME               'nested_loops' line=3 col=6
+LPAR               '(' line=3 col=18
+RPAR               ')' line=3 col=19
+LBRACE             '{' line=3 col=21
+NAME               'int' line=4 col=5
+NAME               'j' line=4 col=9
+EQUAL              '=' line=4 col=11
+DECIMAL_INT        '0' line=4 col=13
+SEMICOLON          ';' line=4 col=14
+FOR                'for' line=5 col=5
+LPAR               '(' line=5 col=9
+NAME               'i' line=5 col=10
+EQUAL              '=' line=5 col=12
+DECIMAL_INT        '0' line=5 col=14
+SEMICOLON          ';' line=5 col=15
+NAME               'i' line=5 col=17
+LESSTHAN           '<' line=5 col=19
+DECIMAL_INT        '3' line=5 col=21
+SEMICOLON          ';' line=5 col=22
+NAME               'i' line=5 col=24
+EQUAL              '=' line=5 col=26
+NAME               'i' line=5 col=28
+PLUS               '+' line=5 col=30
+DECIMAL_INT        '1' line=5 col=32
+RPAR               ')' line=5 col=33
+LBRACE             '{' line=5 col=35
+WHILE              'while' line=6 col=9
+LPAR               '(' line=6 col=15
+NAME               'j' line=6 col=16
+LESSTHAN           '<' line=6 col=18
+DECIMAL_INT        '3' line=6 col=20
+RPAR               ')' line=6 col=21
+LBRACE             '{' line=6 col=23
+IF                 'if' line=7 col=13
+LPAR               '(' line=7 col=16
+NAME               'j' line=7 col=17
+EQUAL              '=' line=7 col=19
+EQUAL              '=' line=7 col=20
+DECIMAL_INT        '1' line=7 col=22
+RPAR               ')' line=7 col=23
+LBRACE             '{' line=7 col=25
+NAME               'j' line=8 col=17
+EQUAL              '=' line=8 col=19
+NAME               'j' line=8 col=21
+PLUS               '+' line=8 col=23
+DECIMAL_INT        '2' line=8 col=25
+SEMICOLON          ';' line=8 col=26
+RBRACE             '}' line=9 col=13
+ELSE               'else' line=9 col=15
+LBRACE             '{' line=9 col=20
+NAME               'j' line=10 col=17
+EQUAL              '=' line=10 col=19
+NAME               'j' line=10 col=21
+PLUS               '+' line=10 col=23
+DECIMAL_INT        '1' line=10 col=25
+SEMICOLON          ';' line=10 col=26
+RBRACE             '}' line=11 col=13
+RBRACE             '}' line=12 col=9
+RBRACE             '}' line=13 col=5
+RBRACE             '}' line=14 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	void
+        None
+      nested_loops
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	int
+              None
+            identifier	j
+            initializer
+              literal
+                number_literal	0
+        statement
+          for_statement
+            for_init
+              assign
+                var_ref	i
+                assign_op	=
+                literal
+                  number_literal	0
+            for_cond
+              less
+                var_ref	i
+                literal
+                  number_literal	3
+            for_step
+              assign
+                var_ref	i
+                assign_op	=
+                add
+                  var_ref	i
+                  literal
+                    number_literal	1
+            block
+              statement
+                while_statement
+                  less
+                    var_ref	j
+                    literal
+                      number_literal	3
+                  block
+                    statement
+                      if_statement
+                        equal
+                          var_ref	j
+                          literal
+                            number_literal	1
+                        block
+                          statement
+                            expression_statement
+                              assign
+                                var_ref	j
+                                assign_op	=
+                                add
+                                  var_ref	j
+                                  literal
+                                    number_literal	2
+                        else_clause
+                          block
+                            statement
+                              expression_statement
+                                assign
+                                  var_ref	j
+                                  assign_op	=
+                                  add
+                                    var_ref	j
+                                    literal
+                                      number_literal	1
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'void'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'nested_loops'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: Declaration
+      │     │  ├─ type: Type
+      │     │  │  ├─ type_id: 'int'
+      │     │  │  ├─ inline: False
+      │     │  │  ├─ static: False
+      │     │  │  ├─ mut: False
+      │     │  │  ├─ const: False
+      │     │  │  └─ suffix: None
+      │     │  ├─ id: Identifier
+      │     │  │  └─ name: 'j'
+      │     │  └─ initializer: Initializer
+      │     │     └─ expression: Literal
+      │     │        └─ value: 0
+      │     └─ [1]: ForStatement
+      │        ├─ init: ForInitializer
+      │        │  └─ init: AssignExpression
+      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │        │     ├─ target: VarRef
+      │        │     │  └─ name: 'i'
+      │        │     └─ value: Literal
+      │        │        └─ value: 0
+      │        ├─ condition: ForConditional
+      │        │  └─ cond: BinaryExpression
+      │        │     ├─ operator: '<'
+      │        │     ├─ left: VarRef
+      │        │     │  └─ name: 'i'
+      │        │     └─ right: Literal
+      │        │        └─ value: 3
+      │        ├─ step: ForStep
+      │        │  └─ step: AssignExpression
+      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │        │     ├─ target: VarRef
+      │        │     │  └─ name: 'i'
+      │        │     └─ value: BinaryExpression
+      │        │        ├─ operator: '+'
+      │        │        ├─ left: VarRef
+      │        │        │  └─ name: 'i'
+      │        │        └─ right: Literal
+      │        │           └─ value: 1
+      │        └─ body: StatementBlock
+      │           └─ statements: list
+      │              └─ [0]: WhileStatement
+      │                 ├─ condition: BinaryExpression
+      │                 │  ├─ operator: '<'
+      │                 │  ├─ left: VarRef
+      │                 │  │  └─ name: 'j'
+      │                 │  └─ right: Literal
+      │                 │     └─ value: 3
+      │                 └─ body: StatementBlock
+      │                    └─ statements: list
+      │                       └─ [0]: IfStatement
+      │                          ├─ condition: BinaryExpression
+      │                          │  ├─ operator: '=='
+      │                          │  ├─ left: VarRef
+      │                          │  │  └─ name: 'j'
+      │                          │  └─ right: Literal
+      │                          │     └─ value: 1
+      │                          ├─ then_block: StatementBlock
+      │                          │  └─ statements: list
+      │                          │     └─ [0]: ExpressionStatement
+      │                          │        └─ expression: AssignExpression
+      │                          │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │                          │           ├─ target: VarRef
+      │                          │           │  └─ name: 'j'
+      │                          │           └─ value: BinaryExpression
+      │                          │              ├─ operator: '+'
+      │                          │              ├─ left: VarRef
+      │                          │              │  └─ name: 'j'
+      │                          │              └─ right: Literal
+      │                          │                 └─ value: 2
+      │                          └─ else_clause: ElseClause
+      │                             └─ body: StatementBlock
+      │                                └─ statements: list
+      │                                   └─ [0]: ExpressionStatement
+      │                                      └─ expression: AssignExpression
+      │                                         ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │                                         ├─ target: VarRef
+      │                                         │  └─ name: 'j'
+      │                                         └─ value: BinaryExpression
+      │                                            ├─ operator: '+'
+      │                                            ├─ left: VarRef
+      │                                            │  └─ name: 'j'
+      │                                            └─ right: Literal
+      │                                               └─ value: 1
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// return inside control flow
+int early_return(int x) {
+    if (x < 0) {
+        return 0;
+    }
+    while (x > 10) {
+        x = x - 1;
+    }
+    return x;
+}
+
+
+======================== TOKENS ========================
+NAME               'int' line=3 col=1
+NAME               'early_return' line=3 col=5
+LPAR               '(' line=3 col=17
+NAME               'int' line=3 col=18
+NAME               'x' line=3 col=22
+RPAR               ')' line=3 col=23
+LBRACE             '{' line=3 col=25
+IF                 'if' line=4 col=5
+LPAR               '(' line=4 col=8
+NAME               'x' line=4 col=9
+LESSTHAN           '<' line=4 col=11
+DECIMAL_INT        '0' line=4 col=13
+RPAR               ')' line=4 col=14
+LBRACE             '{' line=4 col=16
+RETURN             'return' line=5 col=9
+DECIMAL_INT        '0' line=5 col=16
+SEMICOLON          ';' line=5 col=17
+RBRACE             '}' line=6 col=5
+WHILE              'while' line=7 col=5
+LPAR               '(' line=7 col=11
+NAME               'x' line=7 col=12
+MORETHAN           '>' line=7 col=14
+DECIMAL_INT        '10' line=7 col=16
+RPAR               ')' line=7 col=18
+LBRACE             '{' line=7 col=20
+NAME               'x' line=8 col=9
+EQUAL              '=' line=8 col=11
+NAME               'x' line=8 col=13
+MINUS              '-' line=8 col=15
+DECIMAL_INT        '1' line=8 col=17
+SEMICOLON          ';' line=8 col=18
+RBRACE             '}' line=9 col=5
+RETURN             'return' line=10 col=5
+NAME               'x' line=10 col=12
+SEMICOLON          ';' line=10 col=13
+RBRACE             '}' line=11 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	int
+        None
+      early_return
+      parameter_list
+        argument_declaration
+          qualified_type
+            typename	int
+            None
+          x
+      block
+        statement
+          if_statement
+            less
+              var_ref	x
+              literal
+                number_literal	0
+            block
+              statement
+                return_statement
+                  literal
+                    number_literal	0
+            None
+        statement
+          while_statement
+            greater
+              var_ref	x
+              literal
+                number_literal	10
+            block
+              statement
+                expression_statement
+                  assign
+                    var_ref	x
+                    assign_op	=
+                    subtract
+                      var_ref	x
+                      literal
+                        number_literal	1
+        statement
+          return_statement
+            var_ref	x
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'int'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'early_return'
+      ├─ parameters: list
+      │  └─ [0]: Parameter
+      │     ├─ type: Type
+      │     │  ├─ type_id: 'int'
+      │     │  ├─ inline: False
+      │     │  ├─ static: False
+      │     │  ├─ mut: False
+      │     │  ├─ const: False
+      │     │  └─ suffix: None
+      │     └─ name: Identifier
+      │        └─ name: 'x'
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     ├─ [0]: IfStatement
+      │     │  ├─ condition: BinaryExpression
+      │     │  │  ├─ operator: '<'
+      │     │  │  ├─ left: VarRef
+      │     │  │  │  └─ name: 'x'
+      │     │  │  └─ right: Literal
+      │     │  │     └─ value: 0
+      │     │  ├─ then_block: StatementBlock
+      │     │  │  └─ statements: list
+      │     │  │     └─ [0]: ReturnStatement
+      │     │  │        └─ value: Literal
+      │     │  │           └─ value: 0
+      │     │  └─ else_clause: None
+      │     ├─ [1]: WhileStatement
+      │     │  ├─ condition: BinaryExpression
+      │     │  │  ├─ operator: '>'
+      │     │  │  ├─ left: VarRef
+      │     │  │  │  └─ name: 'x'
+      │     │  │  └─ right: Literal
+      │     │  │     └─ value: 10
+      │     │  └─ body: StatementBlock
+      │     │     └─ statements: list
+      │     │        └─ [0]: ExpressionStatement
+      │     │           └─ expression: AssignExpression
+      │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │     │              ├─ target: VarRef
+      │     │              │  └─ name: 'x'
+      │     │              └─ value: BinaryExpression
+      │     │                 ├─ operator: '-'
+      │     │                 ├─ left: VarRef
+      │     │                 │  └─ name: 'x'
+      │     │                 └─ right: Literal
+      │     │                    └─ value: 1
+      │     └─ [2]: ReturnStatement
+      │        └─ value: VarRef
+      │           └─ name: 'x'
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 member_assign() {
+    thing.member = 0;
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'member_assign' line=3 col=5
+LPAR               '(' line=3 col=18
+RPAR               ')' line=3 col=19
+LBRACE             '{' line=3 col=21
+NAME               'thing' line=4 col=5
+DOT                '.' line=4 col=10
+NAME               'member' line=4 col=11
+EQUAL              '=' line=4 col=18
+DECIMAL_INT        '0' line=4 col=20
+SEMICOLON          ';' line=4 col=21
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      member_assign
+      None
+      block
+        statement
+          expression_statement
+            assign
+              member
+                var_ref	thing
+                member
+              assign_op	=
+              literal
+                number_literal	0
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'i32'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'member_assign'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: ExpressionStatement
+      │        └─ expression: AssignExpression
+      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │           ├─ target: MemberAccess
+      │           │  ├─ target: VarRef
+      │           │  │  └─ name: 'thing'
+      │           │  └─ member: 'member'
+      │           └─ value: Literal
+      │              └─ value: 0
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 member_get() {
+    e = thing.member;
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'member_get' line=3 col=5
+LPAR               '(' line=3 col=15
+RPAR               ')' line=3 col=16
+LBRACE             '{' line=3 col=18
+NAME               'e' line=4 col=5
+EQUAL              '=' line=4 col=7
+NAME               'thing' line=4 col=9
+DOT                '.' line=4 col=14
+NAME               'member' line=4 col=15
+SEMICOLON          ';' line=4 col=21
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      member_get
+      None
+      block
+        statement
+          expression_statement
+            assign
+              var_ref	e
+              assign_op	=
+              member
+                var_ref	thing
+                member
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'i32'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'member_get'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: ExpressionStatement
+      │        └─ expression: AssignExpression
+      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │           ├─ target: VarRef
+      │           │  └─ name: 'e'
+      │           └─ value: MemberAccess
+      │              ├─ target: VarRef
+      │              │  └─ name: 'thing'
+      │              └─ member: 'member'
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 while_test() {
+
+    while(true) {
+        print("hello world");
+        break;
+        continue;
+    }
+
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'while_test' line=3 col=5
+LPAR               '(' line=3 col=15
+RPAR               ')' line=3 col=16
+LBRACE             '{' line=3 col=18
+WHILE              'while' line=5 col=5
+LPAR               '(' line=5 col=10
+NAME               'true' line=5 col=11
+RPAR               ')' line=5 col=15
+LBRACE             '{' line=5 col=17
+NAME               'print' line=6 col=9
+LPAR               '(' line=6 col=14
+STRING             '"hello world"' line=6 col=15
+RPAR               ')' line=6 col=28
+SEMICOLON          ';' line=6 col=29
+BREAK              'break' line=7 col=9
+SEMICOLON          ';' line=7 col=14
+CONTINUE           'continue' line=8 col=9
+SEMICOLON          ';' line=8 col=17
+RBRACE             '}' line=9 col=5
+RBRACE             '}' line=11 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      while_test
+      None
+      block
+        statement
+          while_statement
+            var_ref	true
+            block
+              statement
+                expression_statement
+                  call
+                    var_ref	print
+                    argument_list
+                      literal
+                        string_literal	"hello world"
+              statement
+                break_statement
+              statement
+                continue_statement
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'i32'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'while_test'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: WhileStatement
+      │        ├─ condition: VarRef
+      │        │  └─ name: 'true'
+      │        └─ body: StatementBlock
+      │           └─ statements: list
+      │              ├─ [0]: ExpressionStatement
+      │              │  └─ expression: FuncCall
+      │              │     ├─ callee: VarRef
+      │              │     │  └─ name: 'print'
+      │              │     └─ args: ArgumentList
+      │              │        └─ args: list
+      │              │           └─ [0]: Literal
+      │              │              └─ value: 'hello world'
+      │              ├─ [1]: BreakStatement (empty)
+      │              └─ [2]: ContinueStatement (empty)
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 for_test() {
+    for(i = 0; i < 32; i = i + 1) {
+        continue;
+        break;
+    }
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'for_test' line=3 col=5
+LPAR               '(' line=3 col=13
+RPAR               ')' line=3 col=14
+LBRACE             '{' line=3 col=16
+FOR                'for' line=4 col=5
+LPAR               '(' line=4 col=8
+NAME               'i' line=4 col=9
+EQUAL              '=' line=4 col=11
+DECIMAL_INT        '0' line=4 col=13
+SEMICOLON          ';' line=4 col=14
+NAME               'i' line=4 col=16
+LESSTHAN           '<' line=4 col=18
+DECIMAL_INT        '32' line=4 col=20
+SEMICOLON          ';' line=4 col=22
+NAME               'i' line=4 col=24
+EQUAL              '=' line=4 col=26
+NAME               'i' line=4 col=28
+PLUS               '+' line=4 col=30
+DECIMAL_INT        '1' line=4 col=32
+RPAR               ')' line=4 col=33
+LBRACE             '{' line=4 col=35
+CONTINUE           'continue' line=5 col=9
+SEMICOLON          ';' line=5 col=17
+BREAK              'break' line=6 col=9
+SEMICOLON          ';' line=6 col=14
+RBRACE             '}' line=7 col=5
+RBRACE             '}' line=8 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      for_test
+      None
+      block
+        statement
+          for_statement
+            for_init
+              assign
+                var_ref	i
+                assign_op	=
+                literal
+                  number_literal	0
+            for_cond
+              less
+                var_ref	i
+                literal
+                  number_literal	32
+            for_step
+              assign
+                var_ref	i
+                assign_op	=
+                add
+                  var_ref	i
+                  literal
+                    number_literal	1
+            block
+              statement
+                continue_statement
+              statement
+                break_statement
+
+======================== AST ========================
+Program
+└─ entries: list
+   └─ [0]: FunctionDefinition
+      ├─ return_type: Type
+      │  ├─ type_id: 'i32'
+      │  ├─ inline: False
+      │  ├─ static: False
+      │  ├─ mut: False
+      │  ├─ const: False
+      │  └─ suffix: None
+      ├─ name: Identifier
+      │  └─ name: 'for_test'
+      ├─ parameters: list (empty)
+      ├─ body: StatementBlock
+      │  └─ statements: list
+      │     └─ [0]: ForStatement
+      │        ├─ init: ForInitializer
+      │        │  └─ init: AssignExpression
+      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │        │     ├─ target: VarRef
+      │        │     │  └─ name: 'i'
+      │        │     └─ value: Literal
+      │        │        └─ value: 0
+      │        ├─ condition: ForConditional
+      │        │  └─ cond: BinaryExpression
+      │        │     ├─ operator: '<'
+      │        │     ├─ left: VarRef
+      │        │     │  └─ name: 'i'
+      │        │     └─ right: Literal
+      │        │        └─ value: 32
+      │        ├─ step: ForStep
+      │        │  └─ step: AssignExpression
+      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+      │        │     ├─ target: VarRef
+      │        │     │  └─ name: 'i'
+      │        │     └─ value: BinaryExpression
+      │        │        ├─ operator: '+'
+      │        │        ├─ left: VarRef
+      │        │        │  └─ name: 'i'
+      │        │        └─ right: Literal
+      │        │           └─ value: 1
+      │        └─ body: StatementBlock
+      │           └─ statements: list
+      │              ├─ [0]: ContinueStatement (empty)
+      │              └─ [1]: BreakStatement (empty)
+      └─ decorators: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// this fails - only declarations and definitions allowed
+struct NoStatementsInStruct {
+    print(43);
+};
+
+
+======================== TOKENS ========================
+STRUCT             'struct' line=4 col=1
+NAME               'NoStatementsInStruct' line=4 col=8
+LBRACE             '{' line=4 col=29
+NAME               'print' line=5 col=5
+LPAR               '(' line=5 col=10
+DECIMAL_INT        '43' line=5 col=11
+RPAR               ')' line=5 col=13
+SEMICOLON          ';' line=5 col=14
+RBRACE             '}' line=6 col=1
+SEMICOLON          ';' line=6 col=2
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '(' in the current parser context, at line 5 col 10
+
+    print(43);
+         ^
+Expected one of: 
+	* LSQB
+	* AMPERSAND
+	* NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// no Expressions in structures
+struct NoExpressionsInStructs {
+    32;
+};
+
+
+======================== TOKENS ========================
+STRUCT             'struct' line=3 col=1
+NAME               'NoExpressionsInStructs' line=3 col=8
+LBRACE             '{' line=3 col=31
+DECIMAL_INT        '32' line=4 col=5
+SEMICOLON          ';' line=4 col=7
+RBRACE             '}' line=5 col=1
+SEMICOLON          ';' line=5 col=2
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '3' in the current parser context, at line 4 col 5
+
+    32;
+    ^
+Expected one of: 
+	* CONST
+	* STATIC
+	* MUT
+	* RBRACE
+	* INLINE
+	* NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+//int incomplete_string_literal() {
+    //return ";
+//}
+
+
+
+
+// const & mut mutually exclusive
+static inline const mut i32 const_mut_together[32];
+
+
+======================== TOKENS ========================
+STATIC             'static' line=11 col=1
+INLINE             'inline' line=11 col=8
+CONST              'const' line=11 col=15
+MUT                'mut' line=11 col=21
+NAME               'i32' line=11 col=25
+NAME               'const_mut_together' line=11 col=29
+LSQB               '[' line=11 col=47
+DECIMAL_INT        '32' line=11 col=48
+RSQB               ']' line=11 col=50
+SEMICOLON          ';' line=11 col=51
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '[' in the current parser context, at line 11 col 47
+
+ inline const mut i32 const_mut_together[32];
+                                        ^
+Expected one of: 
+	* SEMICOLON
+	* LPAR
+	* EQUAL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+static inline f32[16]& illegalArrayRef;
+
+
+======================== TOKENS ========================
+STATIC             'static' line=3 col=1
+INLINE             'inline' line=3 col=8
+NAME               'f32' line=3 col=15
+LSQB               '[' line=3 col=18
+DECIMAL_INT        '16' line=3 col=19
+RSQB               ']' line=3 col=21
+AMPERSAND          '&' line=3 col=22
+NAME               'illegalArrayRef' line=3 col=24
+SEMICOLON          ';' line=3 col=39
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '&' in the current parser context, at line 3 col 22
+
+static inline f32[16]& illegalArrayRef;
+                     ^
+Expected one of: 
+	* NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+struct foo {
+    inline f32& illegalInlineInStruct;
+}
+
+
+
+
+======================== TOKENS ========================
+STRUCT             'struct' line=3 col=1
+NAME               'foo' line=3 col=8
+LBRACE             '{' line=3 col=12
+INLINE             'inline' line=4 col=5
+NAME               'f32' line=4 col=12
+AMPERSAND          '&' line=4 col=15
+NAME               'illegalInlineInStruct' line=4 col=17
+SEMICOLON          ';' line=4 col=38
+RBRACE             '}' line=5 col=1
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+Unexpected end-of-input. Expected one of: 
+	* SEMICOLON
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 foo() {
+    struct illegalNestedStruct {
+        i32 some_member;
+    };
+}
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'foo' line=3 col=5
+LPAR               '(' line=3 col=8
+RPAR               ')' line=3 col=9
+LBRACE             '{' line=3 col=11
+STRUCT             'struct' line=4 col=5
+NAME               'illegalNestedStruct' line=4 col=12
+LBRACE             '{' line=4 col=32
+NAME               'i32' line=5 col=9
+NAME               'some_member' line=5 col=13
+SEMICOLON          ';' line=5 col=24
+RBRACE             '}' line=6 col=5
+SEMICOLON          ';' line=6 col=6
+RBRACE             '}' line=7 col=1
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 's' in the current parser context, at line 4 col 5
+
+    struct illegalNestedStruct {
+    ^
+Expected one of: 
+	* CONST
+	* DECIMAL_INT
+	* STATIC
+	* CONTINUE
+	* MINUS
+	* INLINE
+	* PLUS
+	* STRING
+	* FOR
+	* IF
+	* WHILE
+	* DECIMAL_FLOAT
+	* LPAR
+	* NAME
+	* RETURN
+	* BANG
+	* HEXADECIMAL_INT
+	* MUT
+	* BREAK
+	* RBRACE
+	* TILDE
+

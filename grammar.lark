@@ -1,133 +1,202 @@
-entry: start*
-
-// Top-level entry points: static declarations, structs, and  functions ONLY
-start: declaration # static inline const f32& deltaTime;
-     | struct_definition #struct Vec3 {...}
-     | function_definition # void foo() {...}
-     # TODO: support struct and function declarations, header semantics
+// Token definitions
+DECIMAL_INT: /[0-9]+/
+HEXADECIMAL_INT: /0[xX][0-9a-fA-F]+/
+DECIMAL_FLOAT: /[0-9]+\.[0-9]+/
+STRING: /"(?:\\.|[^"\\])*"/
 
 
-?statement: declaration 
-          | assignment
-          | expression_statement 
-          | if_statement
-          | while_statement
-          | for_statement
-          | block
-          | return_statement
+ASSIGN_OP: "+=" | "-=" | "*=" | "/=" | "%=" | "="
+COMPOUND_OP: "+=" | "-=" | "*=" | "/=" | "%="
+assign_op: ASSIGN_OP
+// ignore whitespace
+%import common.WS
+%ignore WS
+// ignore single-line comments
+%ignore /\/\/[^\n]*/
 
-// Types and qualifiers
+// identifier matching, ignores keywords
+   NAME: /(?!(?:static|inline|const|mut|virtual|struct|if|else|for|while|return|continue|break)\b)[a-zA-Z_][a-zA-Z0-9_]*/
+
+identifier: NAME
+
+?integer_literal: DECIMAL_INT | HEXADECIMAL_INT
+?float_literal: DECIMAL_FLOAT
+
+// literals
+number_literal: integer_literal | float_literal
+string_literal: STRING
+
+literal: number_literal | string_literal
+
+// typenames
 typename: NAME
 static: "static"
 inline: "inline"
 const: "const"
 mut: "mut"
-type_qualifier: const | mut
+type_qualifier: const | mut | static | inline
 reference: "&"
-type_suffix: ("[" DECIMAL_INT "]") | reference
+
+array_access: "[" expression "]"
+array_size: "[" integer_literal "]"
 
 
-// Declarations
-declaration: static? inline? type_qualifier? typename type_suffix? NAME initializer? ";"
+type_suffix: array_size | reference
+
+// arguments
+argument_list: expression ("," expression)*
 
 
+// fully qualified type
+qualified_type: type_qualifier* typename [type_suffix]
+
+
+
+// declarations
+declaration: qualified_type identifier [initializer] ";"
+
+// initializers
 initializer: "=" expression
 
-parameter: type_qualifier? typename [type_suffix] NAME
-parameter_list: parameter ("," parameter)*
+// decorators
+decorator_value: NAME
+decorator_type: NAME
 
-// Statements
-assignment: lvalue "=" expression ";"
+decorator: "@" decorator_type [decorator_arguments | decorator_value]
+decorators: decorator+
+decorator_arguments: "(" [argument_list] ")"
+
+
+
+// expressions ?
+?expression: assignment
+
+// Assignment:
+?assignment: logic_or
+           | unary assign_op assignment        -> assign
+           | unary COMPOUND_OP assignment -> compound_assign
+
+?logic_or: logic_and
+            | logic_or "||" logic_and -> logical_or
+
+?logic_and: bitwise_or
+            | logic_and "&&" bitwise_or -> logical_and
+
+// Bitwise operators
+?bitwise_or: bitwise_xor
+            | bitwise_or "|" bitwise_xor -> bitwise_or
+
+?bitwise_xor: bitwise_and
+            | bitwise_xor "^" bitwise_and -> bitwise_xor
+
+?bitwise_and: equality
+            | bitwise_and "&" equality -> bitwise_and
+
+// Comparisons
+?equality: comparison
+            | equality "==" comparison -> equal
+            | equality "!=" comparison -> not_equal
+
+?comparison: shift
+            | comparison "<" shift -> less
+            | comparison "<=" shift -> less_equal
+            | comparison ">" shift -> greater
+            | comparison ">=" shift -> greater_equal
+
+// Arithmetic
+?shift: sum
+        | shift "<<" sum -> left_shift
+        | shift ">>" sum -> right_shift
+
+?sum: product
+    | sum "+" product -> add
+    | sum "-" product -> subtract
+
+?product: unary
+        | product "*" unary -> multiply
+        | product "/" unary -> divide
+        | product "%" unary -> modulo
+
+?unary: "+" unary -> positive
+        | "-" unary -> negate
+        | "!" unary -> logical_not
+        | "~" unary -> bitwise_not
+        | postfix
+
+?postfix: atom
+        | postfix "." NAME -> member
+        | postfix array_access -> index
+        | postfix "(" [argument_list] ")" -> call
+
 expression_statement: expression ";"
+
+statement: expression_statement | declaration | if_statement | for_statement | while_statement | return_statement | continue_statement | break_statement
+
+
+
+// Primary expressions
+?atom: literal
+     | NAME -> var_ref
+     | "(" expression ")"
+
+
+
+?variable_access: NAME
+?member_access: NAME "." NAME
+
+
+
+// finally, high-level constructs:
+
+// functions
+
+?return_type: qualified_type
+?function_name: NAME
+?argument_name: NAME
+argument_declaration: qualified_type argument_name
+
+
+parameter_list: argument_declaration ("," argument_declaration)*
+
 
 block: "{" statement* "}"
 
-if_statement: "if" "(" expression ")" block else_clause?
-else_clause: "else" block
-for_statement: "for" "(" expression ";" expression ";" expression ")" "{" block "}"
+function_definition: [decorators] return_type function_name "(" [parameter_list] ")" block
 
 
+virtual_tag: "virtual"
+
+// control flow
+
+else_clause: "else" (if_statement | block)
+
+if_statement: "if" "(" expression ")" block [else_clause]
+
+for_statement: "for" "(" [for_init] ";" [for_cond] ";" [for_step] ")" block
+
+break_statement: "break" ";"
+continue_statement: "continue" ";"
+
+for_init: expression
+for_cond: expression
+for_step: expression
 
 while_statement: "while" "(" expression ")" block
-
 return_statement: "return" expression? ";"
 
-// Structs and functions
-struct_definition: virtual_modifier? "struct" NAME "{" struct_member* "}" ";"
-virtual_modifier: "virtual"
 
-struct_member: const? typename type_suffix? NAME initializer? ";"
+// structs
+struct_name: NAME
+struct_member: qualified_type identifier initializer? ";"
+struct_definition: [decorators] [virtual_tag] "struct" struct_name "{" struct_member* "}" ";"
 
-function_definition: decorator* typename NAME "(" parameter_list? ")" block
 
-decorator: "@" decorator_type decorator_arguments?
-decorator_type: NAME
-decorator_arguments: "(" argument_list? ")"
 
-cast: "(" typename ")" expression
+// entry point
 
-// Expressions
-?expression: comparison | cast
+start: entry*
 
-?comparison: bitwise_shift
-           | comparison COMPARE_OP bitwise_shift
+entry: declaration | function_definition | struct_definition
 
-?bitwise_shift: sum
-              | bitwise_shift SHIFT_OP sum
 
-?sum: product
-    | sum ADD_OP product
-
-?product: unary
-        | product MUL_OP unary
-
-?unary: UNARY_OP unary
-      | rvalue
-
-// Assignable expressions
-?lvalue: NAME
-       | lvalue "." NAME
-       | lvalue "[" expression "]"
-
-// Readable expressions
-?rvalue: postfix
-
-?postfix: atom
-        | postfix "." NAME
-        | postfix "[" expression "]"
-
-?atom: function_call
-     | literal
-     | NAME
-     | "(" expression ")"
-
-function_call: NAME "(" argument_list? ")"
-argument_list: expression ("," expression)*
-
-// Literal hierarchy
-literal: number_literal
-       | STRING
-
-number_literal: DECIMAL_INT
-              | HEXADECIMAL_INT
-              | DECIMAL_FLOAT
-
-// Tokens
-
-NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
-DECIMAL_INT: /[0-9]+/
-HEXADECIMAL_INT: /0x[0-9a-fA-F]*/
-DECIMAL_FLOAT: /[0-9]+\.[0-9]+/
-STRING: /"(?:\\.|[^"\\])*"/
-
-COMPARE_OP: "==" | "!=" | "<=" | ">=" | "<" | ">"
-SHIFT_OP: "<<" | ">>"
-ADD_OP: "+" | "-"
-MUL_OP: "*" | "/" | "%"
-UNARY_OP: "-" | "!"
-
-%import common.WS
-%ignore WS
-%ignore /\/\/[^\n]*/
-
-# TODO: support initializer lists
+# needs break, continue, switch-case is optional

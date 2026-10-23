@@ -1,6 +1,7 @@
 from config import LANGUAGE_NAME, AUTHOR, VERSION, DESCRIPTION
-from test_parser import demo_driver
-from ASTTranslator import ESLTransformer
+from frontend import demo_driver
+#from ASTTranslator import ESLTransformer
+from ESLTranslator import ESLTransformer
 
 
 def show_project_identity() -> None:

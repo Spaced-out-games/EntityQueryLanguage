@@ -7,7 +7,7 @@ VERSION = "0.1"
 DESCRIPTION = "Entity Shader Language (ESL) is a C-Like shader language built for modding" 
 
 # tests
-POSITIVES = ["ESL_sources/positives.esl"]
-NEGATIVES =  ["ESL_sources/negatives.esl"]
+POSITIVES = ["examples/positives.esl"]
+NEGATIVES =  ["examples/negatives.esl"]
 GRAMMAR_PATH = "grammar.lark"
 SPLITTER = "/**/"

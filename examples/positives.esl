@@ -1,0 +1,174 @@
+// global
+static inline const f32& someGlobalRef;
+static inline const f32[16] someGlobalArray;
+/**/
+
+// initialized structure
+struct Vec3 {
+    f32 x = 0.0;
+    f32 y = 0.0;
+    f32 z = 0.0;
+};
+/**/
+// quaternion type, no initializer
+struct Quat {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+};
+/**/
+// transform type
+struct Transform {
+    Vec3 position;
+    Quat rotation;
+    Vec3 scale;
+};
+/**/
+// virtual structure
+virtual struct Person_vstruct {
+    // captures arrays
+    char[256] name;
+    i8 age;
+    f64 net_worth;
+};
+/**/
+// tests entry point decorator
+@entry
+void integrate(mut Transform& transform, const Velocity& velocity) {
+    transform = transform + velocity;
+}
+
+/**/
+@ParameterizedDecorator("test", 124)
+void foo() {
+    transform.pos.x = 0;
+}
+/**/
+
+@export qsh
+void main() {
+    // if-else
+    if(i > 20) {
+        print("i is too big");
+    } else {
+        print("i is too small");
+    }
+}
+
+/**/
+
+
+// if without else
+void if_only() {
+    int score = 80;
+    if (score >= 60) {
+        print(1);
+    }
+}
+/**/
+// if / else
+void if_else() {
+    int score = 80;
+    if (score >= 60) {
+        print(1);
+    } else {
+        print(0);
+    }
+}
+/**/
+// else-if chain
+void else_if_chain() {
+    int score = 80;
+    if (score >= 90) {
+        print(3);
+    } else if (score >= 60) {
+        print(2);
+    } else {
+        print(1);
+    }
+}
+/**/
+// while loop
+void while_loop() {
+    int score = 80;
+    while (score < 85) {
+        score = score + 1;
+    }
+    print(score);
+}
+/**/
+// for loop
+void for_loop() {
+    int total = 0;
+    for (i = 0; i < 10; i = i + 1) {
+        total = total + i;
+    }
+    print(total);
+}
+/**/
+// for with empty clauses
+void for_empty() {
+    for (;;) {
+        return;
+    }
+}
+/**/
+// nested: for containing while containing if
+void nested_loops() {
+    int j = 0;
+    for (i = 0; i < 3; i = i + 1) {
+        while (j < 3) {
+            if (j == 1) {
+                j = j + 2;
+            } else {
+                j = j + 1;
+            }
+        }
+    }
+}
+/**/
+// return inside control flow
+int early_return(int x) {
+    if (x < 0) {
+        return 0;
+    }
+    while (x > 10) {
+        x = x - 1;
+    }
+    return x;
+}
+
+/**/
+
+i32 member_assign() {
+    thing.member = 0;
+}
+
+/**/
+
+i32 member_get() {
+    e = thing.member;
+}
+
+/**/
+
+i32 while_test() {
+
+    while(true) {
+        print("hello world");
+        break;
+        continue;
+    }
+
+}
+
+/**/
+
+i32 for_test() {
+    for(i = 0; i < 32; i = i + 1) {
+        continue;
+        break;
+    }
+}
+
