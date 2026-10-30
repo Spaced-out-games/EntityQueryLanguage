@@ -3,7 +3,8 @@ from lark import Transformer, Tree
 
 from ast_nodes import *
 
-
+# debugging
+from utilities import pretty_ast
 class ESLSemanticError(Exception):
     """A well-formed parse that violates a language rule (expected rejection)."""
 
@@ -70,6 +71,10 @@ class ESLTransformer(Transformer):
     def array_size(self, items): return ArraySpan(items[0])
     def type_suffix(self, items): return items[0]
 
+    @staticmethod
+    def find_node(items, cls, default=None):
+        return next((item for item in items if isinstance(item, cls)), default)
+
     def type_qualifier(self, items):
         name = items[0].data
         try:
@@ -82,18 +87,41 @@ class ESLTransformer(Transformer):
 
     def qualified_type(self, items):
         result = Type()
+
         for item in items:
-            field = TAG_FIELD.get(type(item))
-            if field:
-                if getattr(result, field):
-                    raise ESLSemanticError(f"`{field}` was used more than once")
-                setattr(result, field, True)
-            elif isinstance(item, str):
-                result.type_id = item
-            elif isinstance(item, TypeSuffix):
-                result.suffix = item
+            match item:
+                case StaticTag():
+                    if result.static:
+                        raise ESLSemanticError("`static` was used more than once")
+                    result.static = True
+
+                case InlineTag():
+                    if result.inline:
+                        raise ESLSemanticError("`inline` was used more than once")
+                    result.inline = True
+
+                case ConstTag():
+                    if result.const:
+                        raise ESLSemanticError("`const` was used more than once")
+                    result.const = True
+
+                case MutTag():
+                    if result.mut:
+                        raise ESLSemanticError("`mut` was used more than once")
+                    result.mut = True
+
+                case VirtualTag():
+                    pass
+
+                case TypeSuffix():
+                    result.suffix = item
+
+                case str():
+                    result.type_id = item
+
         if result.const and result.mut:
             raise ESLSemanticError("`const` and `mut` are mutually exclusive")
+
         return result
 
     def return_type(self, items):
@@ -146,7 +174,7 @@ class ESLTransformer(Transformer):
     @staticmethod
     def split_decl(items):
         type_ = next((i for i in items if isinstance(i, Type)), None)
-        id_ = next((i for i in items if isinstance(i, Identifier)), None)
+        id_ = next((i.name for i in items if isinstance(i, Identifier)), None)
         init = next((i for i in items if isinstance(i, Initializer)), None)
         return type_, id_, init
 
@@ -172,7 +200,7 @@ class ESLTransformer(Transformer):
         type_ = next(i for i in items if isinstance(i, DecoratorType))
         args = next((i for i in items
                      if isinstance(i, (ArgumentList, DecoratorValue))), None)
-        return Decorator(type_, args)
+        return Decorator(type_.name, args)
 
     def decorators(self, items):
         return DecoratorList(items)
@@ -187,9 +215,12 @@ class ESLTransformer(Transformer):
         return items[0]
 
     def block(self, items):
+
         return StatementBlock(list(items))
+        
 
     def else_clause(self, items):
+        
         return ElseClause(items[0])
 
     def if_statement(self, items):
@@ -198,28 +229,20 @@ class ESLTransformer(Transformer):
         return IfStatement(cond, then_block, else_clause)
 
     def while_statement(self, items):
-        return WhileStatement(items[0], items[1])
+        return WhileStatement(None, items[0], items[1])
 
     def for_init(self, items):  return ForInitializer(items[0])
     def for_cond(self, items):  return ForConditional(items[0])
     def for_step(self, items):  return ForStep(items[0])
 
     def for_statement(self, items):
-        result = ForStatement(None, None, None, None)
+        init = next((i for i in items if isinstance(i, ForInitializer)), None)
+        condition = next((i for i in items if isinstance(i, ForConditional)), None)
+        step = next((i for i in items if isinstance(i, ForStep)), None)
+        body = next((i for i in items if isinstance(i, StatementBlock)), None)
 
-        for item in items:
-            if isinstance(item, ForInitializer):
-                result.init = item
-            elif isinstance(item, ForConditional):
-                result.condition = item
-            elif isinstance(item, ForStep):
-                result.step = item
-            elif isinstance(item, StatementBlock):
-                result.body = item
-        
-            #parts[item.kind] = item.expr
-        return result
-
+        return ForStatement(init, condition, step, body)
+    
     def continue_statement(self, items):
         return ContinueStatement()
 
@@ -232,6 +255,9 @@ class ESLTransformer(Transformer):
     # ========================================================
     # Top level
     # ========================================================
+    def parameter(self, items):
+        pass
+
     def argument_declaration(self, items):
         type_, name = items
         return Parameter(type_, ident_flatten(name))
@@ -241,7 +267,7 @@ class ESLTransformer(Transformer):
 
     def function_definition(self, items):
         decorators = next((i.decorators for i in items if isinstance(i, DecoratorList)), [])
-        params = next((i.decorators for i in items if isinstance(i, ParameterList)), [])
+        params = next((i.parameters for i in items if isinstance(i, ParameterList)), [])
         return_type = next(i for i in items if isinstance(i, Type))
         body = next(i for i in items if isinstance(i, StatementBlock))
         # the function's name is the only Identifier/str left over

@@ -172,3 +172,26 @@ i32 for_test() {
     }
 }
 
+/**/
+
+i32 logical_not_test() {
+    x = !43;
+}
+
+/**/
+
+i32 negation_test() {
+    x = -43;
+}
+
+/**/
+
+i32 bitwise_not_test() {
+    x = ~3;
+}
+
+/**/
+
+i32 main(int argc, char[16] argv) {
+    return 3;
+}

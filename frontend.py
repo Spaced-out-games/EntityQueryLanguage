@@ -243,7 +243,7 @@ def demo_driver(parser: None, AST_transformer: Transformer, positives: list[str]
     all_blocks = positive_blocks + negative_blocks
 
     for block, expects_pass in all_blocks:
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        print("\n\n\n\n\n\n\n\n\n")
         print("======================== CODE BLOCK ========================")
         print(block)
 
@@ -277,6 +277,8 @@ def demo_driver(parser: None, AST_transformer: Transformer, positives: list[str]
             print(e)
         except VisitError as e:
             print(e)
+        print("\n\n\n\n\n\n\n\n\n")
+        
 
 if __name__ == "__main__":
     demo_driver(parser, transformer, POSITIVES, NEGATIVES, SPLITTER)

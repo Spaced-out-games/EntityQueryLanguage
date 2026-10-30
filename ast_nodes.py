@@ -67,6 +67,12 @@ class Type(Node):
     suffix: TypeSuffix | None = None
 
 
+
+@dataclass
+class Scope(Node):
+    variables: dict[str, Type]
+
+
 # ============================================================
 # Expressions
 # ============================================================
@@ -121,7 +127,7 @@ class Initializer(Node):
 @dataclass
 class Declaration(Statement, TopLevel):      # legal in blocks and at file scope
     type: Type
-    id: Identifier
+    id: str
     initializer: Initializer | None = None
 
 @dataclass
@@ -143,6 +149,7 @@ class BreakStatement(Statement):
 
 @dataclass
 class ElseClause(Node):
+    # this doens't need a scope
     body: IfStatement | StatementBlock
 
 @dataclass
@@ -150,6 +157,7 @@ class IfStatement(Statement):
     condition: Expression
     then_block: StatementBlock
     else_clause: ElseClause | None = None
+
 
 @dataclass
 class WhileStatement(Statement):
@@ -196,7 +204,7 @@ class DecoratorValue(Node):      # @export qsh
 
 @dataclass
 class Decorator(Node):
-    type: DecoratorType
+    type: str
     args: ArgumentList | DecoratorValue | None = None
 
 @dataclass
@@ -214,7 +222,7 @@ class Parameter(Node):
 
 @dataclass
 class ParameterList(Node):
-    decorators: list[Decorator]
+    parameters: list[Parameter]
 
 @dataclass
 class FunctionDefinition(TopLevel):
@@ -239,9 +247,6 @@ class StructDefinition(TopLevel):
 
 @dataclass
 class Program(Node):
+    globals: Scope
     entries: list[TopLevel] = field(default_factory=list)
 
-
-@dataclass
-class Scope(Node):
-    variables: dict[str, Type]

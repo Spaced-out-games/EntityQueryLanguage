@@ -8,24 +8,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ======================== CODE BLOCK ========================
 // global
 static inline const f32& someGlobalRef;
@@ -81,41 +63,32 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   ├─ [0]: Declaration
-   │  ├─ type: Type
-   │  │  ├─ type_id: 'f32'
-   │  │  ├─ inline: True
-   │  │  ├─ static: True
-   │  │  ├─ mut: False
-   │  │  ├─ const: True
-   │  │  └─ suffix: ReferenceFlag (empty)
-   │  ├─ id: Identifier
-   │  │  └─ name: 'someGlobalRef'
-   │  └─ initializer: None
-   └─ [1]: Declaration
-      ├─ type: Type
-      │  ├─ type_id: 'f32'
-      │  ├─ inline: True
-      │  ├─ static: True
-      │  ├─ mut: False
-      │  ├─ const: True
-      │  └─ suffix: ArraySpan
-      │     └─ size: 16
-      ├─ id: Identifier
-      │  └─ name: 'someGlobalArray'
-      └─ initializer: None
+├─ globals: list
+│  ├─ [0]: Declaration
+│  │  ├─ type: Type
+│  │  │  ├─ type_id: 'f32'
+│  │  │  ├─ inline: True
+│  │  │  ├─ static: True
+│  │  │  ├─ mut: False
+│  │  │  ├─ const: True
+│  │  │  └─ suffix: ReferenceFlag (empty)
+│  │  ├─ id: 'someGlobalRef'
+│  │  └─ initializer: None
+│  └─ [1]: Declaration
+│     ├─ type: Type
+│     │  ├─ type_id: 'f32'
+│     │  ├─ inline: True
+│     │  ├─ static: True
+│     │  ├─ mut: False
+│     │  ├─ const: True
+│     │  └─ suffix: ArraySpan
+│     │     └─ size: 16
+│     ├─ id: 'someGlobalArray'
+│     └─ initializer: None
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -201,63 +174,53 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: StructDefinition
-      ├─ name: Identifier
-      │  └─ name: 'Vec3'
-      ├─ members: list
-      │  ├─ [0]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'f32'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'x'
-      │  │  └─ initializer: Initializer
-      │  │     └─ expression: Literal
-      │  │        └─ value: 0.0
-      │  ├─ [1]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'f32'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'y'
-      │  │  └─ initializer: Initializer
-      │  │     └─ expression: Literal
-      │  │        └─ value: 0.0
-      │  └─ [2]: StructMember
-      │     ├─ type: Type
-      │     │  ├─ type_id: 'f32'
-      │     │  ├─ inline: False
-      │     │  ├─ static: False
-      │     │  ├─ mut: False
-      │     │  ├─ const: False
-      │     │  └─ suffix: None
-      │     ├─ id: Identifier
-      │     │  └─ name: 'z'
-      │     └─ initializer: Initializer
-      │        └─ expression: Literal
-      │           └─ value: 0.0
-      ├─ virtual: False
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: StructDefinition
+│     ├─ name: Identifier
+│     │  └─ name: 'Vec3'
+│     ├─ members: list
+│     │  ├─ [0]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'f32'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'x'
+│     │  │  └─ initializer: Initializer
+│     │  │     └─ expression: Literal
+│     │  │        └─ value: 0.0
+│     │  ├─ [1]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'f32'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'y'
+│     │  │  └─ initializer: Initializer
+│     │  │     └─ expression: Literal
+│     │  │        └─ value: 0.0
+│     │  └─ [2]: StructMember
+│     │     ├─ type: Type
+│     │     │  ├─ type_id: 'f32'
+│     │     │  ├─ inline: False
+│     │     │  ├─ static: False
+│     │     │  ├─ mut: False
+│     │     │  ├─ const: False
+│     │     │  └─ suffix: None
+│     │     ├─ id: 'z'
+│     │     └─ initializer: Initializer
+│     │        └─ expression: Literal
+│     │           └─ value: 0.0
+│     ├─ virtual: False
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -336,68 +299,57 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: StructDefinition
-      ├─ name: Identifier
-      │  └─ name: 'Quat'
-      ├─ members: list
-      │  ├─ [0]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'f32'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'x'
-      │  │  └─ initializer: None
-      │  ├─ [1]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'f32'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'y'
-      │  │  └─ initializer: None
-      │  ├─ [2]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'f32'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'z'
-      │  │  └─ initializer: None
-      │  └─ [3]: StructMember
-      │     ├─ type: Type
-      │     │  ├─ type_id: 'f32'
-      │     │  ├─ inline: False
-      │     │  ├─ static: False
-      │     │  ├─ mut: False
-      │     │  ├─ const: False
-      │     │  └─ suffix: None
-      │     ├─ id: Identifier
-      │     │  └─ name: 'w'
-      │     └─ initializer: None
-      ├─ virtual: False
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: StructDefinition
+│     ├─ name: Identifier
+│     │  └─ name: 'Quat'
+│     ├─ members: list
+│     │  ├─ [0]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'f32'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'x'
+│     │  │  └─ initializer: None
+│     │  ├─ [1]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'f32'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'y'
+│     │  │  └─ initializer: None
+│     │  ├─ [2]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'f32'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'z'
+│     │  │  └─ initializer: None
+│     │  └─ [3]: StructMember
+│     │     ├─ type: Type
+│     │     │  ├─ type_id: 'f32'
+│     │     │  ├─ inline: False
+│     │     │  ├─ static: False
+│     │     │  ├─ mut: False
+│     │     │  ├─ const: False
+│     │     │  └─ suffix: None
+│     │     ├─ id: 'w'
+│     │     └─ initializer: None
+│     ├─ virtual: False
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -467,57 +419,47 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: StructDefinition
-      ├─ name: Identifier
-      │  └─ name: 'Transform'
-      ├─ members: list
-      │  ├─ [0]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'Vec3'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'position'
-      │  │  └─ initializer: None
-      │  ├─ [1]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'Quat'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'rotation'
-      │  │  └─ initializer: None
-      │  └─ [2]: StructMember
-      │     ├─ type: Type
-      │     │  ├─ type_id: 'Vec3'
-      │     │  ├─ inline: False
-      │     │  ├─ static: False
-      │     │  ├─ mut: False
-      │     │  ├─ const: False
-      │     │  └─ suffix: None
-      │     ├─ id: Identifier
-      │     │  └─ name: 'scale'
-      │     └─ initializer: None
-      ├─ virtual: False
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: StructDefinition
+│     ├─ name: Identifier
+│     │  └─ name: 'Transform'
+│     ├─ members: list
+│     │  ├─ [0]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'Vec3'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'position'
+│     │  │  └─ initializer: None
+│     │  ├─ [1]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'Quat'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'rotation'
+│     │  │  └─ initializer: None
+│     │  └─ [2]: StructMember
+│     │     ├─ type: Type
+│     │     │  ├─ type_id: 'Vec3'
+│     │     │  ├─ inline: False
+│     │     │  ├─ static: False
+│     │     │  ├─ mut: False
+│     │     │  ├─ const: False
+│     │     │  └─ suffix: None
+│     │     ├─ id: 'scale'
+│     │     └─ initializer: None
+│     ├─ virtual: False
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -593,58 +535,48 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: StructDefinition
-      ├─ name: Identifier
-      │  └─ name: 'Person_vstruct'
-      ├─ members: list
-      │  ├─ [0]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'char'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: ArraySpan
-      │  │  │     └─ size: 256
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'name'
-      │  │  └─ initializer: None
-      │  ├─ [1]: StructMember
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'i8'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: False
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: None
-      │  │  ├─ id: Identifier
-      │  │  │  └─ name: 'age'
-      │  │  └─ initializer: None
-      │  └─ [2]: StructMember
-      │     ├─ type: Type
-      │     │  ├─ type_id: 'f64'
-      │     │  ├─ inline: False
-      │     │  ├─ static: False
-      │     │  ├─ mut: False
-      │     │  ├─ const: False
-      │     │  └─ suffix: None
-      │     ├─ id: Identifier
-      │     │  └─ name: 'net_worth'
-      │     └─ initializer: None
-      ├─ virtual: True
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: StructDefinition
+│     ├─ name: Identifier
+│     │  └─ name: 'Person_vstruct'
+│     ├─ members: list
+│     │  ├─ [0]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'char'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: ArraySpan
+│     │  │  │     └─ size: 256
+│     │  │  ├─ id: 'name'
+│     │  │  └─ initializer: None
+│     │  ├─ [1]: StructMember
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'i8'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  ├─ id: 'age'
+│     │  │  └─ initializer: None
+│     │  └─ [2]: StructMember
+│     │     ├─ type: Type
+│     │     │  ├─ type_id: 'f64'
+│     │     │  ├─ inline: False
+│     │     │  ├─ static: False
+│     │     │  ├─ mut: False
+│     │     │  ├─ const: False
+│     │     │  └─ suffix: None
+│     │     ├─ id: 'net_worth'
+│     │     └─ initializer: None
+│     ├─ virtual: True
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -739,67 +671,59 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'integrate'
-      ├─ parameters: list
-      │  ├─ [0]: Parameter
-      │  │  ├─ type: Type
-      │  │  │  ├─ type_id: 'Transform'
-      │  │  │  ├─ inline: False
-      │  │  │  ├─ static: False
-      │  │  │  ├─ mut: True
-      │  │  │  ├─ const: False
-      │  │  │  └─ suffix: ReferenceFlag (empty)
-      │  │  └─ name: Identifier
-      │  │     └─ name: 'transform'
-      │  └─ [1]: Parameter
-      │     ├─ type: Type
-      │     │  ├─ type_id: 'Velocity'
-      │     │  ├─ inline: False
-      │     │  ├─ static: False
-      │     │  ├─ mut: False
-      │     │  ├─ const: True
-      │     │  └─ suffix: ReferenceFlag (empty)
-      │     └─ name: Identifier
-      │        └─ name: 'velocity'
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: ExpressionStatement
-      │        └─ expression: AssignExpression
-      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │           ├─ target: VarRef
-      │           │  └─ name: 'transform'
-      │           └─ value: BinaryExpression
-      │              ├─ operator: '+'
-      │              ├─ left: VarRef
-      │              │  └─ name: 'transform'
-      │              └─ right: VarRef
-      │                 └─ name: 'velocity'
-      └─ decorators: list
-         └─ [0]: Decorator
-            ├─ type: DecoratorType
-            │  └─ name: 'entry'
-            └─ args: None
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'integrate'
+│     ├─ parameters: list
+│     │  ├─ [0]: Parameter
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'Transform'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: True
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: ReferenceFlag (empty)
+│     │  │  └─ name: Identifier
+│     │  │     └─ name: 'transform'
+│     │  └─ [1]: Parameter
+│     │     ├─ type: Type
+│     │     │  ├─ type_id: 'Velocity'
+│     │     │  ├─ inline: False
+│     │     │  ├─ static: False
+│     │     │  ├─ mut: False
+│     │     │  ├─ const: True
+│     │     │  └─ suffix: ReferenceFlag (empty)
+│     │     └─ name: Identifier
+│     │        └─ name: 'velocity'
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: VarRef
+│     │           │  └─ name: 'transform'
+│     │           └─ value: BinaryExpression
+│     │              ├─ operator: '+'
+│     │              ├─ left: VarRef
+│     │              │  └─ name: 'transform'
+│     │              └─ right: VarRef
+│     │                 └─ name: 'velocity'
+│     └─ decorators: list
+│        └─ [0]: Decorator
+│           ├─ type: 'entry'
+│           └─ args: None
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -882,52 +806,44 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'foo'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: ExpressionStatement
-      │        └─ expression: AssignExpression
-      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │           ├─ target: MemberAccess
-      │           │  ├─ target: MemberAccess
-      │           │  │  ├─ target: VarRef
-      │           │  │  │  └─ name: 'transform'
-      │           │  │  └─ member: 'pos'
-      │           │  └─ member: 'x'
-      │           └─ value: Literal
-      │              └─ value: 0
-      └─ decorators: list
-         └─ [0]: Decorator
-            ├─ type: DecoratorType
-            │  └─ name: 'ParameterizedDecorator'
-            └─ args: ArgumentList
-               └─ args: list
-                  ├─ [0]: Literal
-                  │  └─ value: 'test'
-                  └─ [1]: Literal
-                     └─ value: 124
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'foo'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: MemberAccess
+│     │           │  ├─ target: MemberAccess
+│     │           │  │  ├─ target: VarRef
+│     │           │  │  │  └─ name: 'transform'
+│     │           │  │  └─ member: 'pos'
+│     │           │  └─ member: 'x'
+│     │           └─ value: Literal
+│     │              └─ value: 0
+│     └─ decorators: list
+│        └─ [0]: Decorator
+│           ├─ type: 'ParameterizedDecorator'
+│           └─ args: ArgumentList
+│              └─ args: list
+│                 ├─ [0]: Literal
+│                 │  └─ value: 'test'
+│                 └─ [1]: Literal
+│                    └─ value: 124
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -1033,65 +949,57 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'main'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: IfStatement
-      │        ├─ condition: BinaryExpression
-      │        │  ├─ operator: '>'
-      │        │  ├─ left: VarRef
-      │        │  │  └─ name: 'i'
-      │        │  └─ right: Literal
-      │        │     └─ value: 20
-      │        ├─ then_block: StatementBlock
-      │        │  └─ statements: list
-      │        │     └─ [0]: ExpressionStatement
-      │        │        └─ expression: FuncCall
-      │        │           ├─ callee: VarRef
-      │        │           │  └─ name: 'print'
-      │        │           └─ args: ArgumentList
-      │        │              └─ args: list
-      │        │                 └─ [0]: Literal
-      │        │                    └─ value: 'i is too big'
-      │        └─ else_clause: ElseClause
-      │           └─ body: StatementBlock
-      │              └─ statements: list
-      │                 └─ [0]: ExpressionStatement
-      │                    └─ expression: FuncCall
-      │                       ├─ callee: VarRef
-      │                       │  └─ name: 'print'
-      │                       └─ args: ArgumentList
-      │                          └─ args: list
-      │                             └─ [0]: Literal
-      │                                └─ value: 'i is too small'
-      └─ decorators: list
-         └─ [0]: Decorator
-            ├─ type: DecoratorType
-            │  └─ name: 'export'
-            └─ args: DecoratorValue
-               └─ value: 'qsh'
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'main'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: IfStatement
+│     │        ├─ condition: BinaryExpression
+│     │        │  ├─ operator: '>'
+│     │        │  ├─ left: VarRef
+│     │        │  │  └─ name: 'i'
+│     │        │  └─ right: Literal
+│     │        │     └─ value: 20
+│     │        ├─ then_block: StatementBlock
+│     │        │  └─ statements: list
+│     │        │     └─ [0]: ExpressionStatement
+│     │        │        └─ expression: FuncCall
+│     │        │           ├─ callee: VarRef
+│     │        │           │  └─ name: 'print'
+│     │        │           └─ args: ArgumentList
+│     │        │              └─ args: list
+│     │        │                 └─ [0]: Literal
+│     │        │                    └─ value: 'i is too big'
+│     │        └─ else_clause: ElseClause
+│     │           └─ body: StatementBlock
+│     │              └─ statements: list
+│     │                 └─ [0]: ExpressionStatement
+│     │                    └─ expression: FuncCall
+│     │                       ├─ callee: VarRef
+│     │                       │  └─ name: 'print'
+│     │                       └─ args: ArgumentList
+│     │                          └─ args: list
+│     │                             └─ [0]: Literal
+│     │                                └─ value: 'i is too small'
+│     └─ decorators: list
+│        └─ [0]: Decorator
+│           ├─ type: 'export'
+│           └─ args: DecoratorValue
+│              └─ value: 'qsh'
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -1187,63 +1095,55 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'if_only'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: Declaration
-      │     │  ├─ type: Type
-      │     │  │  ├─ type_id: 'int'
-      │     │  │  ├─ inline: False
-      │     │  │  ├─ static: False
-      │     │  │  ├─ mut: False
-      │     │  │  ├─ const: False
-      │     │  │  └─ suffix: None
-      │     │  ├─ id: Identifier
-      │     │  │  └─ name: 'score'
-      │     │  └─ initializer: Initializer
-      │     │     └─ expression: Literal
-      │     │        └─ value: 80
-      │     └─ [1]: IfStatement
-      │        ├─ condition: BinaryExpression
-      │        │  ├─ operator: '>='
-      │        │  ├─ left: VarRef
-      │        │  │  └─ name: 'score'
-      │        │  └─ right: Literal
-      │        │     └─ value: 60
-      │        ├─ then_block: StatementBlock
-      │        │  └─ statements: list
-      │        │     └─ [0]: ExpressionStatement
-      │        │        └─ expression: FuncCall
-      │        │           ├─ callee: VarRef
-      │        │           │  └─ name: 'print'
-      │        │           └─ args: ArgumentList
-      │        │              └─ args: list
-      │        │                 └─ [0]: Literal
-      │        │                    └─ value: 1
-      │        └─ else_clause: None
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'if_only'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     ├─ [0]: Declaration
+│     │     │  ├─ type: Type
+│     │     │  │  ├─ type_id: 'int'
+│     │     │  │  ├─ inline: False
+│     │     │  │  ├─ static: False
+│     │     │  │  ├─ mut: False
+│     │     │  │  ├─ const: False
+│     │     │  │  └─ suffix: None
+│     │     │  ├─ id: 'score'
+│     │     │  └─ initializer: Initializer
+│     │     │     └─ expression: Literal
+│     │     │        └─ value: 80
+│     │     └─ [1]: IfStatement
+│     │        ├─ condition: BinaryExpression
+│     │        │  ├─ operator: '>='
+│     │        │  ├─ left: VarRef
+│     │        │  │  └─ name: 'score'
+│     │        │  └─ right: Literal
+│     │        │     └─ value: 60
+│     │        ├─ then_block: StatementBlock
+│     │        │  └─ statements: list
+│     │        │     └─ [0]: ExpressionStatement
+│     │        │        └─ expression: FuncCall
+│     │        │           ├─ callee: VarRef
+│     │        │           │  └─ name: 'print'
+│     │        │           └─ args: ArgumentList
+│     │        │              └─ args: list
+│     │        │                 └─ [0]: Literal
+│     │        │                    └─ value: 1
+│     │        └─ else_clause: None
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -1355,73 +1255,65 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'if_else'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: Declaration
-      │     │  ├─ type: Type
-      │     │  │  ├─ type_id: 'int'
-      │     │  │  ├─ inline: False
-      │     │  │  ├─ static: False
-      │     │  │  ├─ mut: False
-      │     │  │  ├─ const: False
-      │     │  │  └─ suffix: None
-      │     │  ├─ id: Identifier
-      │     │  │  └─ name: 'score'
-      │     │  └─ initializer: Initializer
-      │     │     └─ expression: Literal
-      │     │        └─ value: 80
-      │     └─ [1]: IfStatement
-      │        ├─ condition: BinaryExpression
-      │        │  ├─ operator: '>='
-      │        │  ├─ left: VarRef
-      │        │  │  └─ name: 'score'
-      │        │  └─ right: Literal
-      │        │     └─ value: 60
-      │        ├─ then_block: StatementBlock
-      │        │  └─ statements: list
-      │        │     └─ [0]: ExpressionStatement
-      │        │        └─ expression: FuncCall
-      │        │           ├─ callee: VarRef
-      │        │           │  └─ name: 'print'
-      │        │           └─ args: ArgumentList
-      │        │              └─ args: list
-      │        │                 └─ [0]: Literal
-      │        │                    └─ value: 1
-      │        └─ else_clause: ElseClause
-      │           └─ body: StatementBlock
-      │              └─ statements: list
-      │                 └─ [0]: ExpressionStatement
-      │                    └─ expression: FuncCall
-      │                       ├─ callee: VarRef
-      │                       │  └─ name: 'print'
-      │                       └─ args: ArgumentList
-      │                          └─ args: list
-      │                             └─ [0]: Literal
-      │                                └─ value: 0
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'if_else'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     ├─ [0]: Declaration
+│     │     │  ├─ type: Type
+│     │     │  │  ├─ type_id: 'int'
+│     │     │  │  ├─ inline: False
+│     │     │  │  ├─ static: False
+│     │     │  │  ├─ mut: False
+│     │     │  │  ├─ const: False
+│     │     │  │  └─ suffix: None
+│     │     │  ├─ id: 'score'
+│     │     │  └─ initializer: Initializer
+│     │     │     └─ expression: Literal
+│     │     │        └─ value: 80
+│     │     └─ [1]: IfStatement
+│     │        ├─ condition: BinaryExpression
+│     │        │  ├─ operator: '>='
+│     │        │  ├─ left: VarRef
+│     │        │  │  └─ name: 'score'
+│     │        │  └─ right: Literal
+│     │        │     └─ value: 60
+│     │        ├─ then_block: StatementBlock
+│     │        │  └─ statements: list
+│     │        │     └─ [0]: ExpressionStatement
+│     │        │        └─ expression: FuncCall
+│     │        │           ├─ callee: VarRef
+│     │        │           │  └─ name: 'print'
+│     │        │           └─ args: ArgumentList
+│     │        │              └─ args: list
+│     │        │                 └─ [0]: Literal
+│     │        │                    └─ value: 1
+│     │        └─ else_clause: ElseClause
+│     │           └─ body: StatementBlock
+│     │              └─ statements: list
+│     │                 └─ [0]: ExpressionStatement
+│     │                    └─ expression: FuncCall
+│     │                       ├─ callee: VarRef
+│     │                       │  └─ name: 'print'
+│     │                       └─ args: ArgumentList
+│     │                          └─ args: list
+│     │                             └─ [0]: Literal
+│     │                                └─ value: 0
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -1563,91 +1455,83 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'else_if_chain'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: Declaration
-      │     │  ├─ type: Type
-      │     │  │  ├─ type_id: 'int'
-      │     │  │  ├─ inline: False
-      │     │  │  ├─ static: False
-      │     │  │  ├─ mut: False
-      │     │  │  ├─ const: False
-      │     │  │  └─ suffix: None
-      │     │  ├─ id: Identifier
-      │     │  │  └─ name: 'score'
-      │     │  └─ initializer: Initializer
-      │     │     └─ expression: Literal
-      │     │        └─ value: 80
-      │     └─ [1]: IfStatement
-      │        ├─ condition: BinaryExpression
-      │        │  ├─ operator: '>='
-      │        │  ├─ left: VarRef
-      │        │  │  └─ name: 'score'
-      │        │  └─ right: Literal
-      │        │     └─ value: 90
-      │        ├─ then_block: StatementBlock
-      │        │  └─ statements: list
-      │        │     └─ [0]: ExpressionStatement
-      │        │        └─ expression: FuncCall
-      │        │           ├─ callee: VarRef
-      │        │           │  └─ name: 'print'
-      │        │           └─ args: ArgumentList
-      │        │              └─ args: list
-      │        │                 └─ [0]: Literal
-      │        │                    └─ value: 3
-      │        └─ else_clause: ElseClause
-      │           └─ body: IfStatement
-      │              ├─ condition: BinaryExpression
-      │              │  ├─ operator: '>='
-      │              │  ├─ left: VarRef
-      │              │  │  └─ name: 'score'
-      │              │  └─ right: Literal
-      │              │     └─ value: 60
-      │              ├─ then_block: StatementBlock
-      │              │  └─ statements: list
-      │              │     └─ [0]: ExpressionStatement
-      │              │        └─ expression: FuncCall
-      │              │           ├─ callee: VarRef
-      │              │           │  └─ name: 'print'
-      │              │           └─ args: ArgumentList
-      │              │              └─ args: list
-      │              │                 └─ [0]: Literal
-      │              │                    └─ value: 2
-      │              └─ else_clause: ElseClause
-      │                 └─ body: StatementBlock
-      │                    └─ statements: list
-      │                       └─ [0]: ExpressionStatement
-      │                          └─ expression: FuncCall
-      │                             ├─ callee: VarRef
-      │                             │  └─ name: 'print'
-      │                             └─ args: ArgumentList
-      │                                └─ args: list
-      │                                   └─ [0]: Literal
-      │                                      └─ value: 1
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'else_if_chain'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     ├─ [0]: Declaration
+│     │     │  ├─ type: Type
+│     │     │  │  ├─ type_id: 'int'
+│     │     │  │  ├─ inline: False
+│     │     │  │  ├─ static: False
+│     │     │  │  ├─ mut: False
+│     │     │  │  ├─ const: False
+│     │     │  │  └─ suffix: None
+│     │     │  ├─ id: 'score'
+│     │     │  └─ initializer: Initializer
+│     │     │     └─ expression: Literal
+│     │     │        └─ value: 80
+│     │     └─ [1]: IfStatement
+│     │        ├─ condition: BinaryExpression
+│     │        │  ├─ operator: '>='
+│     │        │  ├─ left: VarRef
+│     │        │  │  └─ name: 'score'
+│     │        │  └─ right: Literal
+│     │        │     └─ value: 90
+│     │        ├─ then_block: StatementBlock
+│     │        │  └─ statements: list
+│     │        │     └─ [0]: ExpressionStatement
+│     │        │        └─ expression: FuncCall
+│     │        │           ├─ callee: VarRef
+│     │        │           │  └─ name: 'print'
+│     │        │           └─ args: ArgumentList
+│     │        │              └─ args: list
+│     │        │                 └─ [0]: Literal
+│     │        │                    └─ value: 3
+│     │        └─ else_clause: ElseClause
+│     │           └─ body: IfStatement
+│     │              ├─ condition: BinaryExpression
+│     │              │  ├─ operator: '>='
+│     │              │  ├─ left: VarRef
+│     │              │  │  └─ name: 'score'
+│     │              │  └─ right: Literal
+│     │              │     └─ value: 60
+│     │              ├─ then_block: StatementBlock
+│     │              │  └─ statements: list
+│     │              │     └─ [0]: ExpressionStatement
+│     │              │        └─ expression: FuncCall
+│     │              │           ├─ callee: VarRef
+│     │              │           │  └─ name: 'print'
+│     │              │           └─ args: ArgumentList
+│     │              │              └─ args: list
+│     │              │                 └─ [0]: Literal
+│     │              │                    └─ value: 2
+│     │              └─ else_clause: ElseClause
+│     │                 └─ body: StatementBlock
+│     │                    └─ statements: list
+│     │                       └─ [0]: ExpressionStatement
+│     │                          └─ expression: FuncCall
+│     │                             ├─ callee: VarRef
+│     │                             │  └─ name: 'print'
+│     │                             └─ args: ArgumentList
+│     │                                └─ args: list
+│     │                                   └─ [0]: Literal
+│     │                                      └─ value: 1
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -1754,74 +1638,9 @@ start
                 var_ref	score
 
 ======================== AST ========================
-Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'while_loop'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: Declaration
-      │     │  ├─ type: Type
-      │     │  │  ├─ type_id: 'int'
-      │     │  │  ├─ inline: False
-      │     │  │  ├─ static: False
-      │     │  │  ├─ mut: False
-      │     │  │  ├─ const: False
-      │     │  │  └─ suffix: None
-      │     │  ├─ id: Identifier
-      │     │  │  └─ name: 'score'
-      │     │  └─ initializer: Initializer
-      │     │     └─ expression: Literal
-      │     │        └─ value: 80
-      │     ├─ [1]: WhileStatement
-      │     │  ├─ condition: BinaryExpression
-      │     │  │  ├─ operator: '<'
-      │     │  │  ├─ left: VarRef
-      │     │  │  │  └─ name: 'score'
-      │     │  │  └─ right: Literal
-      │     │  │     └─ value: 85
-      │     │  └─ body: StatementBlock
-      │     │     └─ statements: list
-      │     │        └─ [0]: ExpressionStatement
-      │     │           └─ expression: AssignExpression
-      │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │     │              ├─ target: VarRef
-      │     │              │  └─ name: 'score'
-      │     │              └─ value: BinaryExpression
-      │     │                 ├─ operator: '+'
-      │     │                 ├─ left: VarRef
-      │     │                 │  └─ name: 'score'
-      │     │                 └─ right: Literal
-      │     │                    └─ value: 1
-      │     └─ [2]: ExpressionStatement
-      │        └─ expression: FuncCall
-      │           ├─ callee: VarRef
-      │           │  └─ name: 'print'
-      │           └─ args: ArgumentList
-      │              └─ args: list
-      │                 └─ [0]: VarRef
-      │                    └─ name: 'score'
-      └─ decorators: list (empty)
-======================== STATUS ========================
-PASSED!!!
-expected: True; actual: True
+Error trying to process rule "while_statement":
 
-
-
-
-
-
-
-
+WhileStatement.__init__() takes 3 positional arguments but 4 were given
 
 
 
@@ -1953,92 +1772,84 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'for_loop'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: Declaration
-      │     │  ├─ type: Type
-      │     │  │  ├─ type_id: 'int'
-      │     │  │  ├─ inline: False
-      │     │  │  ├─ static: False
-      │     │  │  ├─ mut: False
-      │     │  │  ├─ const: False
-      │     │  │  └─ suffix: None
-      │     │  ├─ id: Identifier
-      │     │  │  └─ name: 'total'
-      │     │  └─ initializer: Initializer
-      │     │     └─ expression: Literal
-      │     │        └─ value: 0
-      │     ├─ [1]: ForStatement
-      │     │  ├─ init: ForInitializer
-      │     │  │  └─ init: AssignExpression
-      │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │     │  │     ├─ target: VarRef
-      │     │  │     │  └─ name: 'i'
-      │     │  │     └─ value: Literal
-      │     │  │        └─ value: 0
-      │     │  ├─ condition: ForConditional
-      │     │  │  └─ cond: BinaryExpression
-      │     │  │     ├─ operator: '<'
-      │     │  │     ├─ left: VarRef
-      │     │  │     │  └─ name: 'i'
-      │     │  │     └─ right: Literal
-      │     │  │        └─ value: 10
-      │     │  ├─ step: ForStep
-      │     │  │  └─ step: AssignExpression
-      │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │     │  │     ├─ target: VarRef
-      │     │  │     │  └─ name: 'i'
-      │     │  │     └─ value: BinaryExpression
-      │     │  │        ├─ operator: '+'
-      │     │  │        ├─ left: VarRef
-      │     │  │        │  └─ name: 'i'
-      │     │  │        └─ right: Literal
-      │     │  │           └─ value: 1
-      │     │  └─ body: StatementBlock
-      │     │     └─ statements: list
-      │     │        └─ [0]: ExpressionStatement
-      │     │           └─ expression: AssignExpression
-      │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │     │              ├─ target: VarRef
-      │     │              │  └─ name: 'total'
-      │     │              └─ value: BinaryExpression
-      │     │                 ├─ operator: '+'
-      │     │                 ├─ left: VarRef
-      │     │                 │  └─ name: 'total'
-      │     │                 └─ right: VarRef
-      │     │                    └─ name: 'i'
-      │     └─ [2]: ExpressionStatement
-      │        └─ expression: FuncCall
-      │           ├─ callee: VarRef
-      │           │  └─ name: 'print'
-      │           └─ args: ArgumentList
-      │              └─ args: list
-      │                 └─ [0]: VarRef
-      │                    └─ name: 'total'
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'for_loop'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     ├─ [0]: Declaration
+│     │     │  ├─ type: Type
+│     │     │  │  ├─ type_id: 'int'
+│     │     │  │  ├─ inline: False
+│     │     │  │  ├─ static: False
+│     │     │  │  ├─ mut: False
+│     │     │  │  ├─ const: False
+│     │     │  │  └─ suffix: None
+│     │     │  ├─ id: 'total'
+│     │     │  └─ initializer: Initializer
+│     │     │     └─ expression: Literal
+│     │     │        └─ value: 0
+│     │     ├─ [1]: ForStatement
+│     │     │  ├─ init: ForInitializer
+│     │     │  │  └─ init: AssignExpression
+│     │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │     │  │     ├─ target: VarRef
+│     │     │  │     │  └─ name: 'i'
+│     │     │  │     └─ value: Literal
+│     │     │  │        └─ value: 0
+│     │     │  ├─ condition: ForConditional
+│     │     │  │  └─ cond: BinaryExpression
+│     │     │  │     ├─ operator: '<'
+│     │     │  │     ├─ left: VarRef
+│     │     │  │     │  └─ name: 'i'
+│     │     │  │     └─ right: Literal
+│     │     │  │        └─ value: 10
+│     │     │  ├─ step: ForStep
+│     │     │  │  └─ step: AssignExpression
+│     │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │     │  │     ├─ target: VarRef
+│     │     │  │     │  └─ name: 'i'
+│     │     │  │     └─ value: BinaryExpression
+│     │     │  │        ├─ operator: '+'
+│     │     │  │        ├─ left: VarRef
+│     │     │  │        │  └─ name: 'i'
+│     │     │  │        └─ right: Literal
+│     │     │  │           └─ value: 1
+│     │     │  └─ body: StatementBlock
+│     │     │     └─ statements: list
+│     │     │        └─ [0]: ExpressionStatement
+│     │     │           └─ expression: AssignExpression
+│     │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │     │              ├─ target: VarRef
+│     │     │              │  └─ name: 'total'
+│     │     │              └─ value: BinaryExpression
+│     │     │                 ├─ operator: '+'
+│     │     │                 ├─ left: VarRef
+│     │     │                 │  └─ name: 'total'
+│     │     │                 └─ right: VarRef
+│     │     │                    └─ name: 'i'
+│     │     └─ [2]: ExpressionStatement
+│     │        └─ expression: FuncCall
+│     │           ├─ callee: VarRef
+│     │           │  └─ name: 'print'
+│     │           └─ args: ArgumentList
+│     │              └─ args: list
+│     │                 └─ [0]: VarRef
+│     │                    └─ name: 'total'
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -2106,40 +1917,33 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'for_empty'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: ForStatement
-      │        ├─ init: None
-      │        ├─ condition: None
-      │        ├─ step: None
-      │        └─ body: StatementBlock
-      │           └─ statements: list
-      │              └─ [0]: ReturnStatement
-      │                 └─ value: None
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'void'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'for_empty'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ForStatement
+│     │        ├─ init: None
+│     │        ├─ condition: None
+│     │        ├─ step: None
+│     │        └─ body: StatementBlock
+│     │           └─ statements: list
+│     │              └─ [0]: ReturnStatement
+│     │                 └─ value: None
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -2316,117 +2120,9 @@ start
                                       number_literal	1
 
 ======================== AST ========================
-Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'void'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'nested_loops'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: Declaration
-      │     │  ├─ type: Type
-      │     │  │  ├─ type_id: 'int'
-      │     │  │  ├─ inline: False
-      │     │  │  ├─ static: False
-      │     │  │  ├─ mut: False
-      │     │  │  ├─ const: False
-      │     │  │  └─ suffix: None
-      │     │  ├─ id: Identifier
-      │     │  │  └─ name: 'j'
-      │     │  └─ initializer: Initializer
-      │     │     └─ expression: Literal
-      │     │        └─ value: 0
-      │     └─ [1]: ForStatement
-      │        ├─ init: ForInitializer
-      │        │  └─ init: AssignExpression
-      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │        │     ├─ target: VarRef
-      │        │     │  └─ name: 'i'
-      │        │     └─ value: Literal
-      │        │        └─ value: 0
-      │        ├─ condition: ForConditional
-      │        │  └─ cond: BinaryExpression
-      │        │     ├─ operator: '<'
-      │        │     ├─ left: VarRef
-      │        │     │  └─ name: 'i'
-      │        │     └─ right: Literal
-      │        │        └─ value: 3
-      │        ├─ step: ForStep
-      │        │  └─ step: AssignExpression
-      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │        │     ├─ target: VarRef
-      │        │     │  └─ name: 'i'
-      │        │     └─ value: BinaryExpression
-      │        │        ├─ operator: '+'
-      │        │        ├─ left: VarRef
-      │        │        │  └─ name: 'i'
-      │        │        └─ right: Literal
-      │        │           └─ value: 1
-      │        └─ body: StatementBlock
-      │           └─ statements: list
-      │              └─ [0]: WhileStatement
-      │                 ├─ condition: BinaryExpression
-      │                 │  ├─ operator: '<'
-      │                 │  ├─ left: VarRef
-      │                 │  │  └─ name: 'j'
-      │                 │  └─ right: Literal
-      │                 │     └─ value: 3
-      │                 └─ body: StatementBlock
-      │                    └─ statements: list
-      │                       └─ [0]: IfStatement
-      │                          ├─ condition: BinaryExpression
-      │                          │  ├─ operator: '=='
-      │                          │  ├─ left: VarRef
-      │                          │  │  └─ name: 'j'
-      │                          │  └─ right: Literal
-      │                          │     └─ value: 1
-      │                          ├─ then_block: StatementBlock
-      │                          │  └─ statements: list
-      │                          │     └─ [0]: ExpressionStatement
-      │                          │        └─ expression: AssignExpression
-      │                          │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │                          │           ├─ target: VarRef
-      │                          │           │  └─ name: 'j'
-      │                          │           └─ value: BinaryExpression
-      │                          │              ├─ operator: '+'
-      │                          │              ├─ left: VarRef
-      │                          │              │  └─ name: 'j'
-      │                          │              └─ right: Literal
-      │                          │                 └─ value: 2
-      │                          └─ else_clause: ElseClause
-      │                             └─ body: StatementBlock
-      │                                └─ statements: list
-      │                                   └─ [0]: ExpressionStatement
-      │                                      └─ expression: AssignExpression
-      │                                         ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │                                         ├─ target: VarRef
-      │                                         │  └─ name: 'j'
-      │                                         └─ value: BinaryExpression
-      │                                            ├─ operator: '+'
-      │                                            ├─ left: VarRef
-      │                                            │  └─ name: 'j'
-      │                                            └─ right: Literal
-      │                                               └─ value: 1
-      └─ decorators: list (empty)
-======================== STATUS ========================
-PASSED!!!
-expected: True; actual: True
+Error trying to process rule "while_statement":
 
-
-
-
-
-
-
-
+WhileStatement.__init__() takes 3 positional arguments but 4 were given
 
 
 
@@ -2547,79 +2243,9 @@ start
             var_ref	x
 
 ======================== AST ========================
-Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'int'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'early_return'
-      ├─ parameters: list
-      │  └─ [0]: Parameter
-      │     ├─ type: Type
-      │     │  ├─ type_id: 'int'
-      │     │  ├─ inline: False
-      │     │  ├─ static: False
-      │     │  ├─ mut: False
-      │     │  ├─ const: False
-      │     │  └─ suffix: None
-      │     └─ name: Identifier
-      │        └─ name: 'x'
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     ├─ [0]: IfStatement
-      │     │  ├─ condition: BinaryExpression
-      │     │  │  ├─ operator: '<'
-      │     │  │  ├─ left: VarRef
-      │     │  │  │  └─ name: 'x'
-      │     │  │  └─ right: Literal
-      │     │  │     └─ value: 0
-      │     │  ├─ then_block: StatementBlock
-      │     │  │  └─ statements: list
-      │     │  │     └─ [0]: ReturnStatement
-      │     │  │        └─ value: Literal
-      │     │  │           └─ value: 0
-      │     │  └─ else_clause: None
-      │     ├─ [1]: WhileStatement
-      │     │  ├─ condition: BinaryExpression
-      │     │  │  ├─ operator: '>'
-      │     │  │  ├─ left: VarRef
-      │     │  │  │  └─ name: 'x'
-      │     │  │  └─ right: Literal
-      │     │  │     └─ value: 10
-      │     │  └─ body: StatementBlock
-      │     │     └─ statements: list
-      │     │        └─ [0]: ExpressionStatement
-      │     │           └─ expression: AssignExpression
-      │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │     │              ├─ target: VarRef
-      │     │              │  └─ name: 'x'
-      │     │              └─ value: BinaryExpression
-      │     │                 ├─ operator: '-'
-      │     │                 ├─ left: VarRef
-      │     │                 │  └─ name: 'x'
-      │     │                 └─ right: Literal
-      │     │                    └─ value: 1
-      │     └─ [2]: ReturnStatement
-      │        └─ value: VarRef
-      │           └─ name: 'x'
-      └─ decorators: list (empty)
-======================== STATUS ========================
-PASSED!!!
-expected: True; actual: True
+Error trying to process rule "while_statement":
 
-
-
-
-
-
-
-
+WhileStatement.__init__() takes 3 positional arguments but 4 were given
 
 
 
@@ -2684,41 +2310,34 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'i32'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'member_assign'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: ExpressionStatement
-      │        └─ expression: AssignExpression
-      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │           ├─ target: MemberAccess
-      │           │  ├─ target: VarRef
-      │           │  │  └─ name: 'thing'
-      │           │  └─ member: 'member'
-      │           └─ value: Literal
-      │              └─ value: 0
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'member_assign'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: MemberAccess
+│     │           │  ├─ target: VarRef
+│     │           │  │  └─ name: 'thing'
+│     │           │  └─ member: 'member'
+│     │           └─ value: Literal
+│     │              └─ value: 0
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -2782,41 +2401,34 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'i32'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'member_get'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: ExpressionStatement
-      │        └─ expression: AssignExpression
-      │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │           ├─ target: VarRef
-      │           │  └─ name: 'e'
-      │           └─ value: MemberAccess
-      │              ├─ target: VarRef
-      │              │  └─ name: 'thing'
-      │              └─ member: 'member'
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'member_get'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: VarRef
+│     │           │  └─ name: 'e'
+│     │           └─ value: MemberAccess
+│     │              ├─ target: VarRef
+│     │              │  └─ name: 'thing'
+│     │              └─ member: 'member'
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
 
 
 
@@ -2901,48 +2513,9 @@ start
                 continue_statement
 
 ======================== AST ========================
-Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'i32'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'while_test'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: WhileStatement
-      │        ├─ condition: VarRef
-      │        │  └─ name: 'true'
-      │        └─ body: StatementBlock
-      │           └─ statements: list
-      │              ├─ [0]: ExpressionStatement
-      │              │  └─ expression: FuncCall
-      │              │     ├─ callee: VarRef
-      │              │     │  └─ name: 'print'
-      │              │     └─ args: ArgumentList
-      │              │        └─ args: list
-      │              │           └─ [0]: Literal
-      │              │              └─ value: 'hello world'
-      │              ├─ [1]: BreakStatement (empty)
-      │              └─ [2]: ContinueStatement (empty)
-      └─ decorators: list (empty)
-======================== STATUS ========================
-PASSED!!!
-expected: True; actual: True
+Error trying to process rule "while_statement":
 
-
-
-
-
-
-
-
+WhileStatement.__init__() takes 3 positional arguments but 4 were given
 
 
 
@@ -3043,51 +2616,52 @@ start
 
 ======================== AST ========================
 Program
-└─ entries: list
-   └─ [0]: FunctionDefinition
-      ├─ return_type: Type
-      │  ├─ type_id: 'i32'
-      │  ├─ inline: False
-      │  ├─ static: False
-      │  ├─ mut: False
-      │  ├─ const: False
-      │  └─ suffix: None
-      ├─ name: Identifier
-      │  └─ name: 'for_test'
-      ├─ parameters: list (empty)
-      ├─ body: StatementBlock
-      │  └─ statements: list
-      │     └─ [0]: ForStatement
-      │        ├─ init: ForInitializer
-      │        │  └─ init: AssignExpression
-      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │        │     ├─ target: VarRef
-      │        │     │  └─ name: 'i'
-      │        │     └─ value: Literal
-      │        │        └─ value: 0
-      │        ├─ condition: ForConditional
-      │        │  └─ cond: BinaryExpression
-      │        │     ├─ operator: '<'
-      │        │     ├─ left: VarRef
-      │        │     │  └─ name: 'i'
-      │        │     └─ right: Literal
-      │        │        └─ value: 32
-      │        ├─ step: ForStep
-      │        │  └─ step: AssignExpression
-      │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-      │        │     ├─ target: VarRef
-      │        │     │  └─ name: 'i'
-      │        │     └─ value: BinaryExpression
-      │        │        ├─ operator: '+'
-      │        │        ├─ left: VarRef
-      │        │        │  └─ name: 'i'
-      │        │        └─ right: Literal
-      │        │           └─ value: 1
-      │        └─ body: StatementBlock
-      │           └─ statements: list
-      │              ├─ [0]: ContinueStatement (empty)
-      │              └─ [1]: BreakStatement (empty)
-      └─ decorators: list (empty)
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'for_test'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ForStatement
+│     │        ├─ init: ForInitializer
+│     │        │  └─ init: AssignExpression
+│     │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │        │     ├─ target: VarRef
+│     │        │     │  └─ name: 'i'
+│     │        │     └─ value: Literal
+│     │        │        └─ value: 0
+│     │        ├─ condition: ForConditional
+│     │        │  └─ cond: BinaryExpression
+│     │        │     ├─ operator: '<'
+│     │        │     ├─ left: VarRef
+│     │        │     │  └─ name: 'i'
+│     │        │     └─ right: Literal
+│     │        │        └─ value: 32
+│     │        ├─ step: ForStep
+│     │        │  └─ step: AssignExpression
+│     │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │        │     ├─ target: VarRef
+│     │        │     │  └─ name: 'i'
+│     │        │     └─ value: BinaryExpression
+│     │        │        ├─ operator: '+'
+│     │        │        ├─ left: VarRef
+│     │        │        │  └─ name: 'i'
+│     │        │        └─ right: Literal
+│     │        │           └─ value: 1
+│     │        └─ body: StatementBlock
+│     │           └─ statements: list
+│     │              ├─ [0]: ContinueStatement (empty)
+│     │              └─ [1]: BreakStatement (empty)
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -3099,6 +2673,384 @@ expected: True; actual: True
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 logical_not_test() {
+    x = !43;
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'logical_not_test' line=3 col=5
+LPAR               '(' line=3 col=21
+RPAR               ')' line=3 col=22
+LBRACE             '{' line=3 col=24
+NAME               'x' line=4 col=5
+EQUAL              '=' line=4 col=7
+BANG               '!' line=4 col=9
+DECIMAL_INT        '43' line=4 col=10
+SEMICOLON          ';' line=4 col=12
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      logical_not_test
+      None
+      block
+        statement
+          expression_statement
+            assign
+              var_ref	x
+              assign_op	=
+              logical_not
+                literal
+                  number_literal	43
+
+======================== AST ========================
+Program
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'logical_not_test'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: VarRef
+│     │           │  └─ name: 'x'
+│     │           └─ value: UnaryExpression
+│     │              ├─ operator: '!'
+│     │              └─ operand: Literal
+│     │                 └─ value: 43
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 negation_test() {
+    x = -43;
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'negation_test' line=3 col=5
+LPAR               '(' line=3 col=18
+RPAR               ')' line=3 col=19
+LBRACE             '{' line=3 col=21
+NAME               'x' line=4 col=5
+EQUAL              '=' line=4 col=7
+MINUS              '-' line=4 col=9
+DECIMAL_INT        '43' line=4 col=10
+SEMICOLON          ';' line=4 col=12
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      negation_test
+      None
+      block
+        statement
+          expression_statement
+            assign
+              var_ref	x
+              assign_op	=
+              negate
+                literal
+                  number_literal	43
+
+======================== AST ========================
+Program
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'negation_test'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: VarRef
+│     │           │  └─ name: 'x'
+│     │           └─ value: UnaryExpression
+│     │              ├─ operator: '-'
+│     │              └─ operand: Literal
+│     │                 └─ value: 43
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 bitwise_not_test() {
+    x = ~3;
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'bitwise_not_test' line=3 col=5
+LPAR               '(' line=3 col=21
+RPAR               ')' line=3 col=22
+LBRACE             '{' line=3 col=24
+NAME               'x' line=4 col=5
+EQUAL              '=' line=4 col=7
+TILDE              '~' line=4 col=9
+DECIMAL_INT        '3' line=4 col=10
+SEMICOLON          ';' line=4 col=11
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      bitwise_not_test
+      None
+      block
+        statement
+          expression_statement
+            assign
+              var_ref	x
+              assign_op	=
+              bitwise_not
+                literal
+                  number_literal	3
+
+======================== AST ========================
+Program
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'bitwise_not_test'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ExpressionStatement
+│     │        └─ expression: AssignExpression
+│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
+│     │           ├─ target: VarRef
+│     │           │  └─ name: 'x'
+│     │           └─ value: UnaryExpression
+│     │              ├─ operator: '~'
+│     │              └─ operand: Literal
+│     │                 └─ value: 3
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+i32 main(int argc, char[16] argv) {
+    return 3;
+}
+======================== TOKENS ========================
+NAME               'i32' line=3 col=1
+NAME               'main' line=3 col=5
+LPAR               '(' line=3 col=9
+NAME               'int' line=3 col=10
+NAME               'argc' line=3 col=14
+COMMA              ',' line=3 col=18
+NAME               'char' line=3 col=20
+LSQB               '[' line=3 col=24
+DECIMAL_INT        '16' line=3 col=25
+RSQB               ']' line=3 col=27
+NAME               'argv' line=3 col=29
+RPAR               ')' line=3 col=33
+LBRACE             '{' line=3 col=35
+RETURN             'return' line=4 col=5
+DECIMAL_INT        '3' line=4 col=12
+SEMICOLON          ';' line=4 col=13
+RBRACE             '}' line=5 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      main
+      parameter_list
+        argument_declaration
+          qualified_type
+            typename	int
+            None
+          argc
+        argument_declaration
+          qualified_type
+            typename	char
+            type_suffix
+              array_size	16
+          argv
+      block
+        statement
+          return_statement
+            literal
+              number_literal	3
+
+======================== AST ========================
+Program
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'main'
+│     ├─ parameters: list
+│     │  ├─ [0]: Parameter
+│     │  │  ├─ type: Type
+│     │  │  │  ├─ type_id: 'int'
+│     │  │  │  ├─ inline: False
+│     │  │  │  ├─ static: False
+│     │  │  │  ├─ mut: False
+│     │  │  │  ├─ const: False
+│     │  │  │  └─ suffix: None
+│     │  │  └─ name: Identifier
+│     │  │     └─ name: 'argc'
+│     │  └─ [1]: Parameter
+│     │     ├─ type: Type
+│     │     │  ├─ type_id: 'char'
+│     │     │  ├─ inline: False
+│     │     │  ├─ static: False
+│     │     │  ├─ mut: False
+│     │     │  ├─ const: False
+│     │     │  └─ suffix: ArraySpan
+│     │     │     └─ size: 16
+│     │     └─ name: Identifier
+│     │        └─ name: 'argv'
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     └─ [0]: ReturnStatement
+│     │        └─ value: Literal
+│     │           └─ value: 3
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
 
 
 
@@ -3151,17 +3103,9 @@ No terminal matches '(' in the current parser context, at line 5 col 10
     print(43);
          ^
 Expected one of: 
+	* NAME
 	* LSQB
 	* AMPERSAND
-	* NAME
-
-
-
-
-
-
-
-
 
 
 
@@ -3212,19 +3156,11 @@ No terminal matches '3' in the current parser context, at line 4 col 5
     ^
 Expected one of: 
 	* CONST
-	* STATIC
-	* MUT
-	* RBRACE
 	* INLINE
 	* NAME
-
-
-
-
-
-
-
-
+	* MUT
+	* STATIC
+	* RBRACE
 
 
 
@@ -3283,17 +3219,9 @@ No terminal matches '[' in the current parser context, at line 11 col 47
  inline const mut i32 const_mut_together[32];
                                         ^
 Expected one of: 
-	* SEMICOLON
 	* LPAR
 	* EQUAL
-
-
-
-
-
-
-
-
+	* SEMICOLON
 
 
 
@@ -3365,14 +3293,6 @@ Expected one of:
 
 
 
-
-
-
-
-
-
-
-
 ======================== CODE BLOCK ========================
 
 
@@ -3423,14 +3343,6 @@ Unexpected end-of-input. Expected one of:
 
 
 
-
-
-
-
-
-
-
-
 ======================== CODE BLOCK ========================
 
 
@@ -3439,6 +3351,7 @@ i32 foo() {
         i32 some_member;
     };
 }
+
 
 ======================== TOKENS ========================
 NAME               'i32' line=3 col=1
@@ -3467,25 +3380,369 @@ No terminal matches 's' in the current parser context, at line 4 col 5
     struct illegalNestedStruct {
     ^
 Expected one of: 
-	* CONST
-	* DECIMAL_INT
-	* STATIC
-	* CONTINUE
-	* MINUS
-	* INLINE
-	* PLUS
-	* STRING
-	* FOR
-	* IF
-	* WHILE
-	* DECIMAL_FLOAT
 	* LPAR
+	* CONTINUE
 	* NAME
-	* RETURN
-	* BANG
-	* HEXADECIMAL_INT
 	* MUT
+	* RETURN
+	* HEXADECIMAL_INT
+	* DECIMAL_FLOAT
+	* CONST
+	* MINUS
+	* FOR
 	* BREAK
-	* RBRACE
+	* WHILE
+	* INLINE
+	* IF
+	* PLUS
 	* TILDE
+	* BANG
+	* STATIC
+	* DECIMAL_INT
+	* RBRACE
+	* STRING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+int passingDeclarationAsArg() {
+    foo(int x);
+}
+
+
+======================== TOKENS ========================
+NAME               'int' line=3 col=1
+NAME               'passingDeclarationAsArg' line=3 col=5
+LPAR               '(' line=3 col=28
+RPAR               ')' line=3 col=29
+LBRACE             '{' line=3 col=31
+NAME               'foo' line=4 col=5
+LPAR               '(' line=4 col=8
+NAME               'int' line=4 col=9
+NAME               'x' line=4 col=13
+RPAR               ')' line=4 col=14
+SEMICOLON          ';' line=4 col=15
+RBRACE             '}' line=5 col=1
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 'x' in the current parser context, at line 4 col 13
+
+    foo(int x);
+            ^
+Expected one of: 
+	* COMPOUND_OP
+	* COMMA
+	* LPAR
+	* ASSIGN_OP
+	* __ANON_4
+	* RPAR
+	* __ANON_6
+	* MORETHAN
+	* MINUS
+	* DOT
+	* __ANON_7
+	* __ANON_5
+	* __ANON_2
+	* SLASH
+	* CIRCUMFLEX
+	* STAR
+	* PERCENT
+	* LSQB
+	* AMPERSAND
+	* __ANON_3
+	* LESSTHAN
+	* VBAR
+	* PLUS
+	* __ANON_1
+	* __ANON_0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+int passingDefinitionAsArg() {
+    foo(int x = 0);
+}
+
+
+======================== TOKENS ========================
+NAME               'int' line=2 col=1
+NAME               'passingDefinitionAsArg' line=2 col=5
+LPAR               '(' line=2 col=27
+RPAR               ')' line=2 col=28
+LBRACE             '{' line=2 col=30
+NAME               'foo' line=3 col=5
+LPAR               '(' line=3 col=8
+NAME               'int' line=3 col=9
+NAME               'x' line=3 col=13
+EQUAL              '=' line=3 col=15
+DECIMAL_INT        '0' line=3 col=17
+RPAR               ')' line=3 col=18
+SEMICOLON          ';' line=3 col=19
+RBRACE             '}' line=4 col=1
+None
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 'x' in the current parser context, at line 3 col 13
+
+    foo(int x = 0);
+            ^
+Expected one of: 
+	* COMPOUND_OP
+	* COMMA
+	* LPAR
+	* ASSIGN_OP
+	* __ANON_4
+	* RPAR
+	* __ANON_6
+	* MORETHAN
+	* MINUS
+	* DOT
+	* __ANON_7
+	* __ANON_5
+	* __ANON_2
+	* SLASH
+	* CIRCUMFLEX
+	* STAR
+	* PERCENT
+	* LSQB
+	* AMPERSAND
+	* __ANON_3
+	* LESSTHAN
+	* VBAR
+	* PLUS
+	* __ANON_1
+	* __ANON_0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+i32 doubleDeclaration() {
+    i32 function_local;
+    if(1) {
+        i32 if_local;
+    } else {
+        int i;
+        int i;
+    }
+}
+======================== TOKENS ========================
+NAME               'i32' line=2 col=1
+NAME               'doubleDeclaration' line=2 col=5
+LPAR               '(' line=2 col=22
+RPAR               ')' line=2 col=23
+LBRACE             '{' line=2 col=25
+NAME               'i32' line=3 col=5
+NAME               'function_local' line=3 col=9
+SEMICOLON          ';' line=3 col=23
+IF                 'if' line=4 col=5
+LPAR               '(' line=4 col=7
+DECIMAL_INT        '1' line=4 col=8
+RPAR               ')' line=4 col=9
+LBRACE             '{' line=4 col=11
+NAME               'i32' line=5 col=9
+NAME               'if_local' line=5 col=13
+SEMICOLON          ';' line=5 col=21
+RBRACE             '}' line=6 col=5
+ELSE               'else' line=6 col=7
+LBRACE             '{' line=6 col=12
+NAME               'int' line=7 col=9
+NAME               'i' line=7 col=13
+SEMICOLON          ';' line=7 col=14
+NAME               'int' line=8 col=9
+NAME               'i' line=8 col=13
+SEMICOLON          ';' line=8 col=14
+RBRACE             '}' line=9 col=5
+RBRACE             '}' line=10 col=1
+======================== PARSE TREE ========================
+start
+  entry
+    function_definition
+      None
+      qualified_type
+        typename	i32
+        None
+      doubleDeclaration
+      None
+      block
+        statement
+          declaration
+            qualified_type
+              typename	i32
+              None
+            identifier	function_local
+            None
+        statement
+          if_statement
+            literal
+              number_literal	1
+            block
+              statement
+                declaration
+                  qualified_type
+                    typename	i32
+                    None
+                  identifier	if_local
+                  None
+            else_clause
+              block
+                statement
+                  declaration
+                    qualified_type
+                      typename	int
+                      None
+                    identifier	i
+                    None
+                statement
+                  declaration
+                    qualified_type
+                      typename	int
+                      None
+                    identifier	i
+                    None
+
+======================== AST ========================
+Program
+├─ globals: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: Type
+│     │  ├─ type_id: 'i32'
+│     │  ├─ inline: False
+│     │  ├─ static: False
+│     │  ├─ mut: False
+│     │  ├─ const: False
+│     │  └─ suffix: None
+│     ├─ name: Identifier
+│     │  └─ name: 'doubleDeclaration'
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  └─ statements: list
+│     │     ├─ [0]: Declaration
+│     │     │  ├─ type: Type
+│     │     │  │  ├─ type_id: 'i32'
+│     │     │  │  ├─ inline: False
+│     │     │  │  ├─ static: False
+│     │     │  │  ├─ mut: False
+│     │     │  │  ├─ const: False
+│     │     │  │  └─ suffix: None
+│     │     │  ├─ id: 'function_local'
+│     │     │  └─ initializer: None
+│     │     └─ [1]: IfStatement
+│     │        ├─ condition: Literal
+│     │        │  └─ value: 1
+│     │        ├─ then_block: StatementBlock
+│     │        │  └─ statements: list
+│     │        │     └─ [0]: Declaration
+│     │        │        ├─ type: Type
+│     │        │        │  ├─ type_id: 'i32'
+│     │        │        │  ├─ inline: False
+│     │        │        │  ├─ static: False
+│     │        │        │  ├─ mut: False
+│     │        │        │  ├─ const: False
+│     │        │        │  └─ suffix: None
+│     │        │        ├─ id: 'if_local'
+│     │        │        └─ initializer: None
+│     │        └─ else_clause: ElseClause
+│     │           └─ body: StatementBlock
+│     │              └─ statements: list
+│     │                 ├─ [0]: Declaration
+│     │                 │  ├─ type: Type
+│     │                 │  │  ├─ type_id: 'int'
+│     │                 │  │  ├─ inline: False
+│     │                 │  │  ├─ static: False
+│     │                 │  │  ├─ mut: False
+│     │                 │  │  ├─ const: False
+│     │                 │  │  └─ suffix: None
+│     │                 │  ├─ id: 'i'
+│     │                 │  └─ initializer: None
+│     │                 └─ [1]: Declaration
+│     │                    ├─ type: Type
+│     │                    │  ├─ type_id: 'int'
+│     │                    │  ├─ inline: False
+│     │                    │  ├─ static: False
+│     │                    │  ├─ mut: False
+│     │                    │  ├─ const: False
+│     │                    │  └─ suffix: None
+│     │                    ├─ id: 'i'
+│     │                    └─ initializer: None
+│     └─ decorators: list (empty)
+└─ entries: list (empty)
+======================== STATUS ========================
+FAILED!!!
+expected: False; actual: True
+
+
+
+
+
+
+
+
+
 

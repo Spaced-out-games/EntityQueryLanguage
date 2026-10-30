@@ -42,3 +42,25 @@ i32 foo() {
         i32 some_member;
     };
 }
+
+/**/
+
+int passingDeclarationAsArg() {
+    foo(int x);
+}
+
+/**/
+int passingDefinitionAsArg() {
+    foo(int x = 0);
+}
+
+/**/
+i32 doubleDeclaration() {
+    i32 function_local;
+    if(1) {
+        i32 if_local;
+    } else {
+        int i;
+        int i;
+    }
+}
