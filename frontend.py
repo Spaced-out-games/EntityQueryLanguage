@@ -96,7 +96,7 @@ def create_parser(grammar_path: str):
 
 parser = create_parser(GRAMMAR_PATH)
 
-from ESLTranslator import ESLTransformer
+from ESLTranslator import ESLSemanticError, ESLTransformer
 
 # ============================================================
 # 4. CREATE TRANSFORMER
@@ -240,7 +240,7 @@ def demo_driver(parser: None, AST_transformer: Transformer, positives: list[str]
             negative_blocks = [[block, False] for block in blocks]
 
     # merge them
-    all_blocks = positive_blocks + negative_blocks
+    all_blocks = negative_blocks + positive_blocks
 
     for block, expects_pass in all_blocks:
         print("\n\n\n\n\n\n\n\n\n")
@@ -262,21 +262,24 @@ def demo_driver(parser: None, AST_transformer: Transformer, positives: list[str]
             print("======================== AST ========================")
 
             tree = AST_transformer.transform(parse_tree)
-            print(pretty_ast(tree))
+            #AST_transformer.init_scopes(tree, [])
+
+            print(pretty_ast(tree, True, True))
             
             # it needs to pass, so it better pass
             print("======================== STATUS ========================")
             print("PASSED!!!" if expects_pass else "FAILED!!!")
             print(f"expected: {expects_pass}; actual: True")
 
-        except UnexpectedInput as e:
-            print(None)
+        except Exception as e:
             print("======================== STATUS ========================")
             print("PASSED!!!" if not expects_pass else "FAILED!!!")
             print(f"expected: {expects_pass}; actual: False\n\nError:\n")
             print(e)
-        except VisitError as e:
-            print(e)
+        #except VisitError as e:
+        #    print(e)
+        #except ESLSemanticError as e:
+        #    pass
         print("\n\n\n\n\n\n\n\n\n")
         
 

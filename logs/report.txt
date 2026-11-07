@@ -9,27 +9,625 @@
 
 
 ======================== CODE BLOCK ========================
+
+// VALIDATED
+// this fails - only declarations and definitions allowed
+struct NoStatementsInStruct {
+    print(43);
+};
+
+
+======================== TOKENS ========================
+STRUCT             'struct' line=4 col=1
+NAME               'NoStatementsInStruct' line=4 col=8
+LBRACE             '{' line=4 col=29
+NAME               'print' line=5 col=5
+LPAR               '(' line=5 col=10
+DECIMAL_INT        '43' line=5 col=11
+RPAR               ')' line=5 col=13
+SEMICOLON          ';' line=5 col=14
+RBRACE             '}' line=6 col=1
+SEMICOLON          ';' line=6 col=2
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '(' in the current parser context, at line 5 col 10
+
+    print(43);
+         ^
+Expected one of: 
+	* NAME
+	* AMPERSAND
+	* LSQB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// VALIDATED
+// no Expressions in structures
+struct NoExpressionsInStructs {
+    32;
+};
+
+
+======================== TOKENS ========================
+STRUCT             'struct' line=4 col=1
+NAME               'NoExpressionsInStructs' line=4 col=8
+LBRACE             '{' line=4 col=31
+DECIMAL_INT        '32' line=5 col=5
+SEMICOLON          ';' line=5 col=7
+RBRACE             '}' line=6 col=1
+SEMICOLON          ';' line=6 col=2
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '3' in the current parser context, at line 5 col 5
+
+    32;
+    ^
+Expected one of: 
+	* CONST
+	* NAME
+	* INLINE
+	* MUT
+	* RBRACE
+	* STATIC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+// VALIDATED
+//int incomplete_string_literal() {
+    //return ";
+//}
+
+
+
+// VALIDATED
+// const & mut mutually exclusive
+static inline const mut i32 const_mut_together;
+
+
+======================== TOKENS ========================
+STATIC             'static' line=11 col=1
+INLINE             'inline' line=11 col=8
+CONST              'const' line=11 col=15
+MUT                'mut' line=11 col=21
+NAME               'i32' line=11 col=25
+NAME               'const_mut_together' line=11 col=29
+SEMICOLON          ';' line=11 col=47
+======================== PARSE TREE ========================
+start
+  entry
+    declaration
+      qualified_type
+        type_qualifier
+          static
+        type_qualifier
+          inline
+        type_qualifier
+          const
+        type_qualifier
+          mut
+        typename	i32
+        None
+      identifier	const_mut_together
+      None
+
+======================== AST ========================
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+Error trying to process rule "qualified_type":
+
+`const` and `mut` are mutually exclusive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// VALIDATED
+static inline f32[16]& illegalArrayRef;
+
+
+======================== TOKENS ========================
+STATIC             'static' line=4 col=1
+INLINE             'inline' line=4 col=8
+NAME               'f32' line=4 col=15
+LSQB               '[' line=4 col=18
+DECIMAL_INT        '16' line=4 col=19
+RSQB               ']' line=4 col=21
+AMPERSAND          '&' line=4 col=22
+NAME               'illegalArrayRef' line=4 col=24
+SEMICOLON          ';' line=4 col=39
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches '&' in the current parser context, at line 4 col 22
+
+static inline f32[16]& illegalArrayRef;
+                     ^
+Expected one of: 
+	* NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// VALIDATED
+struct foo {
+    inline f32& illegalInlineInStruct;
+}
+
+
+
+
+======================== TOKENS ========================
+STRUCT             'struct' line=4 col=1
+NAME               'foo' line=4 col=8
+LBRACE             '{' line=4 col=12
+INLINE             'inline' line=5 col=5
+NAME               'f32' line=5 col=12
+AMPERSAND          '&' line=5 col=15
+NAME               'illegalInlineInStruct' line=5 col=17
+SEMICOLON          ';' line=5 col=38
+RBRACE             '}' line=6 col=1
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+Unexpected end-of-input. Expected one of: 
+	* SEMICOLON
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// VALIDATED
+i32 foo() {
+    struct illegalNestedStruct {
+        i32 some_member;
+    };
+}
+
+
+======================== TOKENS ========================
+NAME               'i32' line=4 col=1
+NAME               'foo' line=4 col=5
+LPAR               '(' line=4 col=8
+RPAR               ')' line=4 col=9
+LBRACE             '{' line=4 col=11
+STRUCT             'struct' line=5 col=5
+NAME               'illegalNestedStruct' line=5 col=12
+LBRACE             '{' line=5 col=32
+NAME               'i32' line=6 col=9
+NAME               'some_member' line=6 col=13
+SEMICOLON          ';' line=6 col=24
+RBRACE             '}' line=7 col=5
+SEMICOLON          ';' line=7 col=6
+RBRACE             '}' line=8 col=1
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 's' in the current parser context, at line 5 col 5
+
+    struct illegalNestedStruct {
+    ^
+Expected one of: 
+	* STRING
+	* NAME
+	* DECIMAL_INT
+	* BANG
+	* PLUS
+	* IF
+	* INLINE
+	* HEXADECIMAL_INT
+	* WHILE
+	* RETURN
+	* DECIMAL_FLOAT
+	* BREAK
+	* MUT
+	* FOR
+	* LPAR
+	* TILDE
+	* MINUS
+	* CONST
+	* CONTINUE
+	* RBRACE
+	* STATIC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// VALIDATED
+int passingDeclarationAsArg() {
+    foo(int x);
+}
+
+
+======================== TOKENS ========================
+NAME               'int' line=4 col=1
+NAME               'passingDeclarationAsArg' line=4 col=5
+LPAR               '(' line=4 col=28
+RPAR               ')' line=4 col=29
+LBRACE             '{' line=4 col=31
+NAME               'foo' line=5 col=5
+LPAR               '(' line=5 col=8
+NAME               'int' line=5 col=9
+NAME               'x' line=5 col=13
+RPAR               ')' line=5 col=14
+SEMICOLON          ';' line=5 col=15
+RBRACE             '}' line=6 col=1
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 'x' in the current parser context, at line 5 col 13
+
+    foo(int x);
+            ^
+Expected one of: 
+	* VBAR
+	* COMMA
+	* __ANON_4
+	* __ANON_6
+	* STAR
+	* DOT
+	* AMPERSAND
+	* CIRCUMFLEX
+	* RPAR
+	* PERCENT
+	* __ANON_0
+	* LSQB
+	* ASSIGN_OP
+	* PLUS
+	* __ANON_3
+	* __ANON_5
+	* SLASH
+	* LPAR
+	* MORETHAN
+	* LESSTHAN
+	* MINUS
+	* __ANON_1
+	* __ANON_7
+	* __ANON_2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// VALIDATED
+int passingDefinitionAsArg() {
+    foo(int x = 0);
+}
+
+
+======================== TOKENS ========================
+NAME               'int' line=4 col=1
+NAME               'passingDefinitionAsArg' line=4 col=5
+LPAR               '(' line=4 col=27
+RPAR               ')' line=4 col=28
+LBRACE             '{' line=4 col=30
+NAME               'foo' line=5 col=5
+LPAR               '(' line=5 col=8
+NAME               'int' line=5 col=9
+NAME               'x' line=5 col=13
+EQUAL              '=' line=5 col=15
+DECIMAL_INT        '0' line=5 col=17
+RPAR               ')' line=5 col=18
+SEMICOLON          ';' line=5 col=19
+RBRACE             '}' line=6 col=1
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 'x' in the current parser context, at line 5 col 13
+
+    foo(int x = 0);
+            ^
+Expected one of: 
+	* VBAR
+	* COMMA
+	* __ANON_4
+	* __ANON_6
+	* STAR
+	* DOT
+	* AMPERSAND
+	* CIRCUMFLEX
+	* RPAR
+	* PERCENT
+	* __ANON_0
+	* LSQB
+	* ASSIGN_OP
+	* PLUS
+	* __ANON_3
+	* __ANON_5
+	* SLASH
+	* LPAR
+	* MORETHAN
+	* LESSTHAN
+	* MINUS
+	* __ANON_1
+	* __ANON_7
+	* __ANON_2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+
+
+// VALIDATED
+i32 foo() {
+    while(i32 d = 5) {
+
+    }
+}
+======================== TOKENS ========================
+NAME               'i32' line=4 col=1
+NAME               'foo' line=4 col=5
+LPAR               '(' line=4 col=8
+RPAR               ')' line=4 col=9
+LBRACE             '{' line=4 col=11
+WHILE              'while' line=5 col=5
+LPAR               '(' line=5 col=10
+NAME               'i32' line=5 col=11
+NAME               'd' line=5 col=15
+EQUAL              '=' line=5 col=17
+DECIMAL_INT        '5' line=5 col=19
+RPAR               ')' line=5 col=20
+LBRACE             '{' line=5 col=22
+RBRACE             '}' line=7 col=5
+RBRACE             '}' line=8 col=1
+======================== STATUS ========================
+PASSED!!!
+expected: False; actual: False
+
+Error:
+
+No terminal matches 'd' in the current parser context, at line 5 col 15
+
+    while(i32 d = 5) {
+              ^
+Expected one of: 
+	* VBAR
+	* __ANON_4
+	* __ANON_6
+	* STAR
+	* DOT
+	* AMPERSAND
+	* CIRCUMFLEX
+	* RPAR
+	* PERCENT
+	* __ANON_0
+	* LSQB
+	* ASSIGN_OP
+	* PLUS
+	* __ANON_3
+	* __ANON_5
+	* SLASH
+	* LPAR
+	* MORETHAN
+	* LESSTHAN
+	* MINUS
+	* __ANON_1
+	* __ANON_7
+	* __ANON_2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== CODE BLOCK ========================
+// VALIDATED
 // global
 static inline const f32& someGlobalRef;
 static inline const f32[16] someGlobalArray;
 
 ======================== TOKENS ========================
-STATIC             'static' line=2 col=1
-INLINE             'inline' line=2 col=8
-CONST              'const' line=2 col=15
-NAME               'f32' line=2 col=21
-AMPERSAND          '&' line=2 col=24
-NAME               'someGlobalRef' line=2 col=26
-SEMICOLON          ';' line=2 col=39
 STATIC             'static' line=3 col=1
 INLINE             'inline' line=3 col=8
 CONST              'const' line=3 col=15
 NAME               'f32' line=3 col=21
-LSQB               '[' line=3 col=24
-DECIMAL_INT        '16' line=3 col=25
-RSQB               ']' line=3 col=27
-NAME               'someGlobalArray' line=3 col=29
-SEMICOLON          ';' line=3 col=44
+AMPERSAND          '&' line=3 col=24
+NAME               'someGlobalRef' line=3 col=26
+SEMICOLON          ';' line=3 col=39
+STATIC             'static' line=4 col=1
+INLINE             'inline' line=4 col=8
+CONST              'const' line=4 col=15
+NAME               'f32' line=4 col=21
+LSQB               '[' line=4 col=24
+DECIMAL_INT        '16' line=4 col=25
+RSQB               ']' line=4 col=27
+NAME               'someGlobalArray' line=4 col=29
+SEMICOLON          ';' line=4 col=44
 ======================== PARSE TREE ========================
 start
   entry
@@ -62,30 +660,11 @@ start
       None
 
 ======================== AST ========================
-Program
-├─ globals: list
-│  ├─ [0]: Declaration
-│  │  ├─ type: Type
-│  │  │  ├─ type_id: 'f32'
-│  │  │  ├─ inline: True
-│  │  │  ├─ static: True
-│  │  │  ├─ mut: False
-│  │  │  ├─ const: True
-│  │  │  └─ suffix: ReferenceFlag (empty)
-│  │  ├─ id: 'someGlobalRef'
-│  │  └─ initializer: None
-│  └─ [1]: Declaration
-│     ├─ type: Type
-│     │  ├─ type_id: 'f32'
-│     │  ├─ inline: True
-│     │  ├─ static: True
-│     │  ├─ mut: False
-│     │  ├─ const: True
-│     │  └─ suffix: ArraySpan
-│     │     └─ size: 16
-│     ├─ id: 'someGlobalArray'
-│     └─ initializer: None
-└─ entries: list (empty)
+None: Program
+├─ entries: list
+│  ├─ [0]: static inline const f32& someGlobalRef = ?
+│  └─ [1]: static inline const f32[16] someGlobalArray = ?
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -112,6 +691,7 @@ expected: True; actual: True
 ======================== CODE BLOCK ========================
 
 
+// VALIDATED
 // initialized structure
 struct Vec3 {
     f32 x = 0.0;
@@ -120,26 +700,26 @@ struct Vec3 {
 };
 
 ======================== TOKENS ========================
-STRUCT             'struct' line=4 col=1
-NAME               'Vec3' line=4 col=8
-LBRACE             '{' line=4 col=13
-NAME               'f32' line=5 col=5
-NAME               'x' line=5 col=9
-EQUAL              '=' line=5 col=11
-DECIMAL_FLOAT      '0.0' line=5 col=13
-SEMICOLON          ';' line=5 col=16
+STRUCT             'struct' line=5 col=1
+NAME               'Vec3' line=5 col=8
+LBRACE             '{' line=5 col=13
 NAME               'f32' line=6 col=5
-NAME               'y' line=6 col=9
+NAME               'x' line=6 col=9
 EQUAL              '=' line=6 col=11
 DECIMAL_FLOAT      '0.0' line=6 col=13
 SEMICOLON          ';' line=6 col=16
 NAME               'f32' line=7 col=5
-NAME               'z' line=7 col=9
+NAME               'y' line=7 col=9
 EQUAL              '=' line=7 col=11
 DECIMAL_FLOAT      '0.0' line=7 col=13
 SEMICOLON          ';' line=7 col=16
-RBRACE             '}' line=8 col=1
-SEMICOLON          ';' line=8 col=2
+NAME               'f32' line=8 col=5
+NAME               'z' line=8 col=9
+EQUAL              '=' line=8 col=11
+DECIMAL_FLOAT      '0.0' line=8 col=13
+SEMICOLON          ';' line=8 col=16
+RBRACE             '}' line=9 col=1
+SEMICOLON          ';' line=9 col=2
 ======================== PARSE TREE ========================
 start
   entry
@@ -173,51 +753,17 @@ start
             number_literal	0.0
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: StructDefinition
-│     ├─ name: Identifier
-│     │  └─ name: 'Vec3'
+│     ├─ name: "Vec3"
 │     ├─ members: list
-│     │  ├─ [0]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'f32'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'x'
-│     │  │  └─ initializer: Initializer
-│     │  │     └─ expression: Literal
-│     │  │        └─ value: 0.0
-│     │  ├─ [1]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'f32'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'y'
-│     │  │  └─ initializer: Initializer
-│     │  │     └─ expression: Literal
-│     │  │        └─ value: 0.0
-│     │  └─ [2]: StructMember
-│     │     ├─ type: Type
-│     │     │  ├─ type_id: 'f32'
-│     │     │  ├─ inline: False
-│     │     │  ├─ static: False
-│     │     │  ├─ mut: False
-│     │     │  ├─ const: False
-│     │     │  └─ suffix: None
-│     │     ├─ id: 'z'
-│     │     └─ initializer: Initializer
-│     │        └─ expression: Literal
-│     │           └─ value: 0.0
+│     │  ├─ [0]: f32 x = 0.0f
+│     │  ├─ [1]: f32 y = 0.0f
+│     │  └─ [2]: f32 z = 0.0f
 │     ├─ virtual: False
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -243,6 +789,8 @@ expected: True; actual: True
 
 ======================== CODE BLOCK ========================
 
+
+// VALIDATED
 // quaternion type, no initializer
 struct Quat {
     f32 x;
@@ -252,23 +800,23 @@ struct Quat {
 };
 
 ======================== TOKENS ========================
-STRUCT             'struct' line=3 col=1
-NAME               'Quat' line=3 col=8
-LBRACE             '{' line=3 col=13
-NAME               'f32' line=4 col=5
-NAME               'x' line=4 col=9
-SEMICOLON          ';' line=4 col=10
-NAME               'f32' line=5 col=5
-NAME               'y' line=5 col=9
-SEMICOLON          ';' line=5 col=10
+STRUCT             'struct' line=5 col=1
+NAME               'Quat' line=5 col=8
+LBRACE             '{' line=5 col=13
 NAME               'f32' line=6 col=5
-NAME               'z' line=6 col=9
+NAME               'x' line=6 col=9
 SEMICOLON          ';' line=6 col=10
 NAME               'f32' line=7 col=5
-NAME               'w' line=7 col=9
+NAME               'y' line=7 col=9
 SEMICOLON          ';' line=7 col=10
-RBRACE             '}' line=8 col=1
-SEMICOLON          ';' line=8 col=2
+NAME               'f32' line=8 col=5
+NAME               'z' line=8 col=9
+SEMICOLON          ';' line=8 col=10
+NAME               'f32' line=9 col=5
+NAME               'w' line=9 col=9
+SEMICOLON          ';' line=9 col=10
+RBRACE             '}' line=10 col=1
+SEMICOLON          ';' line=10 col=2
 ======================== PARSE TREE ========================
 start
   entry
@@ -298,55 +846,18 @@ start
         identifier	w
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: StructDefinition
-│     ├─ name: Identifier
-│     │  └─ name: 'Quat'
+│     ├─ name: "Quat"
 │     ├─ members: list
-│     │  ├─ [0]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'f32'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'x'
-│     │  │  └─ initializer: None
-│     │  ├─ [1]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'f32'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'y'
-│     │  │  └─ initializer: None
-│     │  ├─ [2]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'f32'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'z'
-│     │  │  └─ initializer: None
-│     │  └─ [3]: StructMember
-│     │     ├─ type: Type
-│     │     │  ├─ type_id: 'f32'
-│     │     │  ├─ inline: False
-│     │     │  ├─ static: False
-│     │     │  ├─ mut: False
-│     │     │  ├─ const: False
-│     │     │  └─ suffix: None
-│     │     ├─ id: 'w'
-│     │     └─ initializer: None
+│     │  ├─ [0]: f32 x = ?
+│     │  ├─ [1]: f32 y = ?
+│     │  ├─ [2]: f32 z = ?
+│     │  └─ [3]: f32 w = ?
 │     ├─ virtual: False
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -372,6 +883,8 @@ expected: True; actual: True
 
 ======================== CODE BLOCK ========================
 
+
+// VALIDATED
 // transform type
 struct Transform {
     Vec3 position;
@@ -380,20 +893,20 @@ struct Transform {
 };
 
 ======================== TOKENS ========================
-STRUCT             'struct' line=3 col=1
-NAME               'Transform' line=3 col=8
-LBRACE             '{' line=3 col=18
-NAME               'Vec3' line=4 col=5
-NAME               'position' line=4 col=10
-SEMICOLON          ';' line=4 col=18
-NAME               'Quat' line=5 col=5
-NAME               'rotation' line=5 col=10
-SEMICOLON          ';' line=5 col=18
+STRUCT             'struct' line=5 col=1
+NAME               'Transform' line=5 col=8
+LBRACE             '{' line=5 col=18
 NAME               'Vec3' line=6 col=5
-NAME               'scale' line=6 col=10
-SEMICOLON          ';' line=6 col=15
-RBRACE             '}' line=7 col=1
-SEMICOLON          ';' line=7 col=2
+NAME               'position' line=6 col=10
+SEMICOLON          ';' line=6 col=18
+NAME               'Quat' line=7 col=5
+NAME               'rotation' line=7 col=10
+SEMICOLON          ';' line=7 col=18
+NAME               'Vec3' line=8 col=5
+NAME               'scale' line=8 col=10
+SEMICOLON          ';' line=8 col=15
+RBRACE             '}' line=9 col=1
+SEMICOLON          ';' line=9 col=2
 ======================== PARSE TREE ========================
 start
   entry
@@ -418,45 +931,17 @@ start
         identifier	scale
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: StructDefinition
-│     ├─ name: Identifier
-│     │  └─ name: 'Transform'
+│     ├─ name: "Transform"
 │     ├─ members: list
-│     │  ├─ [0]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'Vec3'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'position'
-│     │  │  └─ initializer: None
-│     │  ├─ [1]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'Quat'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'rotation'
-│     │  │  └─ initializer: None
-│     │  └─ [2]: StructMember
-│     │     ├─ type: Type
-│     │     │  ├─ type_id: 'Vec3'
-│     │     │  ├─ inline: False
-│     │     │  ├─ static: False
-│     │     │  ├─ mut: False
-│     │     │  ├─ const: False
-│     │     │  └─ suffix: None
-│     │     ├─ id: 'scale'
-│     │     └─ initializer: None
+│     │  ├─ [0]: Vec3 position = ?
+│     │  ├─ [1]: Quat rotation = ?
+│     │  └─ [2]: Vec3 scale = ?
 │     ├─ virtual: False
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -482,6 +967,7 @@ expected: True; actual: True
 
 ======================== CODE BLOCK ========================
 
+
 // virtual structure
 virtual struct Person_vstruct {
     // captures arrays
@@ -491,24 +977,24 @@ virtual struct Person_vstruct {
 };
 
 ======================== TOKENS ========================
-VIRTUAL            'virtual' line=3 col=1
-STRUCT             'struct' line=3 col=9
-NAME               'Person_vstruct' line=3 col=16
-LBRACE             '{' line=3 col=31
-NAME               'char' line=5 col=5
-LSQB               '[' line=5 col=9
-DECIMAL_INT        '256' line=5 col=10
-RSQB               ']' line=5 col=13
-NAME               'name' line=5 col=15
-SEMICOLON          ';' line=5 col=19
-NAME               'i8' line=6 col=5
-NAME               'age' line=6 col=8
-SEMICOLON          ';' line=6 col=11
-NAME               'f64' line=7 col=5
-NAME               'net_worth' line=7 col=9
-SEMICOLON          ';' line=7 col=18
-RBRACE             '}' line=8 col=1
-SEMICOLON          ';' line=8 col=2
+VIRTUAL            'virtual' line=4 col=1
+STRUCT             'struct' line=4 col=9
+NAME               'Person_vstruct' line=4 col=16
+LBRACE             '{' line=4 col=31
+NAME               'char' line=6 col=5
+LSQB               '[' line=6 col=9
+DECIMAL_INT        '256' line=6 col=10
+RSQB               ']' line=6 col=13
+NAME               'name' line=6 col=15
+SEMICOLON          ';' line=6 col=19
+NAME               'i8' line=7 col=5
+NAME               'age' line=7 col=8
+SEMICOLON          ';' line=7 col=11
+NAME               'f64' line=8 col=5
+NAME               'net_worth' line=8 col=9
+SEMICOLON          ';' line=8 col=18
+RBRACE             '}' line=9 col=1
+SEMICOLON          ';' line=9 col=2
 ======================== PARSE TREE ========================
 start
   entry
@@ -534,46 +1020,17 @@ start
         identifier	net_worth
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: StructDefinition
-│     ├─ name: Identifier
-│     │  └─ name: 'Person_vstruct'
+│     ├─ name: "Person_vstruct"
 │     ├─ members: list
-│     │  ├─ [0]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'char'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: ArraySpan
-│     │  │  │     └─ size: 256
-│     │  │  ├─ id: 'name'
-│     │  │  └─ initializer: None
-│     │  ├─ [1]: StructMember
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'i8'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  ├─ id: 'age'
-│     │  │  └─ initializer: None
-│     │  └─ [2]: StructMember
-│     │     ├─ type: Type
-│     │     │  ├─ type_id: 'f64'
-│     │     │  ├─ inline: False
-│     │     │  ├─ static: False
-│     │     │  ├─ mut: False
-│     │     │  ├─ const: False
-│     │     │  └─ suffix: None
-│     │     ├─ id: 'net_worth'
-│     │     └─ initializer: None
+│     │  ├─ [0]: char[256] name = ?
+│     │  ├─ [1]: i8 age = ?
+│     │  └─ [2]: f64 net_worth = ?
 │     ├─ virtual: True
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -670,57 +1127,22 @@ start
                 var_ref	velocity
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'integrate'
+│     ├─ return_type: void
+│     ├─ name: "integrate"
 │     ├─ parameters: list
-│     │  ├─ [0]: Parameter
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'Transform'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: True
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: ReferenceFlag (empty)
-│     │  │  └─ name: Identifier
-│     │  │     └─ name: 'transform'
-│     │  └─ [1]: Parameter
-│     │     ├─ type: Type
-│     │     │  ├─ type_id: 'Velocity'
-│     │     │  ├─ inline: False
-│     │     │  ├─ static: False
-│     │     │  ├─ mut: False
-│     │     │  ├─ const: True
-│     │     │  └─ suffix: ReferenceFlag (empty)
-│     │     └─ name: Identifier
-│     │        └─ name: 'velocity'
+│     │  ├─ [0]: mut Transform& transform
+│     │  └─ [1]: const Velocity& velocity
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: VarRef
-│     │           │  └─ name: 'transform'
-│     │           └─ value: BinaryExpression
-│     │              ├─ operator: '+'
-│     │              ├─ left: VarRef
-│     │              │  └─ name: 'transform'
-│     │              └─ right: VarRef
-│     │                 └─ name: 'velocity'
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ExpressionStatement
+│     │  │     └─ expression: Symbol("transform")=(Symbol("transform") + Symbol("velocity"))
+│     │  └─ scope:  fn integrate{}
 │     └─ decorators: list
-│        └─ [0]: Decorator
-│           ├─ type: 'entry'
-│           └─ args: None
-└─ entries: list (empty)
+│        └─ [0]: @entry(...)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -749,6 +1171,7 @@ expected: True; actual: True
 @ParameterizedDecorator("test", 124)
 void foo() {
     transform.pos.x = 0;
+    bar().c = 0;
 }
 
 ======================== TOKENS ========================
@@ -772,7 +1195,15 @@ NAME               'x' line=4 col=19
 EQUAL              '=' line=4 col=21
 DECIMAL_INT        '0' line=4 col=23
 SEMICOLON          ';' line=4 col=24
-RBRACE             '}' line=5 col=1
+NAME               'bar' line=5 col=5
+LPAR               '(' line=5 col=8
+RPAR               ')' line=5 col=9
+DOT                '.' line=5 col=10
+NAME               'c' line=5 col=11
+EQUAL              '=' line=5 col=13
+DECIMAL_INT        '0' line=5 col=15
+SEMICOLON          ';' line=5 col=16
+RBRACE             '}' line=6 col=1
 ======================== PARSE TREE ========================
 start
   entry
@@ -803,44 +1234,35 @@ start
               assign_op	=
               literal
                 number_literal	0
+        statement
+          expression_statement
+            assign
+              member
+                call
+                  var_ref	bar
+                  None
+                c
+              assign_op	=
+              literal
+                number_literal	0
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'foo'
+│     ├─ return_type: void
+│     ├─ name: "foo"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: MemberAccess
-│     │           │  ├─ target: MemberAccess
-│     │           │  │  ├─ target: VarRef
-│     │           │  │  │  └─ name: 'transform'
-│     │           │  │  └─ member: 'pos'
-│     │           │  └─ member: 'x'
-│     │           └─ value: Literal
-│     │              └─ value: 0
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: ExpressionStatement
+│     │  │  │  └─ expression: transform.pos.x=0
+│     │  │  └─ [1]: ExpressionStatement
+│     │  │     └─ expression: bar=0
+│     │  └─ scope:  fn foo{}
 │     └─ decorators: list
-│        └─ [0]: Decorator
-│           ├─ type: 'ParameterizedDecorator'
-│           └─ args: ArgumentList
-│              └─ args: list
-│                 ├─ [0]: Literal
-│                 │  └─ value: 'test'
-│                 └─ [1]: Literal
-│                    └─ value: 124
-└─ entries: list (empty)
+│        └─ [0]: @ParameterizedDecorator(...)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -948,55 +1370,42 @@ start
                           string_literal	"i is too small"
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'main'
+│     ├─ return_type: void
+│     ├─ name: "main"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: IfStatement
-│     │        ├─ condition: BinaryExpression
-│     │        │  ├─ operator: '>'
-│     │        │  ├─ left: VarRef
-│     │        │  │  └─ name: 'i'
-│     │        │  └─ right: Literal
-│     │        │     └─ value: 20
-│     │        ├─ then_block: StatementBlock
-│     │        │  └─ statements: list
-│     │        │     └─ [0]: ExpressionStatement
-│     │        │        └─ expression: FuncCall
-│     │        │           ├─ callee: VarRef
-│     │        │           │  └─ name: 'print'
-│     │        │           └─ args: ArgumentList
-│     │        │              └─ args: list
-│     │        │                 └─ [0]: Literal
-│     │        │                    └─ value: 'i is too big'
-│     │        └─ else_clause: ElseClause
-│     │           └─ body: StatementBlock
-│     │              └─ statements: list
-│     │                 └─ [0]: ExpressionStatement
-│     │                    └─ expression: FuncCall
-│     │                       ├─ callee: VarRef
-│     │                       │  └─ name: 'print'
-│     │                       └─ args: ArgumentList
-│     │                          └─ args: list
-│     │                             └─ [0]: Literal
-│     │                                └─ value: 'i is too small'
+│     │  ├─ statements: list
+│     │  │  └─ [0]: IfStatement
+│     │  │     ├─ condition: BinaryExpression
+│     │  │     │  ├─ operator: '>'
+│     │  │     │  ├─ left: VarRef
+│     │  │     │  │  └─ name: 'i'
+│     │  │     │  └─ right: 20
+│     │  │     ├─ then_block: StatementBlock
+│     │  │     │  ├─ statements: list
+│     │  │     │  │  └─ [0]: ExpressionStatement
+│     │  │     │  │     └─ expression: FuncCall
+│     │  │     │  │        ├─ callee: 'print'
+│     │  │     │  │        └─ args: ArgumentList
+│     │  │     │  │           └─ args: list
+│     │  │     │  │              └─ [0]: "i is too big"
+│     │  │     │  └─ scope:  block{}
+│     │  │     └─ else_clause: StatementBlock
+│     │  │        ├─ statements: list
+│     │  │        │  └─ [0]: ExpressionStatement
+│     │  │        │     └─ expression: FuncCall
+│     │  │        │        ├─ callee: 'print'
+│     │  │        │        └─ args: ArgumentList
+│     │  │        │           └─ args: list
+│     │  │        │              └─ [0]: "i is too small"
+│     │  │        └─ scope:  block{}
+│     │  └─ scope:  fn main{}
 │     └─ decorators: list
-│        └─ [0]: Decorator
-│           ├─ type: 'export'
-│           └─ args: DecoratorValue
-│              └─ value: 'qsh'
-└─ entries: list (empty)
+│        └─ [0]: @export qsh
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -1094,53 +1503,36 @@ start
             None
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'if_only'
+│     ├─ return_type: void
+│     ├─ name: "if_only"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     ├─ [0]: Declaration
-│     │     │  ├─ type: Type
-│     │     │  │  ├─ type_id: 'int'
-│     │     │  │  ├─ inline: False
-│     │     │  │  ├─ static: False
-│     │     │  │  ├─ mut: False
-│     │     │  │  ├─ const: False
-│     │     │  │  └─ suffix: None
-│     │     │  ├─ id: 'score'
-│     │     │  └─ initializer: Initializer
-│     │     │     └─ expression: Literal
-│     │     │        └─ value: 80
-│     │     └─ [1]: IfStatement
-│     │        ├─ condition: BinaryExpression
-│     │        │  ├─ operator: '>='
-│     │        │  ├─ left: VarRef
-│     │        │  │  └─ name: 'score'
-│     │        │  └─ right: Literal
-│     │        │     └─ value: 60
-│     │        ├─ then_block: StatementBlock
-│     │        │  └─ statements: list
-│     │        │     └─ [0]: ExpressionStatement
-│     │        │        └─ expression: FuncCall
-│     │        │           ├─ callee: VarRef
-│     │        │           │  └─ name: 'print'
-│     │        │           └─ args: ArgumentList
-│     │        │              └─ args: list
-│     │        │                 └─ [0]: Literal
-│     │        │                    └─ value: 1
-│     │        └─ else_clause: None
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: int score = 80
+│     │  │  └─ [1]: IfStatement
+│     │  │     ├─ condition: BinaryExpression
+│     │  │     │  ├─ operator: '>='
+│     │  │     │  ├─ left: VarRef
+│     │  │     │  │  └─ name: 'score'
+│     │  │     │  └─ right: 60
+│     │  │     ├─ then_block: StatementBlock
+│     │  │     │  ├─ statements: list
+│     │  │     │  │  └─ [0]: ExpressionStatement
+│     │  │     │  │     └─ expression: FuncCall
+│     │  │     │  │        ├─ callee: 'print'
+│     │  │     │  │        └─ args: ArgumentList
+│     │  │     │  │           └─ args: list
+│     │  │     │  │              └─ [0]: 1
+│     │  │     │  └─ scope:  block{}
+│     │  │     └─ else_clause: StatementBlock
+│     │  │        ├─ statements: list (empty)
+│     │  │        └─ scope: dict (empty)
+│     │  └─ scope:  fn if_only{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -1254,63 +1646,42 @@ start
                           number_literal	0
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'if_else'
+│     ├─ return_type: void
+│     ├─ name: "if_else"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     ├─ [0]: Declaration
-│     │     │  ├─ type: Type
-│     │     │  │  ├─ type_id: 'int'
-│     │     │  │  ├─ inline: False
-│     │     │  │  ├─ static: False
-│     │     │  │  ├─ mut: False
-│     │     │  │  ├─ const: False
-│     │     │  │  └─ suffix: None
-│     │     │  ├─ id: 'score'
-│     │     │  └─ initializer: Initializer
-│     │     │     └─ expression: Literal
-│     │     │        └─ value: 80
-│     │     └─ [1]: IfStatement
-│     │        ├─ condition: BinaryExpression
-│     │        │  ├─ operator: '>='
-│     │        │  ├─ left: VarRef
-│     │        │  │  └─ name: 'score'
-│     │        │  └─ right: Literal
-│     │        │     └─ value: 60
-│     │        ├─ then_block: StatementBlock
-│     │        │  └─ statements: list
-│     │        │     └─ [0]: ExpressionStatement
-│     │        │        └─ expression: FuncCall
-│     │        │           ├─ callee: VarRef
-│     │        │           │  └─ name: 'print'
-│     │        │           └─ args: ArgumentList
-│     │        │              └─ args: list
-│     │        │                 └─ [0]: Literal
-│     │        │                    └─ value: 1
-│     │        └─ else_clause: ElseClause
-│     │           └─ body: StatementBlock
-│     │              └─ statements: list
-│     │                 └─ [0]: ExpressionStatement
-│     │                    └─ expression: FuncCall
-│     │                       ├─ callee: VarRef
-│     │                       │  └─ name: 'print'
-│     │                       └─ args: ArgumentList
-│     │                          └─ args: list
-│     │                             └─ [0]: Literal
-│     │                                └─ value: 0
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: int score = 80
+│     │  │  └─ [1]: IfStatement
+│     │  │     ├─ condition: BinaryExpression
+│     │  │     │  ├─ operator: '>='
+│     │  │     │  ├─ left: VarRef
+│     │  │     │  │  └─ name: 'score'
+│     │  │     │  └─ right: 60
+│     │  │     ├─ then_block: StatementBlock
+│     │  │     │  ├─ statements: list
+│     │  │     │  │  └─ [0]: ExpressionStatement
+│     │  │     │  │     └─ expression: FuncCall
+│     │  │     │  │        ├─ callee: 'print'
+│     │  │     │  │        └─ args: ArgumentList
+│     │  │     │  │           └─ args: list
+│     │  │     │  │              └─ [0]: 1
+│     │  │     │  └─ scope:  block{}
+│     │  │     └─ else_clause: StatementBlock
+│     │  │        ├─ statements: list
+│     │  │        │  └─ [0]: ExpressionStatement
+│     │  │        │     └─ expression: FuncCall
+│     │  │        │        ├─ callee: 'print'
+│     │  │        │        └─ args: ArgumentList
+│     │  │        │           └─ args: list
+│     │  │        │              └─ [0]: 0
+│     │  │        └─ scope:  block{}
+│     │  └─ scope:  fn if_else{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -1454,81 +1825,57 @@ start
                               number_literal	1
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'else_if_chain'
+│     ├─ return_type: void
+│     ├─ name: "else_if_chain"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     ├─ [0]: Declaration
-│     │     │  ├─ type: Type
-│     │     │  │  ├─ type_id: 'int'
-│     │     │  │  ├─ inline: False
-│     │     │  │  ├─ static: False
-│     │     │  │  ├─ mut: False
-│     │     │  │  ├─ const: False
-│     │     │  │  └─ suffix: None
-│     │     │  ├─ id: 'score'
-│     │     │  └─ initializer: Initializer
-│     │     │     └─ expression: Literal
-│     │     │        └─ value: 80
-│     │     └─ [1]: IfStatement
-│     │        ├─ condition: BinaryExpression
-│     │        │  ├─ operator: '>='
-│     │        │  ├─ left: VarRef
-│     │        │  │  └─ name: 'score'
-│     │        │  └─ right: Literal
-│     │        │     └─ value: 90
-│     │        ├─ then_block: StatementBlock
-│     │        │  └─ statements: list
-│     │        │     └─ [0]: ExpressionStatement
-│     │        │        └─ expression: FuncCall
-│     │        │           ├─ callee: VarRef
-│     │        │           │  └─ name: 'print'
-│     │        │           └─ args: ArgumentList
-│     │        │              └─ args: list
-│     │        │                 └─ [0]: Literal
-│     │        │                    └─ value: 3
-│     │        └─ else_clause: ElseClause
-│     │           └─ body: IfStatement
-│     │              ├─ condition: BinaryExpression
-│     │              │  ├─ operator: '>='
-│     │              │  ├─ left: VarRef
-│     │              │  │  └─ name: 'score'
-│     │              │  └─ right: Literal
-│     │              │     └─ value: 60
-│     │              ├─ then_block: StatementBlock
-│     │              │  └─ statements: list
-│     │              │     └─ [0]: ExpressionStatement
-│     │              │        └─ expression: FuncCall
-│     │              │           ├─ callee: VarRef
-│     │              │           │  └─ name: 'print'
-│     │              │           └─ args: ArgumentList
-│     │              │              └─ args: list
-│     │              │                 └─ [0]: Literal
-│     │              │                    └─ value: 2
-│     │              └─ else_clause: ElseClause
-│     │                 └─ body: StatementBlock
-│     │                    └─ statements: list
-│     │                       └─ [0]: ExpressionStatement
-│     │                          └─ expression: FuncCall
-│     │                             ├─ callee: VarRef
-│     │                             │  └─ name: 'print'
-│     │                             └─ args: ArgumentList
-│     │                                └─ args: list
-│     │                                   └─ [0]: Literal
-│     │                                      └─ value: 1
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: int score = 80
+│     │  │  └─ [1]: IfStatement
+│     │  │     ├─ condition: BinaryExpression
+│     │  │     │  ├─ operator: '>='
+│     │  │     │  ├─ left: VarRef
+│     │  │     │  │  └─ name: 'score'
+│     │  │     │  └─ right: 90
+│     │  │     ├─ then_block: StatementBlock
+│     │  │     │  ├─ statements: list
+│     │  │     │  │  └─ [0]: ExpressionStatement
+│     │  │     │  │     └─ expression: FuncCall
+│     │  │     │  │        ├─ callee: 'print'
+│     │  │     │  │        └─ args: ArgumentList
+│     │  │     │  │           └─ args: list
+│     │  │     │  │              └─ [0]: 3
+│     │  │     │  └─ scope:  block{}
+│     │  │     └─ else_clause: IfStatement
+│     │  │        ├─ condition: BinaryExpression
+│     │  │        │  ├─ operator: '>='
+│     │  │        │  ├─ left: VarRef
+│     │  │        │  │  └─ name: 'score'
+│     │  │        │  └─ right: 60
+│     │  │        ├─ then_block: StatementBlock
+│     │  │        │  ├─ statements: list
+│     │  │        │  │  └─ [0]: ExpressionStatement
+│     │  │        │  │     └─ expression: FuncCall
+│     │  │        │  │        ├─ callee: 'print'
+│     │  │        │  │        └─ args: ArgumentList
+│     │  │        │  │           └─ args: list
+│     │  │        │  │              └─ [0]: 2
+│     │  │        │  └─ scope:  block{}
+│     │  │        └─ else_clause: StatementBlock
+│     │  │           ├─ statements: list
+│     │  │           │  └─ [0]: ExpressionStatement
+│     │  │           │     └─ expression: FuncCall
+│     │  │           │        ├─ callee: 'print'
+│     │  │           │        └─ args: ArgumentList
+│     │  │           │           └─ args: list
+│     │  │           │              └─ [0]: 1
+│     │  │           └─ scope:  block{}
+│     │  └─ scope:  fn else_if_chain{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -1638,9 +1985,40 @@ start
                 var_ref	score
 
 ======================== AST ========================
-Error trying to process rule "while_statement":
-
-WhileStatement.__init__() takes 3 positional arguments but 4 were given
+None: Program
+├─ entries: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: void
+│     ├─ name: "while_loop"
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: int score = 80
+│     │  │  ├─ [1]: WhileStatement
+│     │  │  │  ├─ condition: BinaryExpression
+│     │  │  │  │  ├─ operator: '<'
+│     │  │  │  │  ├─ left: VarRef
+│     │  │  │  │  │  └─ name: 'score'
+│     │  │  │  │  └─ right: 85
+│     │  │  │  ├─ body: StatementBlock
+│     │  │  │  │  ├─ statements: list
+│     │  │  │  │  │  └─ [0]: ExpressionStatement
+│     │  │  │  │  │     └─ expression: Symbol("score")=(Symbol("score") + 1)
+│     │  │  │  │  └─ scope:  block{}
+│     │  │  │  └─ locals:  while{}
+│     │  │  └─ [2]: ExpressionStatement
+│     │  │     └─ expression: FuncCall
+│     │  │        ├─ callee: 'print'
+│     │  │        └─ args: ArgumentList
+│     │  │           └─ args: list
+│     │  │              └─ [0]: VarRef
+│     │  │                 └─ name: 'score'
+│     │  └─ scope:  fn while_loop{}
+│     └─ decorators: list (empty)
+└─ globals:  globals{}
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
 
 
 
@@ -1771,82 +2149,41 @@ start
                 var_ref	total
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'for_loop'
+│     ├─ return_type: void
+│     ├─ name: "for_loop"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     ├─ [0]: Declaration
-│     │     │  ├─ type: Type
-│     │     │  │  ├─ type_id: 'int'
-│     │     │  │  ├─ inline: False
-│     │     │  │  ├─ static: False
-│     │     │  │  ├─ mut: False
-│     │     │  │  ├─ const: False
-│     │     │  │  └─ suffix: None
-│     │     │  ├─ id: 'total'
-│     │     │  └─ initializer: Initializer
-│     │     │     └─ expression: Literal
-│     │     │        └─ value: 0
-│     │     ├─ [1]: ForStatement
-│     │     │  ├─ init: ForInitializer
-│     │     │  │  └─ init: AssignExpression
-│     │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │     │  │     ├─ target: VarRef
-│     │     │  │     │  └─ name: 'i'
-│     │     │  │     └─ value: Literal
-│     │     │  │        └─ value: 0
-│     │     │  ├─ condition: ForConditional
-│     │     │  │  └─ cond: BinaryExpression
-│     │     │  │     ├─ operator: '<'
-│     │     │  │     ├─ left: VarRef
-│     │     │  │     │  └─ name: 'i'
-│     │     │  │     └─ right: Literal
-│     │     │  │        └─ value: 10
-│     │     │  ├─ step: ForStep
-│     │     │  │  └─ step: AssignExpression
-│     │     │  │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │     │  │     ├─ target: VarRef
-│     │     │  │     │  └─ name: 'i'
-│     │     │  │     └─ value: BinaryExpression
-│     │     │  │        ├─ operator: '+'
-│     │     │  │        ├─ left: VarRef
-│     │     │  │        │  └─ name: 'i'
-│     │     │  │        └─ right: Literal
-│     │     │  │           └─ value: 1
-│     │     │  └─ body: StatementBlock
-│     │     │     └─ statements: list
-│     │     │        └─ [0]: ExpressionStatement
-│     │     │           └─ expression: AssignExpression
-│     │     │              ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │     │              ├─ target: VarRef
-│     │     │              │  └─ name: 'total'
-│     │     │              └─ value: BinaryExpression
-│     │     │                 ├─ operator: '+'
-│     │     │                 ├─ left: VarRef
-│     │     │                 │  └─ name: 'total'
-│     │     │                 └─ right: VarRef
-│     │     │                    └─ name: 'i'
-│     │     └─ [2]: ExpressionStatement
-│     │        └─ expression: FuncCall
-│     │           ├─ callee: VarRef
-│     │           │  └─ name: 'print'
-│     │           └─ args: ArgumentList
-│     │              └─ args: list
-│     │                 └─ [0]: VarRef
-│     │                    └─ name: 'total'
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: int total = 0
+│     │  │  ├─ [1]: ForStatement
+│     │  │  │  ├─ init: ForInitializer
+│     │  │  │  │  └─ init: Symbol("i")=0
+│     │  │  │  ├─ condition: ForConditional
+│     │  │  │  │  └─ cond: BinaryExpression
+│     │  │  │  │     ├─ operator: '<'
+│     │  │  │  │     ├─ left: VarRef
+│     │  │  │  │     │  └─ name: 'i'
+│     │  │  │  │     └─ right: 10
+│     │  │  │  ├─ step: ForStep
+│     │  │  │  │  └─ step: Symbol("i")=(Symbol("i") + 1)
+│     │  │  │  └─ body: StatementBlock
+│     │  │  │     ├─ statements: list
+│     │  │  │     │  └─ [0]: ExpressionStatement
+│     │  │  │     │     └─ expression: Symbol("total")=(Symbol("total") + Symbol("i"))
+│     │  │  │     └─ scope:  for_body{}
+│     │  │  └─ [2]: ExpressionStatement
+│     │  │     └─ expression: FuncCall
+│     │  │        ├─ callee: 'print'
+│     │  │        └─ args: ArgumentList
+│     │  │           └─ args: list
+│     │  │              └─ [0]: VarRef
+│     │  │                 └─ name: 'total'
+│     │  └─ scope:  fn for_loop{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -1916,31 +2253,24 @@ start
                 return_statement
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'void'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'for_empty'
+│     ├─ return_type: void
+│     ├─ name: "for_empty"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ForStatement
-│     │        ├─ init: None
-│     │        ├─ condition: None
-│     │        ├─ step: None
-│     │        └─ body: StatementBlock
-│     │           └─ statements: list
-│     │              └─ [0]: ReturnStatement
-│     │                 └─ value: None
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ForStatement
+│     │  │     ├─ init: ForInitializer (empty)
+│     │  │     ├─ condition: ForConditional (empty)
+│     │  │     ├─ step: ForStep (empty)
+│     │  │     └─ body: StatementBlock
+│     │  │        ├─ statements: list (empty)
+│     │  │        └─ scope:  for_body{}
+│     │  └─ scope:  fn for_empty{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -2120,9 +2450,61 @@ start
                                       number_literal	1
 
 ======================== AST ========================
-Error trying to process rule "while_statement":
-
-WhileStatement.__init__() takes 3 positional arguments but 4 were given
+None: Program
+├─ entries: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: void
+│     ├─ name: "nested_loops"
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: int j = 0
+│     │  │  └─ [1]: ForStatement
+│     │  │     ├─ init: ForInitializer
+│     │  │     │  └─ init: Symbol("i")=0
+│     │  │     ├─ condition: ForConditional
+│     │  │     │  └─ cond: BinaryExpression
+│     │  │     │     ├─ operator: '<'
+│     │  │     │     ├─ left: VarRef
+│     │  │     │     │  └─ name: 'i'
+│     │  │     │     └─ right: 3
+│     │  │     ├─ step: ForStep
+│     │  │     │  └─ step: Symbol("i")=(Symbol("i") + 1)
+│     │  │     └─ body: StatementBlock
+│     │  │        ├─ statements: list
+│     │  │        │  └─ [0]: WhileStatement
+│     │  │        │     ├─ condition: BinaryExpression
+│     │  │        │     │  ├─ operator: '<'
+│     │  │        │     │  ├─ left: VarRef
+│     │  │        │     │  │  └─ name: 'j'
+│     │  │        │     │  └─ right: 3
+│     │  │        │     ├─ body: StatementBlock
+│     │  │        │     │  ├─ statements: list
+│     │  │        │     │  │  └─ [0]: IfStatement
+│     │  │        │     │  │     ├─ condition: BinaryExpression
+│     │  │        │     │  │     │  ├─ operator: '=='
+│     │  │        │     │  │     │  ├─ left: VarRef
+│     │  │        │     │  │     │  │  └─ name: 'j'
+│     │  │        │     │  │     │  └─ right: 1
+│     │  │        │     │  │     ├─ then_block: StatementBlock
+│     │  │        │     │  │     │  ├─ statements: list
+│     │  │        │     │  │     │  │  └─ [0]: ExpressionStatement
+│     │  │        │     │  │     │  │     └─ expression: Symbol("j")=(Symbol("j") + 2)
+│     │  │        │     │  │     │  └─ scope:  block{}
+│     │  │        │     │  │     └─ else_clause: StatementBlock
+│     │  │        │     │  │        ├─ statements: list
+│     │  │        │     │  │        │  └─ [0]: ExpressionStatement
+│     │  │        │     │  │        │     └─ expression: Symbol("j")=(Symbol("j") + 1)
+│     │  │        │     │  │        └─ scope:  block{}
+│     │  │        │     │  └─ scope:  block{}
+│     │  │        │     └─ locals:  while{}
+│     │  │        └─ scope:  for_body{}
+│     │  └─ scope:  fn nested_loops{}
+│     └─ decorators: list (empty)
+└─ globals:  globals{}
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
 
 
 
@@ -2243,9 +2625,50 @@ start
             var_ref	x
 
 ======================== AST ========================
-Error trying to process rule "while_statement":
-
-WhileStatement.__init__() takes 3 positional arguments but 4 were given
+None: Program
+├─ entries: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: int
+│     ├─ name: "early_return"
+│     ├─ parameters: list
+│     │  └─ [0]: int x
+│     ├─ body: StatementBlock
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: IfStatement
+│     │  │  │  ├─ condition: BinaryExpression
+│     │  │  │  │  ├─ operator: '<'
+│     │  │  │  │  ├─ left: VarRef
+│     │  │  │  │  │  └─ name: 'x'
+│     │  │  │  │  └─ right: 0
+│     │  │  │  ├─ then_block: StatementBlock
+│     │  │  │  │  ├─ statements: list
+│     │  │  │  │  │  └─ [0]: ReturnStatement
+│     │  │  │  │  │     └─ value: 0
+│     │  │  │  │  └─ scope:  block{}
+│     │  │  │  └─ else_clause: StatementBlock
+│     │  │  │     ├─ statements: list (empty)
+│     │  │  │     └─ scope: dict (empty)
+│     │  │  ├─ [1]: WhileStatement
+│     │  │  │  ├─ condition: BinaryExpression
+│     │  │  │  │  ├─ operator: '>'
+│     │  │  │  │  ├─ left: VarRef
+│     │  │  │  │  │  └─ name: 'x'
+│     │  │  │  │  └─ right: 10
+│     │  │  │  ├─ body: StatementBlock
+│     │  │  │  │  ├─ statements: list
+│     │  │  │  │  │  └─ [0]: ExpressionStatement
+│     │  │  │  │  │     └─ expression: Symbol("x")=(Symbol("x") - 1)
+│     │  │  │  │  └─ scope:  block{}
+│     │  │  │  └─ locals:  while{}
+│     │  │  └─ [2]: ReturnStatement
+│     │  │     └─ value: VarRef
+│     │  │        └─ name: 'x'
+│     │  └─ scope:  fn early_return{}
+│     └─ decorators: list (empty)
+└─ globals:  globals{}
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
 
 
 
@@ -2309,32 +2732,19 @@ start
                 number_literal	0
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'member_assign'
+│     ├─ return_type: i32
+│     ├─ name: "member_assign"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: MemberAccess
-│     │           │  ├─ target: VarRef
-│     │           │  │  └─ name: 'thing'
-│     │           │  └─ member: 'member'
-│     │           └─ value: Literal
-│     │              └─ value: 0
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ExpressionStatement
+│     │  │     └─ expression: thing.member=0
+│     │  └─ scope:  fn member_assign{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -2400,32 +2810,19 @@ start
                 member
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'member_get'
+│     ├─ return_type: i32
+│     ├─ name: "member_get"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: VarRef
-│     │           │  └─ name: 'e'
-│     │           └─ value: MemberAccess
-│     │              ├─ target: VarRef
-│     │              │  └─ name: 'thing'
-│     │              └─ member: 'member'
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ExpressionStatement
+│     │  │     └─ expression: Symbol("e")=thing.member
+│     │  └─ scope:  fn member_get{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -2513,9 +2910,35 @@ start
                 continue_statement
 
 ======================== AST ========================
-Error trying to process rule "while_statement":
-
-WhileStatement.__init__() takes 3 positional arguments but 4 were given
+None: Program
+├─ entries: list
+│  └─ [0]: FunctionDefinition
+│     ├─ return_type: i32
+│     ├─ name: "while_test"
+│     ├─ parameters: list (empty)
+│     ├─ body: StatementBlock
+│     │  ├─ statements: list
+│     │  │  └─ [0]: WhileStatement
+│     │  │     ├─ condition: VarRef
+│     │  │     │  └─ name: 'true'
+│     │  │     ├─ body: StatementBlock
+│     │  │     │  ├─ statements: list
+│     │  │     │  │  ├─ [0]: ExpressionStatement
+│     │  │     │  │  │  └─ expression: FuncCall
+│     │  │     │  │  │     ├─ callee: 'print'
+│     │  │     │  │  │     └─ args: ArgumentList
+│     │  │     │  │  │        └─ args: list
+│     │  │     │  │  │           └─ [0]: "hello world"
+│     │  │     │  │  ├─ [1]: BreakStatement (empty)
+│     │  │     │  │  └─ [2]: ContinueStatement (empty)
+│     │  │     │  └─ scope:  block{}
+│     │  │     └─ locals:  while{}
+│     │  └─ scope:  fn while_test{}
+│     └─ decorators: list (empty)
+└─ globals:  globals{}
+======================== STATUS ========================
+PASSED!!!
+expected: True; actual: True
 
 
 
@@ -2540,7 +2963,7 @@ WhileStatement.__init__() takes 3 positional arguments but 4 were given
 
 
 i32 for_test() {
-    for(i = 0; i < 32; i = i + 1) {
+    for(i32 i = 0; i < 32; i = i + 1) {
         continue;
         break;
     }
@@ -2555,116 +2978,63 @@ RPAR               ')' line=3 col=14
 LBRACE             '{' line=3 col=16
 FOR                'for' line=4 col=5
 LPAR               '(' line=4 col=8
-NAME               'i' line=4 col=9
-EQUAL              '=' line=4 col=11
-DECIMAL_INT        '0' line=4 col=13
-SEMICOLON          ';' line=4 col=14
-NAME               'i' line=4 col=16
-LESSTHAN           '<' line=4 col=18
-DECIMAL_INT        '32' line=4 col=20
-SEMICOLON          ';' line=4 col=22
-NAME               'i' line=4 col=24
-EQUAL              '=' line=4 col=26
+NAME               'i32' line=4 col=9
+NAME               'i' line=4 col=13
+EQUAL              '=' line=4 col=15
+DECIMAL_INT        '0' line=4 col=17
+SEMICOLON          ';' line=4 col=18
+NAME               'i' line=4 col=20
+LESSTHAN           '<' line=4 col=22
+DECIMAL_INT        '32' line=4 col=24
+SEMICOLON          ';' line=4 col=26
 NAME               'i' line=4 col=28
-PLUS               '+' line=4 col=30
-DECIMAL_INT        '1' line=4 col=32
-RPAR               ')' line=4 col=33
-LBRACE             '{' line=4 col=35
+EQUAL              '=' line=4 col=30
+NAME               'i' line=4 col=32
+PLUS               '+' line=4 col=34
+DECIMAL_INT        '1' line=4 col=36
+RPAR               ')' line=4 col=37
+LBRACE             '{' line=4 col=39
 CONTINUE           'continue' line=5 col=9
 SEMICOLON          ';' line=5 col=17
 BREAK              'break' line=6 col=9
 SEMICOLON          ';' line=6 col=14
 RBRACE             '}' line=7 col=5
 RBRACE             '}' line=8 col=1
-======================== PARSE TREE ========================
-start
-  entry
-    function_definition
-      None
-      qualified_type
-        typename	i32
-        None
-      for_test
-      None
-      block
-        statement
-          for_statement
-            for_init
-              assign
-                var_ref	i
-                assign_op	=
-                literal
-                  number_literal	0
-            for_cond
-              less
-                var_ref	i
-                literal
-                  number_literal	32
-            for_step
-              assign
-                var_ref	i
-                assign_op	=
-                add
-                  var_ref	i
-                  literal
-                    number_literal	1
-            block
-              statement
-                continue_statement
-              statement
-                break_statement
-
-======================== AST ========================
-Program
-├─ globals: list
-│  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'for_test'
-│     ├─ parameters: list (empty)
-│     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ForStatement
-│     │        ├─ init: ForInitializer
-│     │        │  └─ init: AssignExpression
-│     │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │        │     ├─ target: VarRef
-│     │        │     │  └─ name: 'i'
-│     │        │     └─ value: Literal
-│     │        │        └─ value: 0
-│     │        ├─ condition: ForConditional
-│     │        │  └─ cond: BinaryExpression
-│     │        │     ├─ operator: '<'
-│     │        │     ├─ left: VarRef
-│     │        │     │  └─ name: 'i'
-│     │        │     └─ right: Literal
-│     │        │        └─ value: 32
-│     │        ├─ step: ForStep
-│     │        │  └─ step: AssignExpression
-│     │        │     ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │        │     ├─ target: VarRef
-│     │        │     │  └─ name: 'i'
-│     │        │     └─ value: BinaryExpression
-│     │        │        ├─ operator: '+'
-│     │        │        ├─ left: VarRef
-│     │        │        │  └─ name: 'i'
-│     │        │        └─ right: Literal
-│     │        │           └─ value: 1
-│     │        └─ body: StatementBlock
-│     │           └─ statements: list
-│     │              ├─ [0]: ContinueStatement (empty)
-│     │              └─ [1]: BreakStatement (empty)
-│     └─ decorators: list (empty)
-└─ entries: list (empty)
 ======================== STATUS ========================
-PASSED!!!
-expected: True; actual: True
+FAILED!!!
+expected: True; actual: False
+
+Error:
+
+No terminal matches 'i' in the current parser context, at line 4 col 13
+
+    for(i32 i = 0; i < 32; i = i + 1) {
+            ^
+Expected one of: 
+	* VBAR
+	* __ANON_4
+	* __ANON_6
+	* STAR
+	* DOT
+	* AMPERSAND
+	* CIRCUMFLEX
+	* SEMICOLON
+	* PERCENT
+	* __ANON_0
+	* LSQB
+	* ASSIGN_OP
+	* PLUS
+	* __ANON_3
+	* __ANON_5
+	* SLASH
+	* LPAR
+	* MORETHAN
+	* LESSTHAN
+	* MINUS
+	* __ANON_1
+	* __ANON_7
+	* __ANON_2
+
 
 
 
@@ -2726,32 +3096,19 @@ start
                   number_literal	43
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'logical_not_test'
+│     ├─ return_type: i32
+│     ├─ name: "logical_not_test"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: VarRef
-│     │           │  └─ name: 'x'
-│     │           └─ value: UnaryExpression
-│     │              ├─ operator: '!'
-│     │              └─ operand: Literal
-│     │                 └─ value: 43
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ExpressionStatement
+│     │  │     └─ expression: Symbol("x")=!43
+│     │  └─ scope:  fn logical_not_test{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -2816,32 +3173,19 @@ start
                   number_literal	43
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'negation_test'
+│     ├─ return_type: i32
+│     ├─ name: "negation_test"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: VarRef
-│     │           │  └─ name: 'x'
-│     │           └─ value: UnaryExpression
-│     │              ├─ operator: '-'
-│     │              └─ operand: Literal
-│     │                 └─ value: 43
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ExpressionStatement
+│     │  │     └─ expression: Symbol("x")=-43
+│     │  └─ scope:  fn negation_test{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -2906,32 +3250,19 @@ start
                   number_literal	3
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'bitwise_not_test'
+│     ├─ return_type: i32
+│     ├─ name: "bitwise_not_test"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ExpressionStatement
-│     │        └─ expression: AssignExpression
-│     │           ├─ operator: "Tree(Token('RULE', 'assign_op'), [Token('ASSIGN_OP', '=')])"
-│     │           ├─ target: VarRef
-│     │           │  └─ name: 'x'
-│     │           └─ value: UnaryExpression
-│     │              ├─ operator: '~'
-│     │              └─ operand: Literal
-│     │                 └─ value: 3
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ExpressionStatement
+│     │  │     └─ expression: Symbol("x")=~3
+│     │  └─ scope:  fn bitwise_not_test{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
@@ -2961,6 +3292,8 @@ expected: True; actual: True
 i32 main(int argc, char[16] argv) {
     return 3;
 }
+
+
 ======================== TOKENS ========================
 NAME               'i32' line=3 col=1
 NAME               'main' line=3 col=5
@@ -3007,560 +3340,24 @@ start
               number_literal	3
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'main'
+│     ├─ return_type: i32
+│     ├─ name: "main"
 │     ├─ parameters: list
-│     │  ├─ [0]: Parameter
-│     │  │  ├─ type: Type
-│     │  │  │  ├─ type_id: 'int'
-│     │  │  │  ├─ inline: False
-│     │  │  │  ├─ static: False
-│     │  │  │  ├─ mut: False
-│     │  │  │  ├─ const: False
-│     │  │  │  └─ suffix: None
-│     │  │  └─ name: Identifier
-│     │  │     └─ name: 'argc'
-│     │  └─ [1]: Parameter
-│     │     ├─ type: Type
-│     │     │  ├─ type_id: 'char'
-│     │     │  ├─ inline: False
-│     │     │  ├─ static: False
-│     │     │  ├─ mut: False
-│     │     │  ├─ const: False
-│     │     │  └─ suffix: ArraySpan
-│     │     │     └─ size: 16
-│     │     └─ name: Identifier
-│     │        └─ name: 'argv'
+│     │  ├─ [0]: int argc
+│     │  └─ [1]: char[16] argv
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     └─ [0]: ReturnStatement
-│     │        └─ value: Literal
-│     │           └─ value: 3
+│     │  ├─ statements: list
+│     │  │  └─ [0]: ReturnStatement
+│     │  │     └─ value: 3
+│     │  └─ scope:  fn main{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
 PASSED!!!
 expected: True; actual: True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-
-// this fails - only declarations and definitions allowed
-struct NoStatementsInStruct {
-    print(43);
-};
-
-
-======================== TOKENS ========================
-STRUCT             'struct' line=4 col=1
-NAME               'NoStatementsInStruct' line=4 col=8
-LBRACE             '{' line=4 col=29
-NAME               'print' line=5 col=5
-LPAR               '(' line=5 col=10
-DECIMAL_INT        '43' line=5 col=11
-RPAR               ')' line=5 col=13
-SEMICOLON          ';' line=5 col=14
-RBRACE             '}' line=6 col=1
-SEMICOLON          ';' line=6 col=2
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches '(' in the current parser context, at line 5 col 10
-
-    print(43);
-         ^
-Expected one of: 
-	* NAME
-	* LSQB
-	* AMPERSAND
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-// no Expressions in structures
-struct NoExpressionsInStructs {
-    32;
-};
-
-
-======================== TOKENS ========================
-STRUCT             'struct' line=3 col=1
-NAME               'NoExpressionsInStructs' line=3 col=8
-LBRACE             '{' line=3 col=31
-DECIMAL_INT        '32' line=4 col=5
-SEMICOLON          ';' line=4 col=7
-RBRACE             '}' line=5 col=1
-SEMICOLON          ';' line=5 col=2
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches '3' in the current parser context, at line 4 col 5
-
-    32;
-    ^
-Expected one of: 
-	* CONST
-	* INLINE
-	* NAME
-	* MUT
-	* STATIC
-	* RBRACE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-
-//int incomplete_string_literal() {
-    //return ";
-//}
-
-
-
-
-// const & mut mutually exclusive
-static inline const mut i32 const_mut_together[32];
-
-
-======================== TOKENS ========================
-STATIC             'static' line=11 col=1
-INLINE             'inline' line=11 col=8
-CONST              'const' line=11 col=15
-MUT                'mut' line=11 col=21
-NAME               'i32' line=11 col=25
-NAME               'const_mut_together' line=11 col=29
-LSQB               '[' line=11 col=47
-DECIMAL_INT        '32' line=11 col=48
-RSQB               ']' line=11 col=50
-SEMICOLON          ';' line=11 col=51
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches '[' in the current parser context, at line 11 col 47
-
- inline const mut i32 const_mut_together[32];
-                                        ^
-Expected one of: 
-	* LPAR
-	* EQUAL
-	* SEMICOLON
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-
-static inline f32[16]& illegalArrayRef;
-
-
-======================== TOKENS ========================
-STATIC             'static' line=3 col=1
-INLINE             'inline' line=3 col=8
-NAME               'f32' line=3 col=15
-LSQB               '[' line=3 col=18
-DECIMAL_INT        '16' line=3 col=19
-RSQB               ']' line=3 col=21
-AMPERSAND          '&' line=3 col=22
-NAME               'illegalArrayRef' line=3 col=24
-SEMICOLON          ';' line=3 col=39
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches '&' in the current parser context, at line 3 col 22
-
-static inline f32[16]& illegalArrayRef;
-                     ^
-Expected one of: 
-	* NAME
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-
-struct foo {
-    inline f32& illegalInlineInStruct;
-}
-
-
-
-
-======================== TOKENS ========================
-STRUCT             'struct' line=3 col=1
-NAME               'foo' line=3 col=8
-LBRACE             '{' line=3 col=12
-INLINE             'inline' line=4 col=5
-NAME               'f32' line=4 col=12
-AMPERSAND          '&' line=4 col=15
-NAME               'illegalInlineInStruct' line=4 col=17
-SEMICOLON          ';' line=4 col=38
-RBRACE             '}' line=5 col=1
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-Unexpected end-of-input. Expected one of: 
-	* SEMICOLON
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-
-i32 foo() {
-    struct illegalNestedStruct {
-        i32 some_member;
-    };
-}
-
-
-======================== TOKENS ========================
-NAME               'i32' line=3 col=1
-NAME               'foo' line=3 col=5
-LPAR               '(' line=3 col=8
-RPAR               ')' line=3 col=9
-LBRACE             '{' line=3 col=11
-STRUCT             'struct' line=4 col=5
-NAME               'illegalNestedStruct' line=4 col=12
-LBRACE             '{' line=4 col=32
-NAME               'i32' line=5 col=9
-NAME               'some_member' line=5 col=13
-SEMICOLON          ';' line=5 col=24
-RBRACE             '}' line=6 col=5
-SEMICOLON          ';' line=6 col=6
-RBRACE             '}' line=7 col=1
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches 's' in the current parser context, at line 4 col 5
-
-    struct illegalNestedStruct {
-    ^
-Expected one of: 
-	* LPAR
-	* CONTINUE
-	* NAME
-	* MUT
-	* RETURN
-	* HEXADECIMAL_INT
-	* DECIMAL_FLOAT
-	* CONST
-	* MINUS
-	* FOR
-	* BREAK
-	* WHILE
-	* INLINE
-	* IF
-	* PLUS
-	* TILDE
-	* BANG
-	* STATIC
-	* DECIMAL_INT
-	* RBRACE
-	* STRING
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-
-int passingDeclarationAsArg() {
-    foo(int x);
-}
-
-
-======================== TOKENS ========================
-NAME               'int' line=3 col=1
-NAME               'passingDeclarationAsArg' line=3 col=5
-LPAR               '(' line=3 col=28
-RPAR               ')' line=3 col=29
-LBRACE             '{' line=3 col=31
-NAME               'foo' line=4 col=5
-LPAR               '(' line=4 col=8
-NAME               'int' line=4 col=9
-NAME               'x' line=4 col=13
-RPAR               ')' line=4 col=14
-SEMICOLON          ';' line=4 col=15
-RBRACE             '}' line=5 col=1
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches 'x' in the current parser context, at line 4 col 13
-
-    foo(int x);
-            ^
-Expected one of: 
-	* COMPOUND_OP
-	* COMMA
-	* LPAR
-	* ASSIGN_OP
-	* __ANON_4
-	* RPAR
-	* __ANON_6
-	* MORETHAN
-	* MINUS
-	* DOT
-	* __ANON_7
-	* __ANON_5
-	* __ANON_2
-	* SLASH
-	* CIRCUMFLEX
-	* STAR
-	* PERCENT
-	* LSQB
-	* AMPERSAND
-	* __ANON_3
-	* LESSTHAN
-	* VBAR
-	* PLUS
-	* __ANON_1
-	* __ANON_0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================== CODE BLOCK ========================
-
-int passingDefinitionAsArg() {
-    foo(int x = 0);
-}
-
-
-======================== TOKENS ========================
-NAME               'int' line=2 col=1
-NAME               'passingDefinitionAsArg' line=2 col=5
-LPAR               '(' line=2 col=27
-RPAR               ')' line=2 col=28
-LBRACE             '{' line=2 col=30
-NAME               'foo' line=3 col=5
-LPAR               '(' line=3 col=8
-NAME               'int' line=3 col=9
-NAME               'x' line=3 col=13
-EQUAL              '=' line=3 col=15
-DECIMAL_INT        '0' line=3 col=17
-RPAR               ')' line=3 col=18
-SEMICOLON          ';' line=3 col=19
-RBRACE             '}' line=4 col=1
-None
-======================== STATUS ========================
-PASSED!!!
-expected: False; actual: False
-
-Error:
-
-No terminal matches 'x' in the current parser context, at line 3 col 13
-
-    foo(int x = 0);
-            ^
-Expected one of: 
-	* COMPOUND_OP
-	* COMMA
-	* LPAR
-	* ASSIGN_OP
-	* __ANON_4
-	* RPAR
-	* __ANON_6
-	* MORETHAN
-	* MINUS
-	* DOT
-	* __ANON_7
-	* __ANON_5
-	* __ANON_2
-	* SLASH
-	* CIRCUMFLEX
-	* STAR
-	* PERCENT
-	* LSQB
-	* AMPERSAND
-	* __ANON_3
-	* LESSTHAN
-	* VBAR
-	* PLUS
-	* __ANON_1
-	* __ANON_0
-
 
 
 
@@ -3668,74 +3465,32 @@ start
                     None
 
 ======================== AST ========================
-Program
-├─ globals: list
+None: Program
+├─ entries: list
 │  └─ [0]: FunctionDefinition
-│     ├─ return_type: Type
-│     │  ├─ type_id: 'i32'
-│     │  ├─ inline: False
-│     │  ├─ static: False
-│     │  ├─ mut: False
-│     │  ├─ const: False
-│     │  └─ suffix: None
-│     ├─ name: Identifier
-│     │  └─ name: 'doubleDeclaration'
+│     ├─ return_type: i32
+│     ├─ name: "doubleDeclaration"
 │     ├─ parameters: list (empty)
 │     ├─ body: StatementBlock
-│     │  └─ statements: list
-│     │     ├─ [0]: Declaration
-│     │     │  ├─ type: Type
-│     │     │  │  ├─ type_id: 'i32'
-│     │     │  │  ├─ inline: False
-│     │     │  │  ├─ static: False
-│     │     │  │  ├─ mut: False
-│     │     │  │  ├─ const: False
-│     │     │  │  └─ suffix: None
-│     │     │  ├─ id: 'function_local'
-│     │     │  └─ initializer: None
-│     │     └─ [1]: IfStatement
-│     │        ├─ condition: Literal
-│     │        │  └─ value: 1
-│     │        ├─ then_block: StatementBlock
-│     │        │  └─ statements: list
-│     │        │     └─ [0]: Declaration
-│     │        │        ├─ type: Type
-│     │        │        │  ├─ type_id: 'i32'
-│     │        │        │  ├─ inline: False
-│     │        │        │  ├─ static: False
-│     │        │        │  ├─ mut: False
-│     │        │        │  ├─ const: False
-│     │        │        │  └─ suffix: None
-│     │        │        ├─ id: 'if_local'
-│     │        │        └─ initializer: None
-│     │        └─ else_clause: ElseClause
-│     │           └─ body: StatementBlock
-│     │              └─ statements: list
-│     │                 ├─ [0]: Declaration
-│     │                 │  ├─ type: Type
-│     │                 │  │  ├─ type_id: 'int'
-│     │                 │  │  ├─ inline: False
-│     │                 │  │  ├─ static: False
-│     │                 │  │  ├─ mut: False
-│     │                 │  │  ├─ const: False
-│     │                 │  │  └─ suffix: None
-│     │                 │  ├─ id: 'i'
-│     │                 │  └─ initializer: None
-│     │                 └─ [1]: Declaration
-│     │                    ├─ type: Type
-│     │                    │  ├─ type_id: 'int'
-│     │                    │  ├─ inline: False
-│     │                    │  ├─ static: False
-│     │                    │  ├─ mut: False
-│     │                    │  ├─ const: False
-│     │                    │  └─ suffix: None
-│     │                    ├─ id: 'i'
-│     │                    └─ initializer: None
+│     │  ├─ statements: list
+│     │  │  ├─ [0]: i32 function_local = ?
+│     │  │  └─ [1]: IfStatement
+│     │  │     ├─ condition: 1
+│     │  │     ├─ then_block: StatementBlock
+│     │  │     │  ├─ statements: list
+│     │  │     │  │  └─ [0]: i32 if_local = ?
+│     │  │     │  └─ scope:  block{}
+│     │  │     └─ else_clause: StatementBlock
+│     │  │        ├─ statements: list
+│     │  │        │  ├─ [0]: int i = ?
+│     │  │        │  └─ [1]: int i = ?
+│     │  │        └─ scope:  block{}
+│     │  └─ scope:  fn doubleDeclaration{}
 │     └─ decorators: list (empty)
-└─ entries: list (empty)
+└─ globals:  globals{}
 ======================== STATUS ========================
-FAILED!!!
-expected: False; actual: True
+PASSED!!!
+expected: True; actual: True
 
 
 

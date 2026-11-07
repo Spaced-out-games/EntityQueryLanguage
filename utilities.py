@@ -33,10 +33,16 @@ def leaf(node):
         return f"{node.type}({node.value!r})"
     return repr(node)
 
-
 def render(node, name, prefix, is_last, is_root, out, show_positions, hide_none):
     connector = "" if is_root else ("└─ " if is_last else "├─ ")
-    label = f"{name}: " if name else ""
+    label = f"{name}: "
+
+    # Custom pretty-print protocol
+    pretty = getattr(node, "pretty", None)
+    if callable(pretty):
+        out.append(f"{prefix}{connector}{label}{pretty()}")
+        return
+
     kids = children(node, show_positions)
 
     if kids is None or not kids[1]:
@@ -53,9 +59,12 @@ def render(node, name, prefix, is_last, is_root, out, show_positions, hide_none)
 
     out.append(f"{prefix}{connector}{label}{title}")
     child_prefix = prefix + ("" if is_root else ("   " if is_last else "│  "))
+
     for i, (child_name, child) in enumerate(items):
-        render(child, child_name, child_prefix, i == len(items) - 1, False,
-                out, show_positions, hide_none)
+        render(
+            child, child_name, child_prefix, i == len(items) - 1, False,
+            out, show_positions, hide_none
+        )
 
 
 def pretty_ast(node, show_positions: bool = False, hide_none: bool = False) -> str:

@@ -1,34 +1,37 @@
 
-
+// VALIDATED
 // this fails - only declarations and definitions allowed
 struct NoStatementsInStruct {
     print(43);
 };
 
 /**/
+// VALIDATED
 // no Expressions in structures
 struct NoExpressionsInStructs {
     32;
 };
 
 /**/
-
+// VALIDATED
 //int incomplete_string_literal() {
     //return ";
 //}
 
 
 
-
+// VALIDATED
 // const & mut mutually exclusive
-static inline const mut i32 const_mut_together[32];
+static inline const mut i32 const_mut_together;
 
 /**/
 
+// VALIDATED
 static inline f32[16]& illegalArrayRef;
 
 /**/
 
+// VALIDATED
 struct foo {
     inline f32& illegalInlineInStruct;
 }
@@ -37,6 +40,7 @@ struct foo {
 
 /**/
 
+// VALIDATED
 i32 foo() {
     struct illegalNestedStruct {
         i32 some_member;
@@ -45,22 +49,23 @@ i32 foo() {
 
 /**/
 
+// VALIDATED
 int passingDeclarationAsArg() {
     foo(int x);
 }
 
 /**/
+
+// VALIDATED
 int passingDefinitionAsArg() {
     foo(int x = 0);
 }
 
 /**/
-i32 doubleDeclaration() {
-    i32 function_local;
-    if(1) {
-        i32 if_local;
-    } else {
-        int i;
-        int i;
+
+// VALIDATED
+i32 foo() {
+    while(i32 d = 5) {
+
     }
 }

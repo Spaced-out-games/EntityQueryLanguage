@@ -1,66 +1,254 @@
 """Future milestone: semantic analysis and symbol table."""
+# all the nodes
 from ast_nodes import *
 
+from typeinfo import *
+
+# type information
+
+
+from enum import Enum, auto
+
+class ValueCategory(Enum):
+    UNKNOWN = auto()
+    LVALUE = auto()
+    RVALUE = auto()
+
 class SemanticError(Exception):
+    ''' Semantic analysis error. '''
     pass
 
-"""
-class ESLAnalyzer:
-    def __init__(self):
-        self.symbol_table = {}
+binary_operators = ["+", "-", "*", "/", "%", "<<", ">>", "<", "<=", ">", ">=", "==", "!=", "&", "^", "|", "&&", "||"]
+assignment_operators = ["+=", "-=", "*=", "/=", "%=", "="]
+
+
+
+
+
+
+
+
+
+
+def classify_value(functions: FunctionTable,expr: Expression) -> ValueCategory:
+
+    if isinstance(expr, Literal):
+        return ValueCategory.RVALUE
+
+    if isinstance(expr, VarRef):
+        return ValueCategory.LVALUE
+
+    if isinstance(expr, MemberAccess):
+        return classify_value(expr.target)
+
+    if isinstance(expr, IndexExpression):
+        return classify_value(expr.target)
+
+    if isinstance(expr, FuncCall):
+        if expr in functions:
+            return_t = functions[expr].return_type
+            if return_t.const or return_t.type_id == "void":
+                return ValueCategory.RVALUE
+            return ValueCategory.LVALUE
+        else:
+            return ValueCategory.UNKNOWN
+
+
+    if isinstance(expr, BinaryExpression):
+        return ValueCategory.RVALUE
+
+    if isinstance(expr, UnaryExpression):
+        return ValueCategory.RVALUE
+
+    raise SemanticError(f"Unknown expression category: {type(expr).__name__}")
+
+
+
+
+
+
+
+
+
+def validate_identifier(scope: Scope, node: Identifier):
+    if(node.name is None):
+        raise SemanticError("Identifier name was None")
+    if(node.name == ""):
+        raise SemanticError("Identifier name was empty")
+
     
-    def check_expression(self, expr):
-        if isinstance(expr, Literal):
-            return
+    # finding the symbol isn't important because this is
+    # an identifier
+    #if (scope.find_recursive(node.name) is not None):
+    #    raise SemanticError(f"symbol '{node.name}' was not declared")
 
-        if isinstance(expr, Identifier):
-            if(expr.name) not in self.symbol_table:
-                raise RuntimeError(f"Variable {expr.name} is not declared!") # semantic error
-        
-        if isinstance(expr, UnaryExpression):
-            if expr.operator not in []:
-                raise RuntimeError(f"Unsupported binary operator `{expr.operator}`")
+    return
 
-        if isinstance(expr, BinaryExpression):
-            if expr.operator not in ["+=", "-=", "*=", "/=", "%=", "=", "+=", "-=", "*=", "/=", "%="]:
-                raise RuntimeError(f"Unsupported binary operator `{expr.operator}`")
 
-        
-from 
-from frontend import parse
-def run_semantic_tests():
-    #cases = [(name, code, True) for name, code in POSITIVE.items] + \
-    #[(name, code, False) for name, code in NEGATIVE.items]
+def validate_varref(scope: Scope, node: VarRef):
+    if not isinstance(type.type_id, str):
+        raise SemanticError("Identifier name was not str")
+    if(node.name == ""):
+        raise SemanticError("Identifier name was empty")
 
-    passed = 0
+    # we are using it so it must exist
+    if (scope.find_recursive(node.name) is None):
+        raise SemanticError(f"symbol '{node.name}' was not declared")
+
+    return
+
+
+def validate_type_node(node: Type):
+    if not isinstance(node.type_id, str):
+        raise SemanticError("type_id was not a str")
+    if node.type_id == "":
+        raise SemanticError("type_id was empty")
+
+    if not isinstance(node.inline, bool):
+        raise SemanticError("inline was not bool")
+    if not isinstance(node.static, bool):
+        raise SemanticError("static was not bool")
+    if not isinstance(node.mut, bool):
+        raise SemanticError("mut was not bool")
+    if not isinstance(node.const, bool):
+        raise SemanticError("const was not bool")
+    if not isinstance(node.reference, bool):
+        raise SemanticError("reference was not bool")
+
+    if node.mut and node.const:
+        raise SemanticError("const and mut are mutually exclusive")
+
+    if node.array_size is not None and type(node.array_size) is not int:
+        raise SemanticError("array_size was not int or None")
+
+    if node.array_size is not None and node.reference:
+        raise SemanticError("array and reference types are mutually exclusive")
+
+    if node.array_size is not None and node.array_size <= 0:
+        raise SemanticError("array types must have 1 or more elements")
+
+def validate_scope_node(node: Scope):
+    if not isinstance(node.variables, dict):
+        raise SemanticError("variables was not dict")
+
+    for key, value in node.variables:
+        if not isinstance(value, SymbolTableEntry):
+            raise SemanticError("variables was not homogenously full of SymbolTableEntry")
+
+    if not isinstance(node.debug_name, (str, None)):
+        raise SemanticError("debug_name was not str or None")
+
+    if not isinstance(node.parent, (Scope, None)):
+        raise SemanticError("parent was not Scope or None")
+
+
+def validate_literal_node(node: Literal):
+    if node.value is None:
+        raise SemanticError("Literal held no value")
+
+    if isinstance(node.value, (str, int, float)):
+        raise SemanticError("Literal held invalid value type")
+
+
+def validate_unary_expression(node: UnaryExpression):
+
+    if node.operator not in ["+", "-", "!", "~"]:
+        raise SemanticError("Unsupported Unary operator")
+
+    if node.operand is None:
+        raise SemanticError("Unary operand was None")
+
+    if not isinstance(node.operand, Expression):
+        raise SemanticError("Unary operand was not an expression")
+
+    validate_expression(node.operand)
+
+def validate_binary_expression(node: BinaryExpression):
+    if node.operator not in binary_operators:
+        raise SemanticError("Unsupported Unary operator")
+
+    if node.left is None:
+        raise SemanticError("left operator was None")
+
+    if not isinstance(node.left, Expression):
+        raise SemanticError("left was not an Expression")
+
+    if node.right is None:
+        raise SemanticError("right operator was None")
+
+    if not isinstance(node.right, Expression):
+        raise SemanticError("right was not an Expression")
+
+    validate_expression(node.left)
+    validate_expression(node.right)
+
+def validate_assign_expression(scope: Scope, node: AssignExpression):
+
+    if node.expression is None:
+        raise SemanticError("expression was None")
+
+    if not isinstance(node.expression, Expression):
+        raise SemanticError("expression was not an Expression")
+
+    if node.target is None:
+        raise SemanticError("target was None")
+
+    if not isinstance(node.target, Expression):
+        raise SemanticError("target was not an Expression")
+
+    validate_expression(node.expression)
+
+    validate_expression(node.target)
+
+    # here we'd make sure node.target is an lvalue
+    value_class =  classify_value(node.target)
+
+    if value_class == ValueCategory.UNKNOWN:
+        pass
+    elif value_class == ValueCategory.RVALUE:
+        raise SemanticError("Attempted to assign an rvalue")
+
+def validate_member_access(current_scope: Scope, node: MemberAccess):
+    # run of the mill shit
+    if not isinstance(node.target, Expression):
+        raise SemanticError("target was not an expression")
+
+     # first, find the symbol
+
+    type_id = node.target.type_id(current_scope=current_scope)
+
+    if type_id is None:
+        raise SemanticError("")
+
     
-    print(" ---------- Entity Shading Language Semantic Analysis Validation Test ---------- ")
 
-    for i, (name, code, expected) in enumerate(cases, 1):
-        try:
-            SemanticAnalyzer.analyse(parse(code))
 
-            valid = True
-        except SemanticError as e:
-            valid = False
-            reason = str(e)
+def validate_expression(node: Expression):
+    match node:
+        case UnaryExpression():
+            validate_unary_expression(node)
+        case BinaryExpression():
+            validate_binary_expression(node)
+        case AssignExpression():
+            validate_assign_expression(node)
+        case MemberAccess():
+            validate_member_access(node)
+        case IndexExpression():
+            validate_index_expression(node)
+        case FuncCall():
+            validate_func_call(node)
+            
 
-        except Exception as e:
-            print(f'Test {i} - {name}: Unexpected error: {e}')
 
-        success = valid == expected
 
-        passed += success
-        print(f"{i}.{name}: {"VALID" if valid else "INVALID"} | {"PASS" if success else "FAIL"}")
+
+class SemanticAnalyzer:
+    type_table = primitive_types
+    current_scope: Scope = Scope({}, "globals")
+
     
-        print("*" * 60)
 
-        print("Result: {passed}/{len(cases)} tests passed.")
 
-        return passed, len(cases)
-
-        
-if __name__ == "__main__":
-    raise SystemExit(run_semantic_tests())
-"""
+    
+    
 

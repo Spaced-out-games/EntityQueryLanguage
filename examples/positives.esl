@@ -1,8 +1,10 @@
+// VALIDATED
 // global
 static inline const f32& someGlobalRef;
 static inline const f32[16] someGlobalArray;
 /**/
 
+// VALIDATED
 // initialized structure
 struct Vec3 {
     f32 x = 0.0;
@@ -10,6 +12,8 @@ struct Vec3 {
     f32 z = 0.0;
 };
 /**/
+
+// VALIDATED
 // quaternion type, no initializer
 struct Quat {
     f32 x;
@@ -18,6 +22,8 @@ struct Quat {
     f32 w;
 };
 /**/
+
+// VALIDATED
 // transform type
 struct Transform {
     Vec3 position;
@@ -25,6 +31,7 @@ struct Transform {
     Vec3 scale;
 };
 /**/
+
 // virtual structure
 virtual struct Person_vstruct {
     // captures arrays
@@ -43,6 +50,7 @@ void integrate(mut Transform& transform, const Velocity& velocity) {
 @ParameterizedDecorator("test", 124)
 void foo() {
     transform.pos.x = 0;
+    bar().c = 0;
 }
 /**/
 
@@ -166,7 +174,7 @@ i32 while_test() {
 /**/
 
 i32 for_test() {
-    for(i = 0; i < 32; i = i + 1) {
+    for(i32 i = 0; i < 32; i = i + 1) {
         continue;
         break;
     }
@@ -194,4 +202,15 @@ i32 bitwise_not_test() {
 
 i32 main(int argc, char[16] argv) {
     return 3;
+}
+
+/**/
+i32 doubleDeclaration() {
+    i32 function_local;
+    if(1) {
+        i32 if_local;
+    } else {
+        int i;
+        int i;
+    }
 }

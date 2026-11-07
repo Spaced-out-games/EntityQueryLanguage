@@ -1,6 +1,6 @@
 import ast
 from lark import Transformer, Tree
-
+from dataclasses import fields, is_dataclass
 from ast_nodes import *
 
 # debugging
@@ -69,11 +69,15 @@ class ESLTransformer(Transformer):
     # ========================================================
     def reference(self, _):      return ReferenceFlag()
     def array_size(self, items): return ArraySpan(items[0])
-    def type_suffix(self, items): return items[0]
+    def type_suffix(self, items):
+        return items[0]
 
     @staticmethod
     def find_node(items, cls, default=None):
         return next((item for item in items if isinstance(item, cls)), default)
+
+    def assign_op(self, items):
+        return items[0]
 
     def type_qualifier(self, items):
         name = items[0].data
@@ -111,16 +115,26 @@ class ESLTransformer(Transformer):
                     result.mut = True
 
                 case VirtualTag():
+                    assert False, "this should never happen"
                     pass
 
                 case TypeSuffix():
-                    result.suffix = item
+                    assert not result.reference and result.array_size is None, "this should never happen"
+                        
+
+                    if isinstance(item, ReferenceFlag):
+                        result.reference = True
+                    elif isinstance(item, ArraySpan):
+                        result.array_size = item.size
+                
 
                 case str():
                     result.type_id = item
 
         if result.const and result.mut:
             raise ESLSemanticError("`const` and `mut` are mutually exclusive")
+
+        
 
         return result
 
@@ -163,7 +177,9 @@ class ESLTransformer(Transformer):
 
     def call(self, items):
         args = items[1] if len(items) > 1 else ArgumentList()
-        return FuncCall(items[0], args)
+        assert isinstance(items[0], VarRef)
+        
+        return FuncCall(items[0].name, args)
 
     # ========================================================
     # Declarations
@@ -173,9 +189,9 @@ class ESLTransformer(Transformer):
 
     @staticmethod
     def split_decl(items):
-        type_ = next((i for i in items if isinstance(i, Type)), None)
+        type_ = next((i for i in items if isinstance(i, Type)), Type())
         id_ = next((i.name for i in items if isinstance(i, Identifier)), None)
-        init = next((i for i in items if isinstance(i, Initializer)), None)
+        init = next((i for i in items if isinstance(i, Initializer)), Initializer(None))
         return type_, id_, init
 
     def declaration(self, items):
@@ -212,35 +228,42 @@ class ESLTransformer(Transformer):
         return ExpressionStatement(items[0])
 
     def statement(self, items):
+
+
         return items[0]
 
     def block(self, items):
+        scope = Scope({}, "block")
 
-        return StatementBlock(list(items))
+
+        return StatementBlock(list(items), None, scope=scope)
         
 
     def else_clause(self, items):
-        
-        return ElseClause(items[0])
+        return items[0]
 
     def if_statement(self, items):
         cond, then_block = items[0], items[1]
-        else_clause = items[2] if len(items) > 2 else None
+        else_clause = items[2] if len(items) > 2 and items[2] is not None else StatementBlock([], None)
+        #then_block.scope.debug_name = "if_then"
+        #else_clause.scope.debug_name = "if_else"
+
         return IfStatement(cond, then_block, else_clause)
 
     def while_statement(self, items):
-        return WhileStatement(None, items[0], items[1])
+        scope = Scope({}, "while")
+        return WhileStatement(items[0], items[1], scope)
 
     def for_init(self, items):  return ForInitializer(items[0])
     def for_cond(self, items):  return ForConditional(items[0])
     def for_step(self, items):  return ForStep(items[0])
 
     def for_statement(self, items):
-        init = next((i for i in items if isinstance(i, ForInitializer)), None)
-        condition = next((i for i in items if isinstance(i, ForConditional)), None)
-        step = next((i for i in items if isinstance(i, ForStep)), None)
-        body = next((i for i in items if isinstance(i, StatementBlock)), None)
-
+        init = next((i for i in items if isinstance(i, ForInitializer)), ForInitializer(None))
+        condition = next((i for i in items if isinstance(i, ForConditional)), ForConditional(None))
+        step = next((i for i in items if isinstance(i, ForStep)), ForStep(None))
+        body = next((i for i in items if isinstance(i, StatementBlock)), StatementBlock([], None))
+        body.scope.debug_name = "for_body"
         return ForStatement(init, condition, step, body)
     
     def continue_statement(self, items):
@@ -250,7 +273,11 @@ class ESLTransformer(Transformer):
         return BreakStatement()
 
     def return_statement(self, items):
-        return ReturnStatement(items[0] if items else None)
+        if items:
+            return ReturnStatement(items[0])
+        else:
+            return None
+
 
     # ========================================================
     # Top level
@@ -273,6 +300,9 @@ class ESLTransformer(Transformer):
         # the function's name is the only Identifier/str left over
         name = next(i for i in items
                     if isinstance(i, (Identifier, str)))
+
+        body.scope.debug_name = f"fn {name}"
+
         return FunctionDefinition(return_type, ident_flatten(name), list(params),
                                   body, list(decorators))
 
@@ -289,4 +319,13 @@ class ESLTransformer(Transformer):
         return items[0]
 
     def start(self, items):
-        return Program(list(items))
+        _globals = Scope({}, debug_name = "globals")
+
+        program = Program(list(items), globals=_globals)
+
+        return program
+
+    # -------------------
+
+
+    
