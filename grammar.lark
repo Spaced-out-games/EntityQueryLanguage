@@ -9,7 +9,6 @@ STRING: /"(?:\\.|[^"\\])*"/​
 
 ASSIGN_OP: "+=" | "-=" | "*=" | "/=" | "%=" | "="​
 
-COMPOUND_OP: "+=" | "-=" | "*=" | "/=" | "%=" ​
 
 // keywords​
 STATIC.2: "static"​
@@ -93,7 +92,6 @@ decorator_arguments: "(" [argument_list] ")"
 // Assignment:
 ?assignment: logic_or
            | unary assign_op assignment        -> assign
-           | unary COMPOUND_OP assignment -> compound_assign
 
 ?logic_or: logic_and
             | logic_or "||" logic_and -> logical_or
