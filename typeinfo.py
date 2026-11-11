@@ -40,18 +40,18 @@ class IBackendImplementation(ABC):
 class TACGenerator(IBackendImplementation):
     def __init__(self, template: str):
         self.template = template
-    def generate(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs):
         return self.template.format(*args, **kwargs)
 
 @dataclass
 class MemberNode:
     name: str
-    type: 'TypeLayout'
+    type: 'TypeMetadata'
     offset: int = 0
 
 
 @dataclass
-class TypeLayout:
+class TypeMetadata:
     type_name: str
     size_bytes: int | None = None
     padding_bytes: int | None = None
@@ -98,7 +98,7 @@ integral_operators = {
 
     # casting
 
-} | base_operators
+} + base_operators
 # doesn't handle epsilon, NaN, or infinity
 float_operators = {
     '+': TACGenerator('ADD_{type} {src1} {src2} -> {dest}'),
@@ -112,7 +112,7 @@ float_operators = {
     '>': TACGenerator('GT_{type}  {src1} {src2} -> {dest}'),
     '>=': TACGenerator('GE_{type}  {src1} {src2} -> {dest}'),
 
-} | base_operators
+} + base_operators
 
 bool_operators = {
     '==': TACGenerator('EQ_{type}  {src1} {src2} -> {dest}'),
@@ -120,7 +120,7 @@ bool_operators = {
     '&&': TACGenerator('LAND_{type} {src1} {src2} -> {dest}'),
     '||': TACGenerator('LOR_{type} {src1} {src2} -> {dest}'),
     '!': TACGenerator('LNOT_{type} {src1} -> {dest}'),
-}  | base_operators
+}  + base_operators
 
 T_ref_operators = base_operators
 
@@ -132,19 +132,19 @@ T_ref_operators = base_operators
 
 
 primitive_types = {
-    'i8': TypeLayout('i8', size_bytes=1, alignment_bytes=1, operators=integral_operators),
-    'i16': TypeLayout('i16', size_bytes=2, alignment_bytes=2, operators=integral_operators),
-    'i32': TypeLayout('i32', size_bytes=4, alignment_bytes=4, operators=integral_operators),
-    'i64': TypeLayout('i64', size_bytes=8, alignment_bytes=8, operators=integral_operators),
-    'u8': TypeLayout('u8', size_bytes=1, alignment_bytes=1, operators=integral_operators),
-    'u16': TypeLayout('u16', size_bytes=2, alignment_bytes=2, operators=integral_operators),
-    'u32': TypeLayout('u32', size_bytes=4, alignment_bytes=4, operators=integral_operators),
-    'u64': TypeLayout('u64', size_bytes=8, alignment_bytes=8, operators=integral_operators),
-    'f32': TypeLayout('f32', size_bytes=4, alignment_bytes=4, operators=float_operators),
-    'f64': TypeLayout('f64', size_bytes=8, alignment_bytes=8, operators=float_operators),
-    'bool': TypeLayout('bool', size_bytes=1, alignment_bytes=1, operators=bool_operators),
-    'char': TypeLayout('char', size_bytes=1, alignment_bytes=1, operators=integral_operators),
-    'T&': TypeLayout('T&', size_bytes=8, alignment_bytes=8, operators=T_ref_operators),  # Assuming 64-bit architecture for pointer size
+    'i8': TypeMetadata('i8', size_bytes=1, alignment_bytes=1, operators=integral_operators),
+    'i16': TypeMetadata('i16', size_bytes=2, alignment_bytes=2, operators=integral_operators),
+    'i32': TypeMetadata('i32', size_bytes=4, alignment_bytes=4, operators=integral_operators),
+    'i64': TypeMetadata('i64', size_bytes=8, alignment_bytes=8, operators=integral_operators),
+    'u8': TypeMetadata('u8', size_bytes=1, alignment_bytes=1, operators=integral_operators),
+    'u16': TypeMetadata('u16', size_bytes=2, alignment_bytes=2, operators=integral_operators),
+    'u32': TypeMetadata('u32', size_bytes=4, alignment_bytes=4, operators=integral_operators),
+    'u64': TypeMetadata('u64', size_bytes=8, alignment_bytes=8, operators=integral_operators),
+    'f32': TypeMetadata('f32', size_bytes=4, alignment_bytes=4, operators=float_operators),
+    'f64': TypeMetadata('f64', size_bytes=8, alignment_bytes=8, operators=float_operators),
+    'bool': TypeMetadata('bool', size_bytes=1, alignment_bytes=1, operators=bool_operators),
+    'char': TypeMetadata('char', size_bytes=1, alignment_bytes=1, operators=integral_operators),
+    'T&': TypeMetadata('T&', size_bytes=8, alignment_bytes=8, operators=T_ref_operators),  # Assuming 64-bit architecture for pointer size
 }
 
 
