@@ -80,7 +80,7 @@ class ESLTransformer(Transformer):
         return items[0]
 
     def type_qualifier(self, items):
-        name = items[0].data
+        name = str(items[0])
         try:
             return QUALIFIERS[name][0]()
         except KeyError:

@@ -9,7 +9,7 @@ from typeinfo import *
 
 from enum import Enum, auto
 
-class ValueCategory(Enum):
+class ExpressionCategory(Enum):
     UNKNOWN = auto()
     LVALUE = auto()
     RVALUE = auto()
@@ -30,43 +30,37 @@ assignment_operators = ["+=", "-=", "*=", "/=", "%=", "="]
 
 
 
-def classify_value(functions: FunctionTable,expr: Expression) -> ValueCategory:
+def classify_expression(functions: FunctionTable,expr: Expression) -> ExpressionCategory:
 
     if isinstance(expr, Literal):
-        return ValueCategory.RVALUE
+        return ExpressionCategory.RVALUE
 
     if isinstance(expr, VarRef):
-        return ValueCategory.LVALUE
+        return ExpressionCategory.LVALUE
 
     if isinstance(expr, MemberAccess):
-        return classify_value(expr.target)
+        return classify_expression(expr.target)
 
     if isinstance(expr, IndexExpression):
-        return classify_value(expr.target)
+        return classify_expression(expr.target)
 
     if isinstance(expr, FuncCall):
         if expr in functions:
             return_t = functions[expr].return_type
             if return_t.const or return_t.type_id == "void":
-                return ValueCategory.RVALUE
-            return ValueCategory.LVALUE
+                return ExpressionCategory.RVALUE
+            return ExpressionCategory.LVALUE
         else:
-            return ValueCategory.UNKNOWN
+            return ExpressionCategory.UNKNOWN
 
 
     if isinstance(expr, BinaryExpression):
-        return ValueCategory.RVALUE
+        return ExpressionCategory.RVALUE
 
     if isinstance(expr, UnaryExpression):
-        return ValueCategory.RVALUE
+        return ExpressionCategory.RVALUE
 
     raise SemanticError(f"Unknown expression category: {type(expr).__name__}")
-
-
-
-
-
-
 
 
 
@@ -76,11 +70,6 @@ def validate_identifier(scope: Scope, node: Identifier):
     if(node.name == ""):
         raise SemanticError("Identifier name was empty")
 
-    
-    # finding the symbol isn't important because this is
-    # an identifier
-    #if (scope.find_recursive(node.name) is not None):
-    #    raise SemanticError(f"symbol '{node.name}' was not declared")
 
     return
 
@@ -92,7 +81,7 @@ def validate_varref(scope: Scope, node: VarRef):
         raise SemanticError("Identifier name was empty")
 
     # we are using it so it must exist
-    if (scope.find_recursive(node.name) is None):
+    if scope.find_recursive(node.name) is None:
         raise SemanticError(f"symbol '{node.name}' was not declared")
 
     return
@@ -131,9 +120,10 @@ def validate_scope_node(node: Scope):
     if not isinstance(node.variables, dict):
         raise SemanticError("variables was not dict")
 
-    for key, value in node.variables:
-        if not isinstance(value, SymbolTableEntry):
+    for symbol, symbol_type in node.variables:
+        if not isinstance(symbol, Type):
             raise SemanticError("variables was not homogenously full of SymbolTableEntry")
+
 
     if not isinstance(node.debug_name, (str, None)):
         raise SemanticError("debug_name was not str or None")
@@ -201,20 +191,23 @@ def validate_assign_expression(scope: Scope, node: AssignExpression):
     validate_expression(node.target)
 
     # here we'd make sure node.target is an lvalue
-    value_class =  classify_value(node.target)
+    value_class =  classify_expression(node.target)
 
-    if value_class == ValueCategory.UNKNOWN:
+    if value_class == ExpressionCategory.UNKNOWN:
         pass
-    elif value_class == ValueCategory.RVALUE:
+    elif value_class == ExpressionCategory.RVALUE:
         raise SemanticError("Attempted to assign an rvalue")
 
 def validate_member_access(current_scope: Scope, node: MemberAccess):
-    # run of the mill shit
+    # Better be an expression
     if not isinstance(node.target, Expression):
         raise SemanticError("target was not an expression")
 
      # first, find the symbol
+    symbol = current_scope.find_recursive(node.target)
 
+    # make sure the member exists
+    
     type_id = node.target.type_id(current_scope=current_scope)
 
     if type_id is None:
@@ -245,10 +238,4 @@ def validate_expression(node: Expression):
 class SemanticAnalyzer:
     type_table = primitive_types
     current_scope: Scope = Scope({}, "globals")
-
-    
-
-
-    
-    
 

@@ -39,8 +39,8 @@ No terminal matches '(' in the current parser context, at line 5 col 10
     print(43);
          ^
 Expected one of: 
-	* NAME
 	* AMPERSAND
+	* NAME
 	* LSQB
 
 
@@ -92,11 +92,11 @@ No terminal matches '3' in the current parser context, at line 5 col 5
     ^
 Expected one of: 
 	* CONST
-	* NAME
-	* INLINE
-	* MUT
-	* RBRACE
 	* STATIC
+	* NAME
+	* RBRACE
+	* MUT
+	* INLINE
 
 
 
@@ -138,21 +138,18 @@ INLINE             'inline' line=11 col=8
 CONST              'const' line=11 col=15
 MUT                'mut' line=11 col=21
 NAME               'i32' line=11 col=25
-NAME               'const_mut_together' line=11 col=29
+CONST              'const' line=11 col=29
+NAME               '_mut_together' line=11 col=34
 SEMICOLON          ';' line=11 col=47
 ======================== PARSE TREE ========================
 start
   entry
     declaration
       qualified_type
-        type_qualifier
-          static
-        type_qualifier
-          inline
-        type_qualifier
-          const
-        type_qualifier
-          mut
+        type_qualifier	static
+        type_qualifier	inline
+        type_qualifier	const
+        type_qualifier	mut
         typename	i32
         None
       identifier	const_mut_together
@@ -320,32 +317,13 @@ expected: False; actual: False
 
 Error:
 
-No terminal matches 's' in the current parser context, at line 5 col 5
+No terminal matches '{' in the current parser context, at line 5 col 32
 
     struct illegalNestedStruct {
-    ^
+                               ^
 Expected one of: 
-	* STRING
-	* NAME
-	* DECIMAL_INT
-	* BANG
-	* PLUS
-	* IF
-	* INLINE
-	* HEXADECIMAL_INT
-	* WHILE
-	* RETURN
-	* DECIMAL_FLOAT
-	* BREAK
-	* MUT
-	* FOR
-	* LPAR
-	* TILDE
-	* MINUS
-	* CONST
-	* CONTINUE
-	* RBRACE
-	* STATIC
+	* SEMICOLON
+	* EQUAL
 
 
 
@@ -400,30 +378,30 @@ No terminal matches 'x' in the current parser context, at line 5 col 13
     foo(int x);
             ^
 Expected one of: 
-	* VBAR
-	* COMMA
-	* __ANON_4
-	* __ANON_6
 	* STAR
 	* DOT
-	* AMPERSAND
-	* CIRCUMFLEX
 	* RPAR
-	* PERCENT
-	* __ANON_0
-	* LSQB
+	* __ANON_4
 	* ASSIGN_OP
-	* PLUS
-	* __ANON_3
-	* __ANON_5
-	* SLASH
 	* LPAR
-	* MORETHAN
-	* LESSTHAN
-	* MINUS
-	* __ANON_1
+	* CIRCUMFLEX
+	* PERCENT
+	* __ANON_3
+	* SLASH
+	* __ANON_0
+	* COMMA
 	* __ANON_7
+	* MORETHAN
+	* VBAR
+	* MINUS
+	* LSQB
+	* AMPERSAND
+	* PLUS
+	* __ANON_1
 	* __ANON_2
+	* __ANON_5
+	* LESSTHAN
+	* __ANON_6
 
 
 
@@ -480,30 +458,30 @@ No terminal matches 'x' in the current parser context, at line 5 col 13
     foo(int x = 0);
             ^
 Expected one of: 
-	* VBAR
-	* COMMA
-	* __ANON_4
-	* __ANON_6
 	* STAR
 	* DOT
-	* AMPERSAND
-	* CIRCUMFLEX
 	* RPAR
-	* PERCENT
-	* __ANON_0
-	* LSQB
+	* __ANON_4
 	* ASSIGN_OP
-	* PLUS
-	* __ANON_3
-	* __ANON_5
-	* SLASH
 	* LPAR
-	* MORETHAN
-	* LESSTHAN
-	* MINUS
-	* __ANON_1
+	* CIRCUMFLEX
+	* PERCENT
+	* __ANON_3
+	* SLASH
+	* __ANON_0
+	* COMMA
 	* __ANON_7
+	* MORETHAN
+	* VBAR
+	* MINUS
+	* LSQB
+	* AMPERSAND
+	* PLUS
+	* __ANON_1
 	* __ANON_2
+	* __ANON_5
+	* LESSTHAN
+	* __ANON_6
 
 
 
@@ -561,29 +539,30 @@ No terminal matches 'd' in the current parser context, at line 5 col 15
     while(i32 d = 5) {
               ^
 Expected one of: 
-	* VBAR
-	* __ANON_4
-	* __ANON_6
 	* STAR
 	* DOT
-	* AMPERSAND
-	* CIRCUMFLEX
 	* RPAR
-	* PERCENT
-	* __ANON_0
-	* LSQB
+	* __ANON_4
 	* ASSIGN_OP
-	* PLUS
-	* __ANON_3
-	* __ANON_5
-	* SLASH
 	* LPAR
-	* MORETHAN
-	* LESSTHAN
-	* MINUS
-	* __ANON_1
+	* CIRCUMFLEX
+	* PERCENT
+	* __ANON_3
+	* SLASH
+	* __ANON_0
+	* COMMA
 	* __ANON_7
+	* MORETHAN
+	* VBAR
+	* MINUS
+	* LSQB
+	* AMPERSAND
+	* PLUS
+	* __ANON_1
 	* __ANON_2
+	* __ANON_5
+	* LESSTHAN
+	* __ANON_6
 
 
 
@@ -633,12 +612,9 @@ start
   entry
     declaration
       qualified_type
-        type_qualifier
-          static
-        type_qualifier
-          inline
-        type_qualifier
-          const
+        type_qualifier	static
+        type_qualifier	inline
+        type_qualifier	const
         typename	f32
         type_suffix
           reference
@@ -647,12 +623,9 @@ start
   entry
     declaration
       qualified_type
-        type_qualifier
-          static
-        type_qualifier
-          inline
-        type_qualifier
-          const
+        type_qualifier	static
+        type_qualifier	inline
+        type_qualifier	const
         typename	f32
         type_suffix
           array_size	16
@@ -1102,16 +1075,14 @@ start
       parameter_list
         argument_declaration
           qualified_type
-            type_qualifier
-              mut
+            type_qualifier	mut
             typename	Transform
             type_suffix
               reference
           transform
         argument_declaration
           qualified_type
-            type_qualifier
-              const
+            type_qualifier	const
             typename	Velocity
             type_suffix
               reference
@@ -1443,7 +1414,8 @@ void if_only() {
 
 ======================== TOKENS ========================
 NAME               'void' line=5 col=1
-NAME               'if_only' line=5 col=6
+IF                 'if' line=5 col=6
+NAME               '_only' line=5 col=8
 LPAR               '(' line=5 col=13
 RPAR               ')' line=5 col=14
 LBRACE             '{' line=5 col=16
@@ -1570,7 +1542,8 @@ void if_else() {
 
 ======================== TOKENS ========================
 NAME               'void' line=3 col=1
-NAME               'if_else' line=3 col=6
+IF                 'if' line=3 col=6
+NAME               '_else' line=3 col=8
 LPAR               '(' line=3 col=13
 RPAR               ')' line=3 col=14
 LBRACE             '{' line=3 col=16
@@ -1721,7 +1694,8 @@ void else_if_chain() {
 
 ======================== TOKENS ========================
 NAME               'void' line=3 col=1
-NAME               'else_if_chain' line=3 col=6
+ELSE               'else' line=3 col=6
+NAME               '_if_chain' line=3 col=10
 LPAR               '(' line=3 col=19
 RPAR               ')' line=3 col=20
 LBRACE             '{' line=3 col=22
@@ -1912,7 +1886,8 @@ void while_loop() {
 
 ======================== TOKENS ========================
 NAME               'void' line=3 col=1
-NAME               'while_loop' line=3 col=6
+WHILE              'while' line=3 col=6
+NAME               '_loop' line=3 col=11
 LPAR               '(' line=3 col=16
 RPAR               ')' line=3 col=17
 LBRACE             '{' line=3 col=19
@@ -2052,7 +2027,8 @@ void for_loop() {
 
 ======================== TOKENS ========================
 NAME               'void' line=3 col=1
-NAME               'for_loop' line=3 col=6
+FOR                'for' line=3 col=6
+NAME               '_loop' line=3 col=9
 LPAR               '(' line=3 col=14
 RPAR               ')' line=3 col=15
 LBRACE             '{' line=3 col=17
@@ -2218,7 +2194,8 @@ void for_empty() {
 
 ======================== TOKENS ========================
 NAME               'void' line=3 col=1
-NAME               'for_empty' line=3 col=6
+FOR                'for' line=3 col=6
+NAME               '_empty' line=3 col=9
 LPAR               '(' line=3 col=15
 RPAR               ')' line=3 col=16
 LBRACE             '{' line=3 col=18
@@ -2862,7 +2839,8 @@ i32 while_test() {
 
 ======================== TOKENS ========================
 NAME               'i32' line=3 col=1
-NAME               'while_test' line=3 col=5
+WHILE              'while' line=3 col=5
+NAME               '_test' line=3 col=10
 LPAR               '(' line=3 col=15
 RPAR               ')' line=3 col=16
 LBRACE             '{' line=3 col=18
@@ -2972,7 +2950,8 @@ i32 for_test() {
 
 ======================== TOKENS ========================
 NAME               'i32' line=3 col=1
-NAME               'for_test' line=3 col=5
+FOR                'for' line=3 col=5
+NAME               '_test' line=3 col=8
 LPAR               '(' line=3 col=13
 RPAR               ')' line=3 col=14
 LBRACE             '{' line=3 col=16
@@ -3011,29 +2990,31 @@ No terminal matches 'i' in the current parser context, at line 4 col 13
     for(i32 i = 0; i < 32; i = i + 1) {
             ^
 Expected one of: 
-	* VBAR
-	* __ANON_4
-	* __ANON_6
 	* STAR
 	* DOT
-	* AMPERSAND
-	* CIRCUMFLEX
-	* SEMICOLON
-	* PERCENT
-	* __ANON_0
-	* LSQB
+	* RPAR
+	* __ANON_4
 	* ASSIGN_OP
-	* PLUS
-	* __ANON_3
-	* __ANON_5
-	* SLASH
 	* LPAR
-	* MORETHAN
-	* LESSTHAN
-	* MINUS
-	* __ANON_1
+	* CIRCUMFLEX
+	* PERCENT
+	* __ANON_3
+	* SLASH
+	* __ANON_0
+	* COMMA
 	* __ANON_7
+	* MORETHAN
+	* VBAR
+	* MINUS
+	* LSQB
+	* SEMICOLON
+	* AMPERSAND
+	* PLUS
+	* __ANON_1
 	* __ANON_2
+	* __ANON_5
+	* LESSTHAN
+	* __ANON_6
 
 
 
@@ -3404,7 +3385,8 @@ DECIMAL_INT        '1' line=4 col=8
 RPAR               ')' line=4 col=9
 LBRACE             '{' line=4 col=11
 NAME               'i32' line=5 col=9
-NAME               'if_local' line=5 col=13
+IF                 'if' line=5 col=13
+NAME               '_local' line=5 col=15
 SEMICOLON          ';' line=5 col=21
 RBRACE             '}' line=6 col=5
 ELSE               'else' line=6 col=7

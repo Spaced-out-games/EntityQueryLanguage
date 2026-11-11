@@ -7,6 +7,9 @@ from __future__ import annotations   # lets annotations reference classes define
 from dataclasses import dataclass, field
 from abc import abstractmethod
 
+from typeinfo import *
+
+
 # ============================================================
 # Roots
 # ============================================================
@@ -17,15 +20,15 @@ class Node:
     column: int | None = field(default=None, kw_only=True, repr=False)
 
 
+
 class Expression(Node):
     """Anything that evaluates to a value."""
-    @abstractmethod
-    def type_id(self, **kwargs) -> str:
-        pass
+    
 class Statement(Node):   """Anything that can appear in a block."""
 class TopLevel(Node):    """Anything that can appear at file scope."""
 class TypeSuffix(Node):  """&, [N]"""
 class Tag(Node):         """Qualifier keywords."""
+
 
 
 # ============================================================
@@ -45,16 +48,7 @@ class VarRef(Expression):        # a name being *used*
     def __repr__(self):
         return f'Symbol("{self.name}")'
 
-    def type_id(self, **kwargs):
-        assert "current_scope" in kwargs, "VarRef::type_id expected current_scope as a keyword argument"
-        current_scope = kwargs["current_scope"]
-        
-        assert isinstance(current_scope, Scope), "VarRef::type_id expected current_scope keyword argument to be a Scope"
 
-        result = current_scope.find_recursive(self.name)
-        if result is not None:
-            return result.name
-        return None
 
 
 
@@ -120,11 +114,11 @@ from dataclasses import dataclass
 from dataclasses import field
 
 # symbol table entry: name, type, scope, initialized
-@dataclass
-class SymbolTableEntry:
-    name: str
-    type: Type
-    initialized: bool
+#@dataclass
+#class SymbolTableEntry:
+#    name: str
+#    type: Type
+#    initialized: bool
 
 # function table entry
 @dataclass
@@ -134,8 +128,37 @@ class FunctionSignature:
     parameters: list[Parameter]
     decorators: list[Decorator] = field(default_factory=list)
 
+# Function identifier table
 class FunctionTable(dict[str, FunctionSignature]): pass
 
+# Identifier -> Type
+class SymbolTable(dict[str, Type]): pass
+
+# Type -> Layout<T>
+class TypeTable(dict[Type, TypeLayout]): pass
+
+U8_MIN  = 0x00
+U8_MAX  = 0xFF
+U16_MIN = 0x0000
+U16_MAX = 0xFFFF
+
+U32_MIN = 0x00000000
+U32_MAX = 0xFFFFFFFF
+
+U64_MIN = 0x0000000000000000
+U64_MAX = 0xFFFFFFFFFFFFFFFF
+
+I8_MIN  = -0x80
+I8_MAX  = 0x7F
+
+I16_MIN = -0x8000
+I16_MAX = 0x7FFF
+
+I32_MIN = -0x80000000
+I32_MAX = 0x7FFFFFFF
+
+I64_MIN = -0x8000000000000000
+I64_MAX = 0x7FFFFFFFFFFFFFFF
 
 
 def get_func_signature(decorators: list['Decorator'], return_type: type, name: Identifier, parameters: list[Parameter]) -> str:
@@ -159,7 +182,7 @@ def get_func_signature(decorators: list['Decorator'], return_type: type, name: I
 
 @dataclass
 class Scope:
-    variables: dict[str, SymbolTableEntry]
+    variables: SymbolTable
     # doesn't have to be unique or set or useful, just for debugging
     debug_name: str | None
     parent: Scope | None = None
@@ -212,17 +235,26 @@ class Literal(Expression):
     def __repr__(self):
         return self.pretty()
 
-
     def type_id(self):
-        if isinstance(self.value, int):
-            return "i64"
+        if self.value is None:
+            return "void"
+        elif isinstance(self.value, int):
+            # keep it simple
+            if(self.value > 0):
+                return "u32"
+            
+            else:
+                return "i32"
+
         elif isinstance(self.value, float):
             return "f64"
+
         elif isinstance(self.value, str):
-            return f"char[{len(self.value)}]"
-        elif isinstance(self.value, bool):
-            return "bool"
-        raise ValueError("Illegal value type")
+            # need one more for the null terminator
+            return f"char[]"
+
+        raise ValueError("Invalid value")
+
 
 @dataclass
 class UnaryExpression(Expression):
@@ -255,6 +287,8 @@ class AssignExpression(Expression):
     
     def pretty(self):
         return repr(self.target) + self.operator + repr(self.value)
+
+
 
 @dataclass
 class MemberAccess(Expression):
@@ -329,8 +363,8 @@ class TypeInitializerPair(Node):
 @dataclass
 class StatementBlock(Statement):
     statements: list[Statement]
-    parent: Scope
-    scope: dict[str, None] = field(default_factory=dict)
+    parent: Scope # pointer upwards
+    scope: Scope # this scope
 
 
 @dataclass
@@ -478,3 +512,33 @@ class Program(Node):
         return self.entries
 
 
+
+
+
+def get_expression_type(symbols: SymbolTable, layouts: TypeTable, scope: Scope, node: Node):
+    match node:
+        case Literal():
+            type_name = node.type_id()
+            return type_table[type_name] if type_name in type_table else None
+
+        case Identifier():
+            type_name = scope.find_recursive(node.name)
+            return type_table[type_name] if type_name in type_table else None
+
+        case VarRef():
+            type_name = scope.find_recursive(node.name)
+            return type_table[type_name] if type_name in type_table else None
+
+        case MemberAccess():
+            type_name = scope.find_recursive(node.target)
+            type_info = type_table[type_name] if type_name in type_table else None
+
+            if type_info is None:
+                return None
+            
+            return type_info.members[node.member].type if node.member in type_table else None
+
+        case IndexExpression():
+            return get_expression_type(node.target)
+
+        
