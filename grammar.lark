@@ -1,42 +1,41 @@
+
 // Token definitions
-DECIMAL_INT: /[0-9]+/​
+DECIMAL_INT: /[0-9]+/
+HEXADECIMAL_INT: /0[xX][0-9a-fA-F]+/
 
-HEXADECIMAL_INT: /0[xX][0-9a-fA-F]+/​
+DECIMAL_FLOAT: /[0-9]+\.[0-9]+/
 
-DECIMAL_FLOAT: /[0-9]+\.[0-9]+/​
+STRING: /"(?:\\.|[^"\\])*"/
 
-STRING: /"(?:\\.|[^"\\])*"/​
-
-ASSIGN_OP: "+=" | "-=" | "*=" | "/=" | "%=" | "="​
+ASSIGN_OP: "+=" | "-=" | "*=" | "/=" | "%=" | "="
 
 
-// keywords​
-STATIC.2: "static"​
-INLINE.2: "inline"​
-CONST.2: "const"​
-MUT.2: "mut"​
-VIRTUAL.2: "virtual"​
-STRUCT.2: "struct"​
-IF.2: "if"​
-ELSE.2: "else"​
-FOR.2: "for"​
-WHILE.2: "while"​
-RETURN.2: "return"​
-CONTINUE.2: "continue"​
-BREAK.2: "break"​
+// keywords
+STATIC.2: "static"
+INLINE.2: "inline"
+CONST.2: "const"
+MUT.2: "mut"
+VIRTUAL.2: "virtual"
+STRUCT.2: "struct"
+IF.2: "if"
+ELSE.2: "else"
+FOR.2: "for"
+WHILE.2: "while"
+RETURN.2: "return"
+CONTINUE.2: "continue"
+BREAK.2: "break"
 
 // identifier matching, ignores keywords
 NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
-​
+
 assign_op: ASSIGN_OP
+
 // ignore whitespace
 %import common.WS
 %ignore WS
+
 // ignore single-line comments
 %ignore /\/\/[^\n]*/
-
-
-
 
 identifier: NAME
 
@@ -58,17 +57,13 @@ reference: "&"
 array_access: "[" expression "]"
 array_size: "[" integer_literal "]"
 
-
 type_suffix: array_size | reference
 
 // arguments
 argument_list: expression ("," expression)*
 
-
 // fully qualified type
 qualified_type: type_qualifier* typename [type_suffix]
-
-
 
 // declarations
 declaration: qualified_type identifier [initializer] ";"
@@ -84,24 +79,22 @@ decorator: "@" decorator_type [decorator_arguments | decorator_value]
 decorators: decorator+
 decorator_arguments: "(" [argument_list] ")"
 
-
-
-// expressions ?
+// expressions
 ?expression: assignment
 
-// Assignment:
+// Assignment
 ?assignment: logic_or
-           | unary assign_op assignment        -> assign
+           | unary assign_op assignment -> assign
 
 ?logic_or: logic_and
-            | logic_or "||" logic_and -> logical_or
+         | logic_or "||" logic_and -> logical_or
 
 ?logic_and: bitwise_or
-            | logic_and "&&" bitwise_or -> logical_and
+          | logic_and "&&" bitwise_or -> logical_and
 
 // Bitwise operators
 ?bitwise_or: bitwise_xor
-            | bitwise_or "|" bitwise_xor -> bitwise_or
+           | bitwise_or "|" bitwise_xor -> bitwise_or
 
 ?bitwise_xor: bitwise_and
             | bitwise_xor "^" bitwise_and -> bitwise_xor
@@ -111,19 +104,19 @@ decorator_arguments: "(" [argument_list] ")"
 
 // Comparisons
 ?equality: comparison
-            | equality "==" comparison -> equal
-            | equality "!=" comparison -> not_equal
+         | equality "==" comparison -> equal
+         | equality "!=" comparison -> not_equal
 
 ?comparison: shift
-            | comparison "<" shift -> less
-            | comparison "<=" shift -> less_equal
-            | comparison ">" shift -> greater
-            | comparison ">=" shift -> greater_equal
+           | comparison "<" shift -> less
+           | comparison "<=" shift -> less_equal
+           | comparison ">" shift -> greater
+           | comparison ">=" shift -> greater_equal
 
 // Arithmetic
 ?shift: sum
-        | shift "<<" sum -> left_shift
-        | shift ">>" sum -> right_shift
+      | shift "<<" sum -> left_shift
+      | shift ">>" sum -> right_shift
 
 ?sum: product
     | sum "+" product -> add
@@ -135,10 +128,10 @@ decorator_arguments: "(" [argument_list] ")"
         | product "%" unary -> modulo
 
 ?unary: "+" unary -> positive
-        | "-" unary -> negate
-        | "!" unary -> logical_not
-        | "~" unary -> bitwise_not
-        | postfix
+      | "-" unary -> negate
+      | "!" unary -> logical_not
+      | "~" unary -> bitwise_not
+      | postfix
 
 ?postfix: atom
         | postfix "." NAME -> member
@@ -147,44 +140,41 @@ decorator_arguments: "(" [argument_list] ")"
 
 expression_statement: expression ";"
 
-statement: expression_statement | declaration | if_statement | for_statement | while_statement | return_statement | continue_statement | break_statement
-
-
+statement: expression_statement
+         | declaration
+         | if_statement
+         | for_statement
+         | while_statement
+         | return_statement
+         | continue_statement
+         | break_statement
 
 // Primary expressions
 ?atom: literal
      | NAME -> var_ref
      | "(" expression ")"
 
-
-
 ?variable_access: NAME
 ?member_access: NAME "." NAME
 
+// High-level constructs
 
-
-// finally, high-level constructs:
-
-// functions
-
+// Functions
 ?return_type: qualified_type
 ?function_name: NAME
 ?argument_name: NAME
+
 argument_declaration: qualified_type argument_name
 
-
 parameter_list: argument_declaration ("," argument_declaration)*
-
 
 block: "{" statement* "}"
 
 function_definition: [decorators] return_type function_name "(" [parameter_list] ")" block
 
-
 virtual_tag: "virtual"
 
-// control flow
-
+// Control flow
 else_clause: "else" (if_statement | block)
 
 if_statement: "if" "(" expression ")" block [else_clause]
@@ -199,21 +189,19 @@ for_cond: expression
 for_step: expression
 
 while_statement: "while" "(" expression ")" block
+
 return_statement: "return" expression? ";"
 
-
-// structs
+// Structs
 struct_name: NAME
+
 struct_member: qualified_type identifier initializer? ";"
+
 struct_definition: [decorators] [virtual_tag] "struct" struct_name "{" struct_member* "}" ";"
 
-
-
-// entry point
-
+// Entry point
 start: entry*
 
-entry: declaration | function_definition | struct_definition
-
-
-# needs break, continue, switch-case is optional
+entry: declaration
+     | function_definition
+     | struct_definition

@@ -1,31 +1,31 @@
 """
     Defines AST Nodes for Entity Query Language
 """
-
-
 from __future__ import annotations   # lets annotations reference classes defined later
-from dataclasses import dataclass, field
+from typing import Any
+
+from dataclasses import dataclass, field, replace
 from abc import abstractmethod
 
 # ============================================================
 # Roots
 # ============================================================
 @dataclass
-class Node:
+class AST_Node:
     # kw_only so subclasses can still have required fields (Python 3.10+)
     line: int | None = field(default=None, kw_only=True, repr=False)
     column: int | None = field(default=None, kw_only=True, repr=False)
 
 
-class Expression(Node):
+class Expression(AST_Node):
     """Anything that evaluates to a value."""
     @abstractmethod
-    def type_id(self, **kwargs) -> str:
+    def typename(self: Expression, **kwargs: dict[str, Any]) -> str:
         pass
-class Statement(Node):   """Anything that can appear in a block."""
-class TopLevel(Node):    """Anything that can appear at file scope."""
-class TypeSuffix(Node):  """&, [N]"""
-class Tag(Node):         """Qualifier keywords."""
+class Statement(AST_Node):   """Anything that can appear in a block."""
+class TopLevel(AST_Node):    """Anything that can appear at file scope."""
+class TypeSuffix(AST_Node):  """&, [N]"""
+class Tag(AST_Node):         """Qualifier keywords."""
 
 
 # ============================================================
@@ -33,7 +33,7 @@ class Tag(Node):         """Qualifier keywords."""
 # ============================================================
 # NOTE: Only ever used in declarations and struct members!
 @dataclass
-class Identifier(Node):          # a name being *declared*
+class Identifier(AST_Node):          # a name being *declared*
     name: str
 
     def pretty(self) -> str:
@@ -42,19 +42,19 @@ class Identifier(Node):          # a name being *declared*
 class VarRef(Expression):        # a name being *used*
     name: str
 
-    def __repr__(self):
+    def __repr__(self: VarRef) -> str:
         return f'Symbol("{self.name}")'
 
-    def type_id(self, **kwargs):
-        assert "current_scope" in kwargs, "VarRef::type_id expected current_scope as a keyword argument"
+    def typename(self: VarRef, **kwargs: dict[str, Any]) -> str:
+        assert "current_scope" in kwargs, "VarRef::typename expected current_scope as a keyword argument"
         current_scope = kwargs["current_scope"]
-        
-        assert isinstance(current_scope, Scope), "VarRef::type_id expected current_scope keyword argument to be a Scope"
 
-        result = current_scope.find_recursive(self.name)
-        if result is not None:
-            return result.name
-        return None
+        
+        assert isinstance(current_scope, Scope), "VarRef::typename expected current_scope keyword argument to be a Scope"
+
+        return current_scope.find_recursive(self.name)
+
+        
 
 
 
@@ -81,8 +81,8 @@ class InlineTag(Tag): pass
 class VirtualTag(Tag): pass
 
 @dataclass
-class Type(Node):
-    type_id: str | None = None
+class Type(AST_Node):
+    typename: str | None = None
     inline: bool = False
     static: bool = False
     mut: bool = False
@@ -97,7 +97,7 @@ class Type(Node):
             if getattr(self, name)
         ]
 
-        result = " ".join(qualifiers + [self.type_id or "???"])
+        result = " ".join(qualifiers + [self.typename or "???"])
 
         if self.array_size is not None:
             result += f"[{self.array_size}]"
@@ -107,38 +107,27 @@ class Type(Node):
 
         return result
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.pretty()
 
-
-        
-
+    # Removes all type qualifications
+    def decay_t(self) -> Type:
+        return replace(self, inline=False, static=False, mut=False, const=False, reference=False)
 
 
 
 from dataclasses import dataclass
 from dataclasses import field
 
-# symbol table entry: name, type, scope, initialized
-@dataclass
-class SymbolTableEntry:
-    name: str
-    type: Type
-    initialized: bool
-
-# function table entry
-@dataclass
-class FunctionSignature:
-    return_type: Type
-    name: Identifier
-    parameters: list[Parameter]
-    decorators: list[Decorator] = field(default_factory=list)
-
-class FunctionTable(dict[str, FunctionSignature]): pass
+#from typeinfo import *
 
 
 
-def get_func_signature(decorators: list['Decorator'], return_type: type, name: Identifier, parameters: list[Parameter]) -> str:
+
+
+
+
+def get_func_signature(decorators: list['Decorator'], return_type: Type, name: Identifier, parameters: list[Parameter]) -> str:
 
         result = ""
 
@@ -151,41 +140,14 @@ def get_func_signature(decorators: list['Decorator'], return_type: type, name: I
         result += "("
 
         for param in parameters:
-            result += f"{param.type.type_id}, " 
+            result += f"{param.type.typename}, " 
         
         result += ")"
 
         return result        
 
-@dataclass
-class Scope:
-    variables: dict[str, SymbolTableEntry]
-    # doesn't have to be unique or set or useful, just for debugging
-    debug_name: str | None
-    parent: Scope | None = None
 
-    def pretty(self):
-        result = f" {self.debug_name}{str(self.variables)}"
-        if self.parent is not None:
-            result += " -> " + self.parent.pretty()
-        return result
 
-    def find_recursive(self, key: str):
-        # Prefer locals over globals
-        if key in self.variables:
-            return self.variables[key]
-
-        # Try higher-scoped symbols
-        if self.parent is not None:
-            return self.parent.find_recursive(key)
-
-        return None
-
-    def find(self, key: str):
-        if key in self.variables:
-            return self.variables[key]
-        
-        return None
             
 
 
@@ -193,10 +155,10 @@ class Scope:
 # Expressions
 # ============================================================
 @dataclass
-class Literal(Expression):
+class Literal_Node(Expression):
     value: str | int | float | bool
 
-    def pretty(self) ->str:
+    def pretty(self) -> str:
         if isinstance(self.value, int):
             return f"{self.value}"
         elif isinstance(self.value, float):
@@ -207,13 +169,14 @@ class Literal(Expression):
             if self.value:
                 return "true"
             return "false"
-        assert False, "Literal expression has illegal primitive type"
+        assert False, "Literal_Node expression has illegal primitive type"
+        return None
 
-    def __repr__(self):
+    def __repr__(self, **kwargs: dict[str, Any]) -> str:
         return self.pretty()
 
 
-    def type_id(self):
+    def typename(self, **kwargs: dict[str, Any]) -> str:
         if isinstance(self.value, int):
             return "i64"
         elif isinstance(self.value, float):
@@ -222,19 +185,19 @@ class Literal(Expression):
             return f"char[{len(self.value)}]"
         elif isinstance(self.value, bool):
             return "bool"
-        raise ValueError("Illegal value type")
+        return "void"
 
 @dataclass
 class UnaryExpression(Expression):
     operator: str
     operand: Expression
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.operator + self.operand.__repr__()
-    def type_id(self, **kwargs):
+    def typename(self, **kwargs: dict[str, Any]) -> str:
         if self.operator in ["~", "!"]:
             return "bool"
-        return self.operand.type_id(kwargs)
+        return self.operand.typename(**kwargs)
 
 @dataclass
 class BinaryExpression(Expression):
@@ -242,7 +205,7 @@ class BinaryExpression(Expression):
     left: Expression
     right: Expression
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"({self.left} {self.operator} {self.right})" 
 
 
@@ -253,7 +216,7 @@ class AssignExpression(Expression):
     target: Expression
     value: Expression
     
-    def pretty(self):
+    def pretty(self) -> str:
         return repr(self.target) + self.operator + repr(self.value)
 
 @dataclass
@@ -261,7 +224,7 @@ class MemberAccess(Expression):
     target: Expression
     member: str
 
-    def __repr__(self):
+    def __repr__(self) -> str:
 
         if isinstance(self.target, MemberAccess):
             return f"{self.target}.{self.member}"
@@ -280,7 +243,7 @@ class IndexExpression(Expression):
     index: Expression
 
 @dataclass
-class ArgumentList(Node):
+class ArgumentList(AST_Node):
     args: list[Expression] = field(default_factory=list)
 
 @dataclass
@@ -293,13 +256,13 @@ class FuncCall(Expression):
 # Statements
 # ============================================================
 @dataclass
-class Initializer(Node):
+class Initializer(AST_Node):
     expression: Expression
 
-    def pretty(self):
+    def pretty(self) -> str:
         if self.expression is None:
             return "?"
-        elif isinstance(self.expression, Literal):
+        elif isinstance(self.expression, Literal_Node):
             return self.expression.pretty()
         else:
             return self.expression.__repr__()
@@ -313,18 +276,16 @@ class Declaration(Statement, TopLevel):      # legal in blocks and at file scope
     initializer: Initializer | None = None
 
     def pretty(self) -> str:
-        # .pretty()
-        return f"{self.type.pretty()} {self.id} = {self.initializer.pretty()}"
+        if self.initializer:
+            return f"{self.type.pretty()} {self.id} = {self.initializer.pretty()}"
+        return f"{self.type.pretty()} {self.id}"
+        
 
 @dataclass
 class ExpressionStatement(Statement):
     expression: Expression
 
-# Not an AST node - a helper
-#@dataclass
-class TypeInitializerPair(Node):
-    type: Type
-    init: Initializer
+
 
 @dataclass
 class StatementBlock(Statement):
@@ -359,15 +320,15 @@ class WhileStatement(Statement):
 
 
 @dataclass
-class ForInitializer(Node):
+class ForInitializer(AST_Node):
     init: Expression
 
 @dataclass
-class ForConditional(Node):
+class ForConditional(AST_Node):
     cond: Expression
 
 @dataclass
-class ForStep(Node):
+class ForStep(AST_Node):
     step: Statement
 
 @dataclass
@@ -387,29 +348,29 @@ class ReturnStatement(Statement):
 # Decorators
 # ============================================================
 @dataclass
-class DecoratorType(Node):
+class DecoratorType(AST_Node):
     name: str
 
 @dataclass
-class DecoratorValue(Node):      # @export qsh
+class DecoratorValue(AST_Node):      # @export qsh
     value: str
 
 @dataclass
-class Decorator(Node):
+class Decorator(AST_Node):
     type: str
     args: ArgumentList | DecoratorValue | None = None
 
-    def pretty(self):
+    def pretty(self) -> str:
         if isinstance(self.args, DecoratorValue):
             return f"@{self.type} {self.args.value}"
         return f"@{self.type}(...)"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"@{self.type}" 
 
 
 @dataclass
-class DecoratorList(Node):
+class DecoratorList(AST_Node):
     decorators: list[Decorator]
 
 
@@ -417,18 +378,18 @@ class DecoratorList(Node):
 # Top-level definitions
 # ============================================================
 @dataclass
-class Parameter(Node):
+class Parameter(AST_Node):
     type: Type
     name: Identifier
 
-    def pretty(self):
+    def pretty(self) -> str:
         return f"{self.type.pretty()} {self.name.name}"
 
 @dataclass
-class ParameterList(Node):
+class ParameterList(AST_Node):
     parameters: list[Parameter]
 
-    def pretty(self):
+    def pretty(self) -> str:
         result = '('
         for param in self.parameters:
             result += f"{param.type.pretty()} {param.name.name}, "
@@ -450,7 +411,7 @@ class FunctionDefinition(TopLevel):
 
 
 @dataclass
-class StructMember(Node):
+class StructMember(AST_Node):
     type: Type
     id: Identifier
     initializer: Initializer | None = None
@@ -470,11 +431,51 @@ class StructDefinition(TopLevel):
         
 
 @dataclass
-class Program(Node):
+class Program(AST_Node):
     entries: list[TopLevel] = field(default_factory=list)
-    globals: Scope= field(default_factory=list)
+    globals: Scope | None = None
 
-    def children(self):
+    def children(self) -> list[TopLevel]:
         return self.entries
 
+
+
+@dataclass
+class Scope:
+    variables: SymbolTable
+    # doesn't have to be unique or set or useful, just for debugging
+    debug_name: str
+    parent: Scope | None
+
+    def pretty(self) -> str:
+        result = f" {self.debug_name}{str(self.variables)}"
+        if self.parent is not None:
+            result += " -> " + self.parent.pretty()
+        return result
+
+    def find_recursive(self, key: str) -> str:
+        # Prefer locals over globals
+        if key in self.variables:
+            return self.variables[key]
+
+        # Try higher-scoped symbols
+        if self.parent is not None:
+            return self.parent.find_recursive(key)
+
+        return "void"
+
+    def find(self, key: str) -> str:
+        if key in self.variables:
+            return self.variables[key]
+        
+        return "void"
+
+
+
+# Non-tokens
+
+# Local-scope
+class SymbolTable(dict[str, str]):
+    """ Maps Identifier -> typename, scope-local """
+    pass
 

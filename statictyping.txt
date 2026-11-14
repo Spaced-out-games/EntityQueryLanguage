@@ -1,0 +1,299 @@
+semantic_analysis.py:3: note: In module imported here:
+ast_nodes.py: note: In member "typename" of class "Expression":
+ast_nodes.py:23: error: Function is missing a type annotation for one or more
+arguments  [no-untyped-def]
+        def typename(self, **kwargs) -> str:
+        ^
+ast_nodes.py: note: In member "__repr__" of class "VarRef":
+ast_nodes.py:45: error: Function is missing a type annotation  [no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "typename" of class "VarRef":
+ast_nodes.py:48: error: Function is missing a type annotation  [no-untyped-def]
+        def typename(self, **kwargs):
+        ^
+ast_nodes.py: note: In member "__repr__" of class "Type":
+ast_nodes.py:110: error: Function is missing a type annotation 
+[no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "decay_t" of class "Type":
+ast_nodes.py:114: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def decay_t(self):
+        ^
+ast_nodes.py: note: In function "get_func_signature":
+ast_nodes.py:136: error: Call to untyped function "pretty" in typed context 
+[no-untyped-call]
+                    result += decorator.pretty() + "\t"
+                              ^~~~~~~~~~~~~~~~~~
+ast_nodes.py: note: In member "__repr__" of class "Literal":
+ast_nodes.py:174: error: Function is missing a type annotation 
+[no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "typename" of class "Literal":
+ast_nodes.py:178: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def typename(self):
+        ^
+ast_nodes.py:178: error: Signature of "typename" incompatible with supertype
+"Expression"  [override]
+        def typename(self):
+        ^
+ast_nodes.py:178: note:      Superclass:
+ast_nodes.py:178: note:          def typename(self, **kwargs: Any) -> str
+ast_nodes.py:178: note:      Subclass:
+ast_nodes.py:178: note:          def typename(self) -> Any
+ast_nodes.py: note: In member "__repr__" of class "UnaryExpression":
+ast_nodes.py:194: error: Function is missing a type annotation 
+[no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "typename" of class "UnaryExpression":
+ast_nodes.py:196: error: Function is missing a type annotation 
+[no-untyped-def]
+        def typename(self, **kwargs):
+        ^
+ast_nodes.py:199: error: Too many arguments for "typename" of "Expression" 
+[call-arg]
+            return self.operand.typename(kwargs)
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ast_nodes.py: note: In member "__repr__" of class "BinaryExpression":
+ast_nodes.py:207: error: Function is missing a type annotation 
+[no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "AssignExpression":
+ast_nodes.py:218: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def pretty(self):
+        ^
+ast_nodes.py: note: In member "__repr__" of class "MemberAccess":
+ast_nodes.py:226: error: Function is missing a type annotation 
+[no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "Initializer":
+ast_nodes.py:261: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def pretty(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "Declaration":
+ast_nodes.py:279: error: Item "None" of "Initializer | None" has no attribute
+"pretty"  [union-attr]
+    ...      return f"{self.type.pretty()} {self.id} = {self.initializer.pret...
+                                                        ^~~~~~~~~~~~~~~~~~~~~~~
+ast_nodes.py: note: In member "pretty" of class "Decorator":
+ast_nodes.py:360: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def pretty(self):
+        ^
+ast_nodes.py: note: In member "__repr__" of class "Decorator":
+ast_nodes.py:365: error: Function is missing a type annotation 
+[no-untyped-def]
+        def __repr__(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "Parameter":
+ast_nodes.py:382: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def pretty(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "ParameterList":
+ast_nodes.py:389: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def pretty(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "StructMember":
+ast_nodes.py:417: error: Call to untyped function "pretty" in typed context 
+[no-untyped-call]
+    ...      return f"{self.type.pretty()} {self.id} = {self.initializer.pret...
+                                                        ^~~~~~~~~~~~~~~~~~~~~...
+ast_nodes.py: note: In class "Program":
+ast_nodes.py:433: error: Incompatible types in assignment (expression has type
+"list[Never]", variable has type "Scope")  [assignment]
+        globals: Scope= field(default_factory=list)
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+ast_nodes.py: note: In member "children" of class "Program":
+ast_nodes.py:435: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def children(self):
+        ^
+ast_nodes.py: note: In member "pretty" of class "Scope":
+ast_nodes.py:447: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def pretty(self):
+        ^
+ast_nodes.py:448: error: "Scope" has no attribute "variables"  [attr-defined]
+            result = f" {self.debug_name}{str(self.variables)}"
+                                              ^~~~~~~~~~~~~~
+ast_nodes.py:450: error: Call to untyped function "pretty" in typed context 
+[no-untyped-call]
+                result += " -> " + self.parent.pretty()
+                                   ^~~~~~~~~~~~~~~~~~~~
+ast_nodes.py: note: In member "find_recursive" of class "Scope":
+ast_nodes.py:453: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def find_recursive(self, key: str):
+        ^
+ast_nodes.py:455: error: "Scope" has no attribute "variables"  [attr-defined]
+            if key in self.variables:
+                      ^~~~~~~~~~~~~~
+ast_nodes.py:456: error: "Scope" has no attribute "variables"  [attr-defined]
+                return self.variables[key]
+                       ^~~~~~~~~~~~~~
+ast_nodes.py: note: In member "find" of class "Scope":
+ast_nodes.py:464: error: Function is missing a return type annotation 
+[no-untyped-def]
+        def find(self, key: str):
+        ^
+ast_nodes.py:465: error: "Scope" has no attribute "variables"  [attr-defined]
+            if key in self.variables:
+                      ^~~~~~~~~~~~~~
+ast_nodes.py:466: error: "Scope" has no attribute "variables"  [attr-defined]
+                return self.variables[key]
+                       ^~~~~~~~~~~~~~
+semantic_analysis.py:4: error: Module "ast_nodes" has no attribute
+"TypeInitializerPair"  [attr-defined]
+    from ast_nodes import SymbolTable, TypeInitializerPair
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:6: error: Module "type_layout" has no attribute
+"TypeLayout"  [attr-defined]
+    from type_layout import TypeLayout, FunctionTable, TypeTable, TypeLayo...
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...
+semantic_analysis.py:6: error: Module "type_layout" has no attribute
+"FunctionTable"  [attr-defined]
+    from type_layout import TypeLayout, FunctionTable, TypeTable, TypeLayo...
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...
+semantic_analysis.py:6: error: Module "type_layout" has no attribute
+"TypeTable"  [attr-defined]
+    from type_layout import TypeLayout, FunctionTable, TypeTable, TypeLayo...
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...
+semantic_analysis.py:6: error: Module "type_layout" has no attribute
+"TypeLayoutTable"  [attr-defined]
+    from type_layout import TypeLayout, FunctionTable, TypeTable, TypeLayo...
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...
+semantic_analysis.py: note: In function "classify_value":
+semantic_analysis.py:45: error: Missing positional argument "expr" in call to
+"classify_value"  [call-arg]
+            return classify_value(expr.target)
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:48: error: Missing positional argument "expr" in call to
+"classify_value"  [call-arg]
+            return classify_value(expr.target)
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py: note: In function "validate_identifier":
+semantic_analysis.py:91: error: "Scope" has no attribute "variables" 
+[attr-defined]
+        scope.variables[symbol_id] = all_types[typename]
+        ^~~~~~~~~~~~~~~
+semantic_analysis.py: note: In function "validate_varref":
+semantic_analysis.py:98: error: "type[type]" has no attribute "typename" 
+[attr-defined]
+        if not isinstance(type.typename, str):
+                          ^~~~~~~~~~~~~
+semantic_analysis.py: note: In function "validate_scope_node":
+semantic_analysis.py:141: error: "Scope" has no attribute "variables" 
+[attr-defined]
+        if not isinstance(node.variables, SymbolTable):
+                          ^~~~~~~~~~~~~~
+semantic_analysis.py:144: error: Unpacking a string is disallowed  [misc]
+        for key, value in node.variables:
+        ^
+semantic_analysis.py:144: error: "Scope" has no attribute "variables" 
+[attr-defined]
+        for key, value in node.variables:
+                          ^~~~~~~~~~~~~~
+semantic_analysis.py:145: error: Cannot determine type of "value"  [has-type]
+            if not isinstance(value, Type):
+                              ^~~~~
+semantic_analysis.py:148: error: Argument 2 to "isinstance" has incompatible
+type "tuple[type[str], None]"; expected "_ClassInfo"  [arg-type]
+        if not isinstance(node.debug_name, (str, None)):
+                                           ^~~~~~~~~~~
+semantic_analysis.py:151: error: Argument 2 to "isinstance" has incompatible
+type "tuple[type[Scope], None]"; expected "_ClassInfo"  [arg-type]
+        if not isinstance(node.parent, (Scope, None)):
+                                       ^~~~~~~~~~~~~
+semantic_analysis.py: note: In function "validate_literal_node":
+semantic_analysis.py:155: error: Function is missing a return type annotation 
+[no-untyped-def]
+    def validate_literal_node(node: Literal):
+    ^
+semantic_analysis.py: note: In function "validate_unary_expression":
+semantic_analysis.py:163: error: Function is missing a return type annotation 
+[no-untyped-def]
+    def validate_unary_expression(node: UnaryExpression):
+    ^
+semantic_analysis.py:174: error: Missing positional argument "node" in call to
+"validate_expression"  [call-arg]
+        validate_expression(node.operand)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:174: error: Argument 1 to "validate_expression" has
+incompatible type "Expression"; expected "Scope"  [arg-type]
+        validate_expression(node.operand)
+                            ^~~~~~~~~~~~
+semantic_analysis.py: note: In function "validate_binary_expression":
+semantic_analysis.py:193: error: Missing positional argument "node" in call to
+"validate_expression"  [call-arg]
+        validate_expression(node.left)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:193: error: Argument 1 to "validate_expression" has
+incompatible type "Expression"; expected "Scope"  [arg-type]
+        validate_expression(node.left)
+                            ^~~~~~~~~
+semantic_analysis.py:194: error: Missing positional argument "node" in call to
+"validate_expression"  [call-arg]
+        validate_expression(node.right)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:194: error: Argument 1 to "validate_expression" has
+incompatible type "Expression"; expected "Scope"  [arg-type]
+        validate_expression(node.right)
+                            ^~~~~~~~~~
+semantic_analysis.py: note: In function "validate_assign_expression":
+semantic_analysis.py:199: error: "AssignExpression" has no attribute
+"expression"  [attr-defined]
+        if node.expression is None:
+           ^~~~~~~~~~~~~~~
+semantic_analysis.py:202: error: "AssignExpression" has no attribute
+"expression"  [attr-defined]
+        if not isinstance(node.expression, Expression):
+                          ^~~~~~~~~~~~~~~
+semantic_analysis.py:211: error: Missing positional argument "node" in call to
+"validate_expression"  [call-arg]
+        validate_expression(node.expression)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:211: error: "AssignExpression" has no attribute
+"expression"  [attr-defined]
+        validate_expression(node.expression)
+                            ^~~~~~~~~~~~~~~
+semantic_analysis.py:211: error: Argument 1 to "validate_expression" has
+incompatible type "Expression"; expected "Scope"  [arg-type]
+        validate_expression(node.expression)
+                            ^~~~~~~~~~~~~~~
+semantic_analysis.py:213: error: Missing positional argument "node" in call to
+"validate_expression"  [call-arg]
+        validate_expression(node.target)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:213: error: Argument 1 to "validate_expression" has
+incompatible type "Expression"; expected "Scope"  [arg-type]
+        validate_expression(node.target)
+                            ^~~~~~~~~~~
+semantic_analysis.py:216: error: Missing positional argument "expr" in call to
+"classify_value"  [call-arg]
+        value_class =  classify_value(node.target)
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py: note: In function "validate_expression":
+semantic_analysis.py:239: error: Function is missing a return type annotation 
+[no-untyped-def]
+    def validate_expression(scope: Scope, node: Expression):
+    ^
+semantic_analysis.py:250: error: Name "validate_index_expression" is not
+defined  [name-defined]
+                validate_index_expression(node)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~
+semantic_analysis.py:252: error: Name "validate_func_call" is not defined 
+[name-defined]
+                validate_func_call(node)
+                ^~~~~~~~~~~~~~~~~~
+Found 67 errors in 2 files (checked 1 source file)

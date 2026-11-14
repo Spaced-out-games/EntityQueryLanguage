@@ -129,7 +129,7 @@ class ESLTransformer(Transformer):
                 
 
                 case str():
-                    result.type_id = item
+                    result.typename = item
 
         if result.const and result.mut:
             raise ESLSemanticError("`const` and `mut` are mutually exclusive")
@@ -189,10 +189,10 @@ class ESLTransformer(Transformer):
 
     @staticmethod
     def split_decl(items):
-        type_ = next((i for i in items if isinstance(i, Type)), Type())
-        id_ = next((i.name for i in items if isinstance(i, Identifier)), None)
-        init = next((i for i in items if isinstance(i, Initializer)), Initializer(None))
-        return type_, id_, init
+        typename = next((i for i in items if isinstance(i, Type)), Type())
+        id_name = next((i.name for i in items if isinstance(i, Identifier)), None)
+        initializer = next((i for i in items if isinstance(i, Initializer)), Initializer(None))
+        return typename, id_name, initializer
 
     def declaration(self, items):
         return Declaration(*self.split_decl(items))
@@ -213,10 +213,10 @@ class ESLTransformer(Transformer):
         return items[0] if items else ArgumentList()    # `@foo()` has no children
 
     def decorator(self, items):
-        type_ = next(i for i in items if isinstance(i, DecoratorType))
+        decorator_type = next(i for i in items if isinstance(i, DecoratorType))
         args = next((i for i in items
                      if isinstance(i, (ArgumentList, DecoratorValue))), None)
-        return Decorator(type_.name, args)
+        return Decorator(decorator_type.name, args)
 
     def decorators(self, items):
         return DecoratorList(items)
@@ -233,10 +233,9 @@ class ESLTransformer(Transformer):
         return items[0]
 
     def block(self, items):
-        scope = Scope({}, "block")
 
 
-        return StatementBlock(list(items), None, scope=scope)
+        return StatementBlock(list(items), None, scope=Scope({}, "block"))
         
 
     def else_clause(self, items):
@@ -251,8 +250,7 @@ class ESLTransformer(Transformer):
         return IfStatement(cond, then_block, else_clause)
 
     def while_statement(self, items):
-        scope = Scope({}, "while")
-        return WhileStatement(items[0], items[1], scope)
+        return WhileStatement(items[0], items[1], Scope({}, "while"))
 
     def for_init(self, items):  return ForInitializer(items[0])
     def for_cond(self, items):  return ForConditional(items[0])
@@ -319,11 +317,9 @@ class ESLTransformer(Transformer):
         return items[0]
 
     def start(self, items):
-        _globals = Scope({}, debug_name = "globals")
 
-        program = Program(list(items), globals=_globals)
+        return Program(list(items), globals=Scope({}, debug_name = "globals"))
 
-        return program
 
     # -------------------
 
